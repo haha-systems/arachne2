@@ -8,8 +8,13 @@ use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use silk_ir::ProgramIR;
 use silk_protocol::{Effect, Grant, HostFunctionDescriptor, PROTOCOL_VERSION};
+use silk_registry::{
+    Admission, MemoryStore as RegistryMemoryStore, ProcedureArtifact, ProcedureRegistry,
+    RegistryPolicy, RetentionDecision, RetentionState,
+};
 use silk_runtime::{HostFunctionProvider, Session};
 use silk_syntax::lower;
+use silk_synthesis::{CandidateRequest, PipelinePolicy, prepare_candidate};
 
 const MAX_FRAME_BYTES: usize = 16 * 1024 * 1024;
 
@@ -22,6 +27,19 @@ pub fn serve() -> io::Result<()> {
 fn serve_io(mut input: impl Read, mut output: impl Write) -> io::Result<()> {
     let mut initialized = false;
     let mut sessions = HashMap::<String, WireSession>::new();
+    let mut registry = ProcedureRegistry::new(
+        RegistryMemoryStore::default(),
+        RegistryPolicy {
+            required_validation_profiles: [
+                "silk.syntax_lowering.v1".to_owned(),
+                "silk.effects_authority.v1".to_owned(),
+            ]
+            .into_iter()
+            .collect(),
+        },
+    );
+    let mut registered_programs = HashMap::<(String, String), ProgramIR>::new();
+    let mut registered_entries = HashMap::<(String, String), String>::new();
     let mut next_host_id = 1_u64;
     while let Some(frame) = read_frame(&mut input)? {
         let request: Value = match serde_json::from_slice(&frame) {
@@ -49,6 +67,24 @@ fn serve_io(mut input: impl Read, mut output: impl Write) -> io::Result<()> {
             "session.create" if initialized => create_session(&params, &mut sessions),
             "session.close" if initialized => close_session(&params, &mut sessions),
             "program.load" if initialized => load_program(&params, &mut sessions),
+            "candidate.prepare" if initialized => prepare_procedure_candidate(&params, &sessions),
+            "registry.admit" if initialized => admit_candidate(
+                &params,
+                &mut registry,
+                &mut registered_programs,
+                &mut registered_entries,
+            ),
+            "registry.retain" if initialized => retain_candidate(&params, &mut registry),
+            "registry.run" if initialized => run_retained_procedure(
+                &params,
+                &mut sessions,
+                &registry,
+                &registered_programs,
+                &registered_entries,
+                &mut input,
+                &mut output,
+                &mut next_host_id,
+            )?,
             "procedure.run" if initialized => run_procedure(
                 &params,
                 &mut sessions,
@@ -115,7 +151,7 @@ fn initialize(params: &Value, initialized: &mut bool) -> Result<Value, RpcFailur
     }
     *initialized = true;
     Ok(
-        json!({"protocol_version":PROTOCOL_VERSION,"features":["session.create","program.load","procedure.run","session.close","host.call","trace.emit"]}),
+        json!({"protocol_version":PROTOCOL_VERSION,"features":["session.create","program.load","procedure.run","session.close","host.call","trace.emit","candidate.prepare","registry.admit","registry.retain","registry.run"]}),
     )
 }
 
@@ -244,6 +280,213 @@ fn load_program(
     session.runtime = Session::default().with_limits(fuel, call_depth);
     session.program = Some(ir);
     Ok(json!({"program_id":program_id,"diagnostics":[]}))
+}
+
+fn prepare_procedure_candidate(
+    params: &Value,
+    sessions: &HashMap<String, WireSession>,
+) -> Result<Value, RpcFailure> {
+    let session_id = required_string(params, "session_id")?;
+    let source = required_string(params, "source")?;
+    let request: CandidateRequest = serde_json::from_value(
+        params
+            .get("candidate_request")
+            .cloned()
+            .unwrap_or(Value::Null),
+    )
+    .map_err(|error| {
+        failure(
+            -32602,
+            "invalid candidate request",
+            json!({"detail":error.to_string()}),
+        )
+    })?;
+    let session = sessions
+        .get(&session_id)
+        .ok_or_else(|| failure(-32005, "unknown session", json!({"session_id":session_id})))?;
+    let prepared = prepare_candidate(
+        &source,
+        request,
+        &session.descriptors,
+        &PipelinePolicy::default(),
+    )
+    .map_err(|error| {
+        failure(
+            -32030,
+            "candidate preparation failed",
+            json!({"detail":error.to_string()}),
+        )
+    })?;
+    Ok(json!({
+        "artifact":prepared.artifact(),
+        "entry_procedure":prepared.entry_procedure(),
+        "retention_state":prepared.retention_state(),
+    }))
+}
+
+fn admit_candidate(
+    params: &Value,
+    registry: &mut ProcedureRegistry<RegistryMemoryStore>,
+    registered_programs: &mut HashMap<(String, String), ProgramIR>,
+    registered_entries: &mut HashMap<(String, String), String>,
+) -> Result<Value, RpcFailure> {
+    let artifact: ProcedureArtifact = serde_json::from_value(
+        params.get("artifact").cloned().unwrap_or(Value::Null),
+    )
+    .map_err(|error| {
+        failure(
+            -32602,
+            "invalid procedure artifact",
+            json!({"detail":error.to_string()}),
+        )
+    })?;
+    let entry_procedure = required_string(params, "entry_procedure")?;
+    let program: ProgramIR = serde_json::from_value(artifact.executable_semantics.clone())
+        .map_err(|error| {
+            failure(
+                -32602,
+                "artifact executable semantics are invalid",
+                json!({"detail":error.to_string()}),
+            )
+        })?;
+    if !program.procedures.contains_key(&entry_procedure) {
+        return Err(failure(
+            -32602,
+            "candidate entry procedure is missing",
+            json!({"entry_procedure":entry_procedure}),
+        ));
+    }
+    let key = (
+        artifact.procedure_id.clone(),
+        artifact.revision_digest.clone(),
+    );
+    if registered_entries
+        .get(&key)
+        .is_some_and(|existing| existing != &entry_procedure)
+    {
+        return Err(failure(
+            -32031,
+            "candidate entry binding conflicts",
+            json!({}),
+        ));
+    }
+    let admission = registry.admit(artifact).map_err(|error| {
+        failure(
+            -32031,
+            "candidate admission failed",
+            json!({"detail":error.to_string()}),
+        )
+    })?;
+    let artifact = registry
+        .get(&key.0, &key.1)
+        .expect("admitted artifact exists");
+    let entry = registered_entries
+        .entry(key.clone())
+        .or_insert(entry_procedure);
+    registered_programs.entry(key).or_insert(program);
+    let admission = match admission {
+        Admission::Inserted => "inserted",
+        Admission::AlreadyPresent => "already_present",
+    };
+    Ok(json!({
+        "admission":admission,
+        "procedure_id":artifact.procedure_id,
+        "revision_digest":artifact.revision_digest,
+        "entry_procedure":entry,
+        "retention_state":registry.retention_state(&artifact.procedure_id,&artifact.revision_digest),
+    }))
+}
+
+fn retain_candidate(
+    params: &Value,
+    registry: &mut ProcedureRegistry<RegistryMemoryStore>,
+) -> Result<Value, RpcFailure> {
+    let procedure_id = required_string(params, "procedure_id")?;
+    let revision_digest = required_string(params, "revision_digest")?;
+    let decision: RetentionDecision = serde_json::from_value(
+        params.get("decision").cloned().unwrap_or(Value::Null),
+    )
+    .map_err(|error| {
+        failure(
+            -32602,
+            "invalid retention decision",
+            json!({"detail":error.to_string()}),
+        )
+    })?;
+    registry
+        .retain(&procedure_id, &revision_digest, decision)
+        .map_err(|error| {
+            failure(
+                -32032,
+                "candidate retention failed",
+                json!({"detail":error.to_string()}),
+            )
+        })?;
+    Ok(json!({
+        "procedure_id":procedure_id,
+        "revision_digest":revision_digest,
+        "retention_state":registry.retention_state(&procedure_id,&revision_digest),
+    }))
+}
+
+fn run_retained_procedure<R: Read, W: Write>(
+    params: &Value,
+    sessions: &mut HashMap<String, WireSession>,
+    registry: &ProcedureRegistry<RegistryMemoryStore>,
+    registered_programs: &HashMap<(String, String), ProgramIR>,
+    registered_entries: &HashMap<(String, String), String>,
+    input: &mut R,
+    output: &mut W,
+    next_host_id: &mut u64,
+) -> io::Result<Result<Value, RpcFailure>> {
+    let prepared = (|| {
+        let session_id = required_string(params, "session_id")?;
+        let procedure_id = required_string(params, "procedure_id")?;
+        let revision_digest = required_string(params, "revision_digest")?;
+        let procedure = required_string(params, "procedure")?;
+        if registry.retention_state(&procedure_id, &revision_digest)
+            != Some(RetentionState::Retained)
+        {
+            return Err(failure(
+                -32032,
+                "procedure revision is not retained",
+                json!({"procedure_id":procedure_id,"revision_digest":revision_digest}),
+            ));
+        }
+        let key = (procedure_id, revision_digest);
+        if registered_entries.get(&key) != Some(&procedure) {
+            return Err(failure(
+                -32032,
+                "procedure does not match the retained entry",
+                json!({"procedure":procedure}),
+            ));
+        }
+        let Some(program) = registered_programs.get(&key).cloned() else {
+            return Err(failure(
+                -32032,
+                "retained executable is unavailable",
+                json!({}),
+            ));
+        };
+        Ok((session_id, program))
+    })();
+    let (session_id, program) = match prepared {
+        Ok(value) => value,
+        Err(error) => return Ok(Err(error)),
+    };
+    let Some(session) = sessions.get_mut(&session_id) else {
+        return Ok(Err(failure(
+            -32005,
+            "unknown session",
+            json!({"session_id":session_id}),
+        )));
+    };
+    let previous_program = session.program.replace(program);
+    let result = run_procedure(params, sessions, input, output, next_host_id);
+    if let Some(session) = sessions.get_mut(&session_id) {
+        session.program = previous_program;
+    }
+    result
 }
 
 fn close_session(

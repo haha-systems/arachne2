@@ -5,7 +5,7 @@ use serde_json::Value;
 use std::collections::BTreeSet;
 
 /// The initial Silk Runtime Protocol version.
-pub const PROTOCOL_VERSION: &str = "1.0";
+pub const PROTOCOL_VERSION: &str = "1.1";
 
 /// A stable effect label used in function descriptors and session grants.
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd, Serialize, Deserialize)]

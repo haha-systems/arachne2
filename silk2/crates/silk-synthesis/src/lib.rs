@@ -132,6 +132,11 @@ impl PreparedCandidate {
         &self.effect_analysis
     }
 
+    #[must_use]
+    pub fn entry_procedure(&self) -> &str {
+        &self.entry_procedure
+    }
+
     /// Admits the candidate first, then executes the pinned candidate entry in the supplied session.
     pub fn admit_and_execute<S: RegistryStore>(
         self,
@@ -260,7 +265,7 @@ pub fn prepare_candidate(
     Ok(PreparedCandidate {
         ir,
         artifact,
-        entry_procedure: request.entry_procedure,
+        entry_procedure: entry_id,
         effect_analysis: analysis,
     })
 }

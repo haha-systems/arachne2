@@ -2,7 +2,8 @@
 
 **Task:** SILK-05  
 **Protocol:** Silk Runtime Protocol (SRP)  
-**Initial version:** `1.0`
+**Initial version:** `1.0`  
+**Current version:** `1.1`
 
 SRP is the language-independent boundary between a Silk runtime process and any host application. The host may provide filesystem, language-model, retrieval, memory, or other functions. Silk does not depend on a particular host implementation. Arachne is one possible host.
 
@@ -16,7 +17,7 @@ The initial default maximum frame size is 16 MiB. Implementations may expose a l
 
 ## Version negotiation
 
-After transport setup, the host sends `initialize` with `protocol_version: "1.0"` and supported optional features. The runtime returns its version and features. Unknown major versions are refused with a JSON-RPC error and the connection closes. A peer may accept an older minor version when it ignores unknown optional fields and does not invoke unsupported features. Required fields may not be silently defaulted when their absence changes meaning.
+After transport setup, the host sends `initialize` with its supported protocol version and optional features. The runtime returns its version and features. Unknown major versions are refused with a JSON-RPC error and the connection closes. A peer may accept an older minor version when it ignores unknown optional fields and does not invoke unsupported features. Required fields may not be silently defaulted when their absence changes meaning. Version 1.1 adds candidate preparation and volatile registry admission, retention, and execution; the 1.0 session and execution methods retain their meanings.
 
 Every session belongs to one initialized connection. A runtime process may serve multiple sessions on that connection, but session state is isolated. Version negotiation is connection-scoped; host-function catalogs, input, grants, trace sequence, and pending requests are session-scoped.
 
@@ -74,7 +75,7 @@ The response confirms the session and returns the accepted protocol version, fun
 ```json
 {
   "session_id": "session-42",
-  "protocol_version": "1.0",
+  "protocol_version": "1.1",
   "catalog_digest": "sha256:…",
   "limits": { "fuel": 100000, "call_depth": 128, "timeout_ms": 30000 }
 }
@@ -84,18 +85,24 @@ No session is created on a failed response.
 
 ## Lifecycle methods
 
-| Method           | Direction                   | Required behavior                                                                                                                                        |
-| ---------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `initialize`     | host → runtime              | Negotiate protocol version and optional features before creating sessions.                                                                               |
-| `session.create` | host → runtime              | Create isolated state from input, host-function catalog, grants, limits, and trace settings.                                                             |
-| `program.load`   | host → runtime              | Load source or a supported serialized program into the named session. The runtime returns a stable `program_id` and diagnostics; load does not run code. |
-| `procedure.run`  | host → runtime              | Invoke a named procedure with JSON arguments and return its JSON-compatible result or structured execution error.                                        |
-| `agent.step`     | host → runtime              | Run the policy phase and, when requested and outcome input is supplied, the optional learn phase according to SILK-03 lifecycle semantics.               |
-| `session.close`  | host → runtime              | Close the session, discard session-local state, cancel its outstanding work, and reject subsequent session operations.                                   |
-| `host.call`      | runtime → host              | Invoke a previously declared function for one session; the host returns a JSON-compatible result or structured host error.                               |
-| `trace.emit`     | runtime → host notification | Deliver one structured trace event. It is not a program result and carries no request response.                                                          |
+| Method              | Direction                   | Required behavior                                                                                                                                                       |
+| ------------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `initialize`        | host → runtime              | Negotiate protocol version and optional features before creating sessions.                                                                                              |
+| `session.create`    | host → runtime              | Create isolated state from input, host-function catalog, grants, limits, and trace settings.                                                                            |
+| `program.load`      | host → runtime              | Load source or a supported serialized program into the named session. The runtime returns a stable `program_id` and diagnostics; load does not run code.                |
+| `procedure.run`     | host → runtime              | Invoke a named procedure with JSON arguments and return its JSON-compatible result or structured execution error.                                                       |
+| `candidate.prepare` | host → runtime              | Lower caller-supplied source, check its entry point, effects, and authority declarations, and return an ephemeral artifact without registry mutation or execution.      |
+| `registry.admit`    | host → runtime              | Validate and add an exact artifact revision as a candidate. Admission does not make a procedure retained or executable through `registry.run`.                          |
+| `registry.retain`   | host → runtime              | Retain one exact candidate revision using a passing, digest-bound retention decision record. The runtime validates record shape; the host owns reviewer authentication. |
+| `registry.run`      | host → runtime              | Invoke the exact retained entry revision through the current session's host catalog, grants, resource limits, and trace path.                                           |
+| `agent.step`        | host → runtime              | Run the policy phase and, when requested and outcome input is supplied, the optional learn phase according to SILK-03 lifecycle semantics.                              |
+| `session.close`     | host → runtime              | Close the session, discard session-local state, cancel its outstanding work, and reject subsequent session operations.                                                  |
+| `host.call`         | runtime → host              | Invoke a previously declared function for one session; the host returns a JSON-compatible result or structured host error.                                              |
+| `trace.emit`        | runtime → host notification | Deliver one structured trace event. It is not a program result and carries no request response.                                                                         |
 
-`program.load`, `procedure.run`, and `agent.step` require a live session ID. A method called before initialization, with an unknown session, or after close fails with a typed protocol/session error. Loading a second program into a session must follow explicit replace semantics: the runtime refuses replacement while an invocation is active and resets program-owned state only after a successful load.
+`program.load`, `procedure.run`, `candidate.prepare`, `registry.run`, and `agent.step` require a live session ID. A method called before initialization, with an unknown session, or after close fails with a typed protocol/session error. Loading a second program into a session must follow explicit replace semantics: the runtime refuses replacement while an invocation is active and resets program-owned state only after a successful load.
+
+The 1.1 registry is process-local and volatile. Registry admission validates artifact metadata, revision digest, and the configured syntax/effect validation profiles. Retention checks that the supplied approval record names the exact revision, required profile, passing outcome, and a well-formed evidence digest; it does not authenticate the host reviewer or verify a signature. `registry.run` accepts only the admitted exact revision in retained state and still applies the current session's Silk grants and runtime checks.
 
 ## Host-call request and response
 

@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	protocolVersion = "1.0"
+	protocolVersion = "1.1"
 	maxFrameBytes   = 16 << 20
 )
 
@@ -76,7 +76,37 @@ type RunResult struct {
 	Trace   []json.RawMessage `json:"trace"`
 }
 
-// Command starts one Silk subprocess and negotiates SRP 1.0 on its framed stdio stream.
+// PreparedCandidate is Silk-validated executable content that is not admitted or retained yet.
+type PreparedCandidate struct {
+	Artifact       json.RawMessage `json:"artifact"`
+	EntryProcedure string          `json:"entry_procedure"`
+	RetentionState string          `json:"retention_state"`
+}
+
+// CandidateAdmission identifies an immutable revision admitted to Silk's registry.
+type CandidateAdmission struct {
+	Admission      string `json:"admission"`
+	ProcedureID    string `json:"procedure_id"`
+	RevisionDigest string `json:"revision_digest"`
+	EntryProcedure string `json:"entry_procedure"`
+	RetentionState string `json:"retention_state"`
+}
+
+// RegisteredRevision pins one retained artifact for execution through a session.
+type RegisteredRevision struct {
+	ProcedureID    string
+	RevisionDigest string
+}
+
+// ProcedureCall selects a loaded session program or one exact retained registry revision.
+type ProcedureCall struct {
+	SessionID string
+	Procedure string
+	Arguments []json.RawMessage
+	Retained  *RegisteredRevision
+}
+
+// Command starts one Silk subprocess and negotiates SRP 1.1 on its framed stdio stream.
 type Command struct {
 	Path string
 	Args []string
@@ -200,15 +230,58 @@ func (c *Client) LoadProgram(ctx context.Context, sessionID, source string) (str
 	return result.ProgramID, nil
 }
 
+// PrepareCandidate performs Silk lowering and effect/authority analysis without admission.
+func (c *Client) PrepareCandidate(ctx context.Context, sessionID, source string, candidateRequest json.RawMessage) (PreparedCandidate, error) {
+	var result PreparedCandidate
+	err := c.call(ctx, "candidate.prepare", map[string]any{
+		"session_id": sessionID, "source": source, "candidate_request": candidateRequest,
+	}, &result)
+	return result, err
+}
+
+// AdmitCandidate inserts one exact prepared artifact as an unretained registry candidate.
+func (c *Client) AdmitCandidate(ctx context.Context, candidate PreparedCandidate) (CandidateAdmission, error) {
+	var result CandidateAdmission
+	err := c.call(ctx, "registry.admit", map[string]any{
+		"artifact": candidate.Artifact, "entry_procedure": candidate.EntryProcedure,
+	}, &result)
+	return result, err
+}
+
+// RetainCandidate applies a revision-bound retention decision after Arachne governance.
+func (c *Client) RetainCandidate(ctx context.Context, procedureID, revisionDigest string, decision json.RawMessage) error {
+	return c.call(ctx, "registry.retain", map[string]any{
+		"procedure_id": procedureID, "revision_digest": revisionDigest, "decision": decision,
+	}, nil)
+}
+
+// Run invokes a loaded program or exact retained entry through the current session's checks.
+func (c *Client) Run(ctx context.Context, call ProcedureCall) (RunResult, error) {
+	params := map[string]any{
+		"session_id": call.SessionID, "procedure": call.Procedure, "arguments": call.Arguments,
+	}
+	method := "procedure.run"
+	if call.Retained != nil {
+		method = "registry.run"
+		params["procedure_id"] = call.Retained.ProcedureID
+		params["revision_digest"] = call.Retained.RevisionDigest
+	}
+	return c.runWithTrace(ctx, method, call.SessionID, params)
+}
+
 // RunProcedure invokes one named procedure and returns its value and trace.
 func (c *Client) RunProcedure(ctx context.Context, sessionID, procedure string, arguments []json.RawMessage) (RunResult, error) {
+	return c.Run(ctx, ProcedureCall{
+		SessionID: sessionID, Procedure: procedure, Arguments: arguments,
+	})
+}
+
+func (c *Client) runWithTrace(ctx context.Context, method, sessionID string, params any) (RunResult, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.traces[sessionID] = nil
 	var result RunResult
-	err := c.callLocked(ctx, "procedure.run", map[string]any{
-		"session_id": sessionID, "procedure": procedure, "arguments": arguments,
-	}, &result)
+	err := c.callLocked(ctx, method, params, &result)
 	result.Trace = append([]json.RawMessage(nil), c.traces[sessionID]...)
 	return result, err
 }

@@ -1,7 +1,7 @@
 # Arachne and Silk runtime integration
 
 **Task:** AR-04  
-**Boundary:** SRP 1.0 over framed stdio
+**Boundary:** SRP 1.1 over framed stdio
 
 The Silk CLI now runs as a protocol peer:
 
@@ -11,7 +11,7 @@ silk serve
 
 It uses four-byte big-endian length-prefixed JSON-RPC frames on stdin/stdout.
 Logs stay on stderr. Arachne's `internal/silk` client starts this process,
-negotiates SRP 1.0, creates isolated sessions, loads source, invokes procedures,
+negotiates SRP 1.1, creates isolated sessions, loads source, invokes procedures,
 services nested `host.call` requests, and collects `trace.emit` events. It
 serializes access to one process stream so responses and nested calls cannot
 cross sessions.
@@ -31,9 +31,10 @@ cd ../arachne && go run ./examples/silk-roundtrip ../silk2/target/debug/silk
 ```
 
 The current wire service implements initialize, session create/close, program
-load, procedure run, nested host calls, and trace notifications. `agent.step`,
-cancellation messages, full JSON Schema validation, and concurrent requests on
-one stream remain unsupported. Host `inputSchema` validation currently covers
+load, procedure run, candidate preparation, registry admission/retention/run,
+nested host calls, and trace notifications. Registry storage is volatile for
+the Silk process lifetime. `agent.step`, cancellation messages, full JSON
+Schema validation, and concurrent requests on one stream remain unsupported. Host `inputSchema` validation currently covers
 basic JSON types and object properties; positional Silk arguments map by the
 schema's `required` order followed by sorted optional property names. Procedure
 input schemas are not represented in the current IR. The Arachne client
