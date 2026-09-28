@@ -10,7 +10,6 @@ Move a task by changing its **Status** here and in its task file. Use `Ready` on
 
 | ID                                                               | Task                                                    | Depends on                                                    |
 | ---------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
-| [AR-09](tasks/AR-09-implement-bounded-workspace.md)              | Implement bounded workspace coordination                | AR-08                                                         |
 | [AR-10](tasks/AR-10-model-regulation-and-prediction-error.md)    | Model regulation and prediction error                   | AR-05, AR-09                                                  |
 | [AR-11](tasks/AR-11-validate-regulatory-effects.md)              | Validate regulatory effects on cognition                | AR-10                                                         |
 | [AR-12](tasks/AR-12-implement-governed-replay.md)                | Implement governed replay and consolidation             | AR-07, AR-13                                                  |
@@ -23,15 +22,16 @@ Move a task by changing its **Status** here and in its task file. Use `Ready` on
 
 ### Ready
 
-| ID                                                     | Task                                           | Depends on   |
-| ------------------------------------------------------ | ---------------------------------------------- | ------------ |
-| [AR-13](tasks/AR-13-implement-governance.md)           | Implement governance for consequential changes | AR-01, AR-05 |
+| ID                                           | Task                                           | Depends on   |
+| -------------------------------------------- | ---------------------------------------------- | ------------ |
+| [AR-13](tasks/AR-13-implement-governance.md) | Implement governance for consequential changes | AR-01, AR-05 |
+| [AR-09](tasks/AR-09-implement-bounded-workspace.md) | Implement bounded workspace coordination | AR-08 |
 
 ### In Progress
 
-| ID                                                | Task                                     | Depends on |
-| ------------------------------------------------- | ---------------------------------------- | ---------- |
-| [AR-08](tasks/AR-08-implement-specialist-proposals.md) | Implement specialist agents and proposals | AR-05 |
+| ID                                                     | Task                                      | Depends on |
+| ------------------------------------------------------ | ----------------------------------------- | ---------- |
+| [AR-09](tasks/AR-09-implement-bounded-workspace.md)   | Implement bounded workspace coordination | AR-08      |
 
 ### Review
 
@@ -73,6 +73,7 @@ No tasks are marked Review.
 | [AR-05](tasks/AR-05-implement-cognitive-event-spine.md)           | Implement the cognitive event spine                     | [Cognitive event model](docs/ARACHNE_COGNITIVE_EVENTS.md)    |
 | [AR-06](tasks/AR-06-implement-attributed-memory.md)               | Implement attributed organism memory                    | [Attributed memory](docs/ARACHNE_ATTRIBUTED_MEMORY.md)       |
 | [AR-07](tasks/AR-07-add-memory-consolidation.md)                  | Add memory consolidation                                | [Memory consolidation](docs/ARACHNE_MEMORY_CONSOLIDATION.md) |
+| [AR-08](tasks/AR-08-implement-specialist-proposals.md)            | Implement specialist agents and proposals               | [Specialist proposals](docs/ARACHNE_SPECIALISTS.md)          |
 | [INT-02](tasks/INT-02-test-legacy-arachne-with-new-silk.md)       | Run the legacy Arachne compatibility experiment         | [Experiment report](docs/LEGACY_ARACHNE_SILK_EXPERIMENT.md)  |
 
 ### Blocked

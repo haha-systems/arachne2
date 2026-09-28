@@ -33,8 +33,16 @@ Backpressure is explicit: a sender blocks when the recipient inbox is full until
 
 Tests can register fixed agents before startup, send known JSON payloads, and coordinate their work with channels and contexts. Startup launches IDs in sorted order, but Go goroutine scheduling is concurrent; tests should synchronize on messages/barriers rather than assume a particular scheduling interleaving. The agent tests cover per-recipient order, sender/recipient attribution, failure propagation, cancellation/join, and rejection after router close.
 
+## Specialist proposals
+
+AR-08 adds the [`specialist proposal contract`](ARACHNE_SPECIALISTS.md). A
+bounded set of registered specialists can receive one interaction and return
+attributed candidate proposals through the same router and cognitive event
+spine. The supervisor remains a lifecycle and message transport primitive;
+the coordinator/workspace is responsible for collecting and selecting them.
+
 ## Scope and gotchas
 
-- The supervisor is a lifecycle and transport primitive. It does not select specialists, admit workspace proposals, persist events, or make governance decisions.
+- The supervisor is a lifecycle and transport primitive. It does not select specialists, admit workspace proposals, or make governance decisions.
 - Every agent must honor its context. Go cannot forcibly stop an uncooperative goroutine; the daemon enforces a shutdown deadline and reports incomplete shutdown.
-- The command currently registers no agents and listens on no network port. The public embedding API exercises agents; AR-04 adds the Silk client and later tasks add cognition/event persistence.
+- The command currently registers no agents and listens on no network port. The public embedding API exercises agents; AR-04 adds the Silk client, AR-05 the event spine, and AR-08 specialist proposals.

@@ -40,3 +40,6 @@ Embedding applications can use the versioned Silk
 stdio client and register `SilkProcedureAgent` with the supervisor. See the
 [integration contract](../docs/ARACHNE_SILK_INTEGRATION.md) and
 [`silk-roundtrip` example](examples/silk-roundtrip/main.go).
+See the [specialist proposal contract](../docs/ARACHNE_SPECIALISTS.md) and its
+[`specialist-proposals` example](examples/specialist-proposals/main.go) for
+multi-agent candidate work.

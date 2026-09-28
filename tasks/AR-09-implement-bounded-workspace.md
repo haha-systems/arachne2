@@ -1,6 +1,6 @@
 # AR-09 — Implement bounded workspace coordination
 
-**Status:** Backlog  
+**Status:** In Progress  
 **Track:** Arachne  
 **Depends on:** AR-08  
 **Source:** PRD §8, Arachne Phase 6
@@ -17,4 +17,3 @@ Implement selection and admission, broadcast to relevant agents, and tracing of 
 
 - Capacity is bounded and selection decisions are recorded.
 - A run shows which specialists contributed and why selected content was broadcast.
-
