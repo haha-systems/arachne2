@@ -836,3 +836,102 @@ fn write_notification(output: &mut impl Write, method: &str, params: Value) -> i
         &json!({"jsonrpc":"2.0","method":method,"params":params}),
     )
 }
+
+#[cfg(test)]
+mod tests {
+    use std::io::Cursor;
+
+    use serde_json::{Value, json};
+
+    use super::{PROTOCOL_VERSION, read_frame, serve_io};
+
+    #[test]
+    fn host_call_reaches_wire_only_after_declaration_and_grant_checks() {
+        let cases = [
+            ("undeclared", false, false, Some("UnknownHostFunction")),
+            ("ungranted", true, false, Some("AuthorityDenied")),
+            ("granted", true, true, None),
+        ];
+
+        for (name, declared, granted, expected_error) in cases {
+            let frames = run_host_call_case(declared, granted);
+            let host_calls = frames
+                .iter()
+                .filter(|frame| frame.get("method") == Some(&json!("host.call")))
+                .count();
+            assert_eq!(host_calls, usize::from(granted), "{name}: host.call count");
+
+            let response = frames
+                .iter()
+                .find(|frame| frame.get("id") == Some(&json!(4)))
+                .expect("procedure response");
+            if let Some(kind) = expected_error {
+                assert_eq!(
+                    response["error"]["data"]["kind"], kind,
+                    "{name}: error kind"
+                );
+            } else {
+                assert_eq!(response["result"]["value"], 42, "{name}: host result");
+            }
+        }
+    }
+
+    fn run_host_call_case(declared: bool, granted: bool) -> Vec<Value> {
+        let mut input = Vec::new();
+        append_request(
+            &mut input,
+            json!({"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocol_version":PROTOCOL_VERSION}}),
+        );
+        let mut descriptors = Vec::new();
+        if declared {
+            descriptors.push(json!({
+                "name":"catalog.read","authority":"catalog.read","effects":["host_read"],
+                "inputSchema":{"type":"object","properties":{"value":{"type":"integer"}},"required":["value"]}
+            }));
+        }
+        let grants = if granted {
+            json!([{"authority":"catalog.read","effect_ceiling":["host_read"]}])
+        } else {
+            json!([])
+        };
+        append_request(
+            &mut input,
+            json!({"jsonrpc":"2.0","id":2,"method":"session.create","params":{
+                "session_id":"session-1","host_functions":descriptors,"grants":grants
+            }}),
+        );
+        append_request(
+            &mut input,
+            json!({"jsonrpc":"2.0","id":3,"method":"program.load","params":{
+                "session_id":"session-1","source":"fn run() { return catalog.read(7); }"
+            }}),
+        );
+        append_request(
+            &mut input,
+            json!({"jsonrpc":"2.0","id":4,"method":"procedure.run","params":{
+                "session_id":"session-1","procedure":"run","arguments":[]
+            }}),
+        );
+        if granted {
+            append_request(
+                &mut input,
+                json!({"jsonrpc":"2.0","id":"host-1","result":42}),
+            );
+        }
+
+        let mut output = Vec::new();
+        serve_io(Cursor::new(input), &mut output).expect("serve test protocol stream");
+        let mut cursor = Cursor::new(output);
+        let mut frames = Vec::new();
+        while let Some(frame) = read_frame(&mut cursor).expect("read output frame") {
+            frames.push(serde_json::from_slice(&frame).expect("valid output JSON"));
+        }
+        frames
+    }
+
+    fn append_request(stream: &mut Vec<u8>, value: Value) {
+        let bytes = serde_json::to_vec(&value).expect("serialize test request");
+        stream.extend_from_slice(&(bytes.len() as u32).to_be_bytes());
+        stream.extend_from_slice(&bytes);
+    }
+}

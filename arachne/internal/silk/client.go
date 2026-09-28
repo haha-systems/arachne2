@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"sort"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -19,6 +20,16 @@ const (
 	protocolVersion = "1.1"
 	maxFrameBytes   = 16 << 20
 )
+
+// ErrReentrantCall reports a host callback that attempted to call the same Silk client.
+var ErrReentrantCall error = ReentrantCallError{}
+
+// ReentrantCallError identifies an unsupported call back into its active Silk client.
+type ReentrantCallError struct{}
+
+func (ReentrantCallError) Error() string {
+	return "silk client calls from a host callback are unsupported"
+}
 
 // HostFunctionDescriptor declares the schema, effects, and authority for a host callback.
 type HostFunctionDescriptor struct {
@@ -116,15 +127,21 @@ type Command struct {
 
 // Client serializes protocol calls over one Silk process and routes nested host calls.
 type Client struct {
-	mu       sync.Mutex
-	command  *exec.Cmd
-	stdin    io.WriteCloser
-	stdout   *bufio.Reader
-	nextID   uint64
-	sessions map[string]map[string]HostCapability
-	traces   map[string][]json.RawMessage
-	closed   bool
+	gate            chan struct{}
+	command         *exec.Cmd
+	stdin           io.WriteCloser
+	stdout          *bufio.Reader
+	nextID          uint64
+	sessions        map[string]map[string]HostCapability
+	traces          map[string][]json.RawMessage
+	traceSession    string
+	closed          bool
+	failed          error
+	callbacksActive atomic.Int32
+	terminateOnce   sync.Once
 }
+
+type callbackClientContextKey struct{}
 
 // ProtocolError is a typed JSON-RPC failure returned by the Silk process.
 type ProtocolError struct {
@@ -160,6 +177,7 @@ func Start(ctx context.Context, command Command) (*Client, error) {
 		return nil, fmt.Errorf("start Silk: %w", err)
 	}
 	client := &Client{
+		gate:     make(chan struct{}, 1),
 		command:  process,
 		stdin:    stdin,
 		stdout:   bufio.NewReader(stdout),
@@ -182,8 +200,13 @@ func Start(ctx context.Context, command Command) (*Client, error) {
 
 // CreateSession installs explicit callbacks and returns the runtime's accepted catalog digest.
 func (c *Client) CreateSession(ctx context.Context, config SessionConfig) (SessionInfo, error) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	if err := c.rejectReentrant(ctx); err != nil {
+		return SessionInfo{}, err
+	}
+	if err := c.lock(ctx); err != nil {
+		return SessionInfo{}, err
+	}
+	defer c.unlock()
 	if config.ID == "" {
 		return SessionInfo{}, errors.New("session ID must not be empty")
 	}
@@ -277,9 +300,17 @@ func (c *Client) RunProcedure(ctx context.Context, sessionID, procedure string, 
 }
 
 func (c *Client) runWithTrace(ctx context.Context, method, sessionID string, params any) (RunResult, error) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	if err := c.rejectReentrant(ctx); err != nil {
+		return RunResult{}, err
+	}
+	if err := c.lock(ctx); err != nil {
+		return RunResult{}, err
+	}
+	defer c.unlock()
 	c.traces[sessionID] = nil
+	previousTraceSession := c.traceSession
+	c.traceSession = sessionID
+	defer func() { c.traceSession = previousTraceSession }()
 	var result RunResult
 	err := c.callLocked(ctx, method, params, &result)
 	result.Trace = append([]json.RawMessage(nil), c.traces[sessionID]...)
@@ -288,19 +319,32 @@ func (c *Client) runWithTrace(ctx context.Context, method, sessionID string, par
 
 // CloseSession discards one isolated runtime session.
 func (c *Client) CloseSession(ctx context.Context, sessionID string) error {
-	err := c.call(ctx, "session.close", map[string]string{"session_id": sessionID}, nil)
-	c.mu.Lock()
+	if err := c.rejectReentrant(ctx); err != nil {
+		return err
+	}
+	if err := c.lock(ctx); err != nil {
+		return err
+	}
+	defer c.unlock()
+	err := c.callLocked(ctx, "session.close", map[string]string{"session_id": sessionID}, nil)
+	if err != nil {
+		return err
+	}
 	delete(c.sessions, sessionID)
 	delete(c.traces, sessionID)
-	c.mu.Unlock()
-	return err
+	return nil
 }
 
 // Close shuts down the subprocess after closing every remaining session.
 func (c *Client) Close() error {
-	c.mu.Lock()
+	if c.callbacksActive.Load() > 0 {
+		return ErrReentrantCall
+	}
+	if err := c.lock(context.Background()); err != nil {
+		return err
+	}
+	defer c.unlock()
 	if c.closed {
-		c.mu.Unlock()
 		return nil
 	}
 	ids := make([]string, 0, len(c.sessions))
@@ -308,76 +352,136 @@ func (c *Client) Close() error {
 		ids = append(ids, id)
 	}
 	sort.Strings(ids)
-	c.mu.Unlock()
+	var closeErr error
 	for _, id := range ids {
-		_ = c.CloseSession(context.Background(), id)
+		if c.failed == nil {
+			if err := c.callLocked(context.Background(), "session.close", map[string]string{"session_id": id}, nil); err != nil && closeErr == nil {
+				closeErr = err
+			}
+		}
+		delete(c.sessions, id)
+		delete(c.traces, id)
 	}
-	c.mu.Lock()
 	c.closed = true
 	_ = c.stdin.Close()
-	c.mu.Unlock()
-	return c.command.Wait()
+	waitErr := c.command.Wait()
+	if closeErr != nil {
+		return closeErr
+	}
+	return waitErr
 }
 
 func (c *Client) call(ctx context.Context, method string, params any, target any) error {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	if err := c.rejectReentrant(ctx); err != nil {
+		return err
+	}
+	if err := c.lock(ctx); err != nil {
+		return err
+	}
+	defer c.unlock()
 	return c.callLocked(ctx, method, params, target)
 }
 
 func (c *Client) callLocked(ctx context.Context, method string, params any, target any) error {
+	if err := c.rejectReentrant(ctx); err != nil {
+		return err
+	}
 	if err := ctx.Err(); err != nil {
 		return err
+	}
+	if c.failed != nil {
+		return fmt.Errorf("silk client is unusable after a transport failure: %w", c.failed)
 	}
 	if c.closed {
 		return errors.New("silk client is closed")
 	}
+	stopCancellation := context.AfterFunc(ctx, c.terminateProcess)
+	defer stopCancellation()
 	c.nextID++
 	id := c.nextID
 	if err := writeFrame(c.stdin, map[string]any{"jsonrpc": "2.0", "id": id, "method": method, "params": params}); err != nil {
-		return fmt.Errorf("write Silk request: %w", err)
+		if ctxErr := ctx.Err(); ctxErr != nil {
+			return c.failLocked(ctxErr)
+		}
+		return c.failLocked(fmt.Errorf("write Silk request: %w", err))
 	}
 	for {
 		frame, err := readFrame(c.stdout)
 		if err != nil {
-			return fmt.Errorf("read Silk response: %w", err)
+			if ctxErr := ctx.Err(); ctxErr != nil {
+				return c.failLocked(ctxErr)
+			}
+			return c.failLocked(fmt.Errorf("read Silk response: %w", err))
 		}
 		var envelope struct {
-			ID     json.RawMessage `json:"id"`
-			Method string          `json:"method"`
-			Params json.RawMessage `json:"params"`
-			Result json.RawMessage `json:"result"`
-			Error  *ProtocolError  `json:"error"`
+			JSONRPC string          `json:"jsonrpc"`
+			ID      json.RawMessage `json:"id"`
+			Method  string          `json:"method"`
+			Params  json.RawMessage `json:"params"`
+			Result  json.RawMessage `json:"result"`
+			Error   *ProtocolError  `json:"error"`
 		}
 		if err := json.Unmarshal(frame, &envelope); err != nil {
-			return fmt.Errorf("decode Silk frame: %w", err)
+			return c.failLocked(fmt.Errorf("decode Silk frame: %w", err))
 		}
-		if envelope.Method == "host.call" {
-			if err := c.handleHostCall(ctx, envelope.ID, envelope.Params); err != nil {
-				return err
-			}
-			continue
+		if envelope.JSONRPC != "2.0" {
+			return c.failLocked(fmt.Errorf("invalid Silk JSON-RPC version %q", envelope.JSONRPC))
 		}
-		if envelope.Method == "trace.emit" {
-			var notification struct {
-				SessionID string          `json:"session_id"`
-				Event     json.RawMessage `json:"event"`
+		if envelope.Method != "" {
+			switch envelope.Method {
+			case "host.call":
+				if len(envelope.ID) == 0 || len(envelope.Params) == 0 {
+					return c.failLocked(errors.New("malformed Silk host.call request"))
+				}
+				if err := c.handleHostCall(ctx, envelope.ID, envelope.Params); err != nil {
+					if ctxErr := ctx.Err(); ctxErr != nil {
+						return c.failLocked(ctxErr)
+					}
+					return c.failLocked(err)
+				}
+				continue
+			case "trace.emit":
+				if len(envelope.ID) != 0 || len(envelope.Params) == 0 {
+					return c.failLocked(errors.New("malformed Silk trace.emit notification"))
+				}
+				var notification struct {
+					SessionID string          `json:"session_id"`
+					Event     json.RawMessage `json:"event"`
+				}
+				if err := json.Unmarshal(envelope.Params, &notification); err != nil {
+					return c.failLocked(fmt.Errorf("decode trace notification: %w", err))
+				}
+				if notification.SessionID == "" || !json.Valid(notification.Event) || notification.SessionID != c.traceSession {
+					return c.failLocked(fmt.Errorf("silk trace notification has invalid session correlation %q", notification.SessionID))
+				}
+				c.traces[notification.SessionID] = append(c.traces[notification.SessionID], append(json.RawMessage(nil), notification.Event...))
+				continue
+			default:
+				// JSON-RPC notifications have no response ID and may be ignored when
+				// this client does not implement their optional method.
+				if len(envelope.ID) == 0 {
+					continue
+				}
+				return c.failLocked(fmt.Errorf("unexpected Silk server request %q", envelope.Method))
 			}
-			if err := json.Unmarshal(envelope.Params, &notification); err != nil {
-				return fmt.Errorf("decode trace notification: %w", err)
-			}
-			c.traces[notification.SessionID] = append(c.traces[notification.SessionID], append(json.RawMessage(nil), notification.Event...))
-			continue
 		}
-		if string(envelope.ID) != fmt.Sprint(id) {
-			return fmt.Errorf("unexpected Silk response ID %s for request %d", envelope.ID, id)
+		if len(envelope.ID) == 0 || string(envelope.ID) != fmt.Sprint(id) {
+			return c.failLocked(fmt.Errorf("unexpected Silk response ID %s for request %d", envelope.ID, id))
+		}
+		if (len(envelope.Result) == 0) == (envelope.Error == nil) {
+			return c.failLocked(errors.New("silk response must contain exactly one of result or error"))
+		}
+		if !stopCancellation() {
+			if ctxErr := ctx.Err(); ctxErr != nil {
+				return c.failLocked(ctxErr)
+			}
 		}
 		if envelope.Error != nil {
 			return envelope.Error
 		}
 		if target != nil {
 			if err := json.Unmarshal(envelope.Result, target); err != nil {
-				return fmt.Errorf("decode Silk result: %w", err)
+				return c.failLocked(fmt.Errorf("decode Silk result: %w", err))
 			}
 		}
 		return nil
@@ -398,7 +502,7 @@ func (c *Client) handleHostCall(ctx context.Context, id json.RawMessage, params 
 	if !ok {
 		return c.writeHostError(id, -32010, "host function is not registered")
 	}
-	callContext := ctx
+	callContext := context.WithValue(ctx, callbackClientContextKey{}, c)
 	cancel := func() {}
 	if call.DeadlineMS > 0 {
 		const maxDeadlineMillis = uint64((1<<63 - 1) / int64(time.Millisecond))
@@ -406,10 +510,37 @@ func (c *Client) handleHostCall(ctx context.Context, id json.RawMessage, params 
 			return c.writeHostError(id, -32602, "host call deadline is out of range")
 		}
 		// #nosec G115 -- the preceding bound ensures the millisecond duration fits in int64.
-		callContext, cancel = context.WithTimeout(ctx, time.Duration(call.DeadlineMS)*time.Millisecond)
+		callContext, cancel = context.WithTimeout(callContext, time.Duration(call.DeadlineMS)*time.Millisecond)
 	}
 	defer cancel()
-	result, err := capability.Call(callContext, call.Arguments)
+	type callbackResult struct {
+		value json.RawMessage
+		err   error
+	}
+	callbackResults := make(chan callbackResult, 1)
+	c.callbacksActive.Add(1)
+	go func() {
+		callback := callbackResult{}
+		defer func() {
+			if panicValue := recover(); panicValue != nil {
+				callback.err = fmt.Errorf("host callback panicked: %v", panicValue)
+			}
+			c.callbacksActive.Add(-1)
+			callbackResults <- callback
+		}()
+		callback.value, callback.err = capability.Call(callContext, call.Arguments)
+	}()
+	var result json.RawMessage
+	var err error
+	select {
+	case callback := <-callbackResults:
+		result, err = callback.value, callback.err
+	case <-callContext.Done():
+		if ctx.Err() != nil {
+			return ctx.Err()
+		}
+		return c.writeHostError(id, -32011, "host callback deadline exceeded")
+	}
 	if err != nil {
 		return c.writeHostError(id, -32011, err.Error())
 	}
@@ -420,6 +551,45 @@ func (c *Client) handleHostCall(ctx context.Context, id json.RawMessage, params 
 		return c.writeHostError(id, -32603, "host callback returned invalid JSON")
 	}
 	return writeFrame(c.stdin, map[string]any{"jsonrpc": "2.0", "id": id, "result": result})
+}
+
+func (c *Client) rejectReentrant(ctx context.Context) error {
+	if activeClient, _ := ctx.Value(callbackClientContextKey{}).(*Client); activeClient == c {
+		return ErrReentrantCall
+	}
+	return nil
+}
+
+func (c *Client) lock(ctx context.Context) error {
+	select {
+	case c.gate <- struct{}{}:
+		if err := ctx.Err(); err != nil {
+			c.unlock()
+			return err
+		}
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+}
+
+func (c *Client) unlock() { <-c.gate }
+
+func (c *Client) failLocked(err error) error {
+	if c.failed == nil {
+		c.failed = err
+	}
+	c.terminateProcess()
+	return err
+}
+
+func (c *Client) terminateProcess() {
+	c.terminateOnce.Do(func() {
+		_ = c.stdin.Close()
+		if c.command.Process != nil {
+			_ = c.command.Process.Kill()
+		}
+	})
 }
 
 func (c *Client) writeHostError(id json.RawMessage, code int64, message string) error {

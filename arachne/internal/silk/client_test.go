@@ -9,10 +9,16 @@ import (
 	"io"
 	"os"
 	"strings"
+	"sync/atomic"
 	"testing"
+	"time"
+
+	"github.com/haha-systems/arachne2/internal/cognition"
+	"github.com/haha-systems/arachne2/internal/governance"
 )
 
 const testPeerEnv = "ARACHNE_SILK_PROTOCOL_PEER"
+const testPeerModeEnv = "ARACHNE_SILK_PROTOCOL_PEER_MODE"
 
 type peerSession struct {
 	functions []HostFunctionDescriptor
@@ -23,7 +29,7 @@ func TestSilkProtocolPeer(_ *testing.T) {
 	if os.Getenv(testPeerEnv) != "1" {
 		return
 	}
-	if err := serveTestPeer(os.Stdin, os.Stdout); err != nil {
+	if err := serveTestPeer(os.Stdin, os.Stdout, os.Getenv(testPeerModeEnv)); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
@@ -31,20 +37,13 @@ func TestSilkProtocolPeer(_ *testing.T) {
 
 func TestClientKeepsSilkCallbacksAndTracesSessionScoped(t *testing.T) {
 	ctx := context.Background()
-	client, err := Start(ctx, Command{
-		Path: os.Args[0], Args: []string{"-test.run=^TestSilkProtocolPeer$"},
-		Env: []string{testPeerEnv + "=1"}, Err: io.Discard,
-	})
-	if err != nil {
-		t.Fatalf("start protocol peer: %v", err)
-	}
-	t.Cleanup(func() { _ = client.Close() })
+	client := startProtocolClient(t, "unknown-notification", io.Discard)
 
 	calls := map[string]int{}
 	capability := func(sessionID string) HostCapability {
 		return HostCapability{
 			Descriptor: HostFunctionDescriptor{
-				Name: "memory.write", Authority: "memory.write", Effects: []string{"memory_write"},
+				Name: "catalog.read", Authority: "catalog.read", Effects: []string{"host_read"},
 				InputSchema: json.RawMessage(`{"type":"object"}`),
 			},
 			Call: func(_ context.Context, _ json.RawMessage) (json.RawMessage, error) {
@@ -53,7 +52,7 @@ func TestClientKeepsSilkCallbacksAndTracesSessionScoped(t *testing.T) {
 			},
 		}
 	}
-	grant := Grant{Authority: "memory.write", EffectCeiling: []string{"memory_write"}}
+	grant := Grant{Authority: "catalog.read", EffectCeiling: []string{"host_read"}}
 	for _, session := range []struct {
 		id     string
 		grants []Grant
@@ -111,8 +110,8 @@ func TestClientKeepsSilkCallbacksAndTracesSessionScoped(t *testing.T) {
 	if err := client.CloseSession(ctx, "session-a"); err != nil {
 		t.Fatalf("close session: %v", err)
 	}
-	err = client.handleHostCall(ctx, json.RawMessage(`"late-call"`), json.RawMessage(`{
-		"session_id":"session-a","function":"memory.write","arguments":{},"deadline_ms":0
+	err := client.handleHostCall(ctx, json.RawMessage(`"late-call"`), json.RawMessage(`{
+		"session_id":"session-a","function":"catalog.read","arguments":{},"deadline_ms":0
 	}`))
 	if err != nil {
 		t.Fatalf("respond to post-close host call: %v", err)
@@ -128,7 +127,328 @@ func TestClientKeepsSilkCallbacksAndTracesSessionScoped(t *testing.T) {
 	}
 }
 
-func serveTestPeer(input io.Reader, output io.Writer) error {
+func TestClientRejectsReentrantCallsFromHostCallback(t *testing.T) {
+	client := startProtocolClient(t, "", io.Discard)
+	reentrant := make(chan error, 1)
+	_, err := client.CreateSession(context.Background(), SessionConfig{
+		ID: "session-reentrant",
+		HostFunctions: []HostCapability{{
+			Descriptor: HostFunctionDescriptor{Name: "catalog.read", Authority: "catalog.read", Effects: []string{"host_read"}, InputSchema: json.RawMessage(`{"type":"object"}`)},
+			Call: func(ctx context.Context, _ json.RawMessage) (json.RawMessage, error) {
+				_, err := client.LoadProgram(ctx, "session-reentrant", "fn nested() { return 1; }")
+				reentrant <- err
+				return nil, err
+			},
+		}},
+		Grants: []Grant{{Authority: "catalog.read", EffectCeiling: []string{"host_read"}}},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = client.RunProcedure(context.Background(), "session-reentrant", "invoke", nil)
+	if err == nil {
+		t.Fatal("procedure succeeded after its callback rejected re-entry")
+	}
+	select {
+	case callbackErr := <-reentrant:
+		if !errors.Is(callbackErr, ErrReentrantCall) {
+			t.Fatalf("reentrant call error = %v, want ErrReentrantCall", callbackErr)
+		}
+		var typedError ReentrantCallError
+		if !errors.As(callbackErr, &typedError) {
+			t.Fatalf("reentrant call error has type %T, want ReentrantCallError", callbackErr)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("host callback deadlocked while re-entering the client")
+	}
+}
+
+func TestClientCancellationInterruptsBlockedSilkRead(t *testing.T) {
+	blocked := make(chan struct{}, 1)
+	client := startProtocolClient(t, "block", writerFunc(func(data []byte) (int, error) {
+		if strings.Contains(string(data), "blocked") {
+			blocked <- struct{}{}
+		}
+		return len(data), nil
+	}))
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	result := make(chan error, 1)
+	go func() {
+		_, err := client.RunProcedure(ctx, "session-blocked", "invoke", nil)
+		result <- err
+	}()
+	select {
+	case <-blocked:
+	case <-time.After(time.Second):
+		t.Fatal("test Silk process did not reach blocked response read")
+	}
+	cancel()
+	select {
+	case err := <-result:
+		if !errors.Is(err, context.Canceled) {
+			t.Fatalf("cancelled operation error = %v, want context.Canceled", err)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("cancelled operation remained blocked waiting for Silk")
+	}
+}
+
+func TestClientCancellationInterruptsWaitingForSerializedStream(t *testing.T) {
+	blocked := make(chan struct{}, 1)
+	client := startProtocolClient(t, "block", writerFunc(func(data []byte) (int, error) {
+		if strings.Contains(string(data), "blocked") {
+			blocked <- struct{}{}
+		}
+		return len(data), nil
+	}))
+	firstContext, cancelFirst := context.WithCancel(context.Background())
+	firstResult := make(chan error, 1)
+	go func() {
+		_, err := client.RunProcedure(firstContext, "session-first", "invoke", nil)
+		firstResult <- err
+	}()
+	select {
+	case <-blocked:
+	case <-time.After(time.Second):
+		t.Fatal("first request did not block in Silk")
+	}
+
+	secondContext := newSignaledContext()
+	secondResult := make(chan error, 1)
+	go func() {
+		_, err := client.RunProcedure(secondContext, "session-second", "invoke", nil)
+		secondResult <- err
+	}()
+	select {
+	case <-secondContext.waiting:
+	case <-time.After(time.Second):
+		t.Fatal("second request did not wait for the serialized stream")
+	}
+	secondContext.cancel()
+	select {
+	case err := <-secondResult:
+		if !errors.Is(err, context.Canceled) {
+			t.Fatalf("queued request cancellation = %v", err)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("cancelled queued request remained blocked on stream serialization")
+	}
+	cancelFirst()
+	select {
+	case <-firstResult:
+	case <-time.After(time.Second):
+		t.Fatal("cancelling active request did not release the stream")
+	}
+}
+
+func TestClientReturnsWhenSilkExitsDuringRequest(t *testing.T) {
+	client := startProtocolClient(t, "exit", io.Discard)
+	_, err := client.RunProcedure(context.Background(), "session-exit", "invoke", nil)
+	if err == nil {
+		t.Fatal("request succeeded after Silk exited")
+	}
+	_, secondErr := client.RunProcedure(context.Background(), "session-exit", "invoke", nil)
+	if secondErr == nil || !strings.Contains(secondErr.Error(), "unusable after a transport failure") {
+		t.Fatalf("request after subprocess failure = %v, first failure was %v", secondErr, err)
+	}
+}
+
+func TestClientFailsClosedOnMismatchedResponseID(t *testing.T) {
+	client := startProtocolClient(t, "wrong-id", io.Discard)
+	_, err := client.RunProcedure(context.Background(), "session-id", "invoke", nil)
+	if err == nil || !strings.Contains(err.Error(), "unexpected Silk response ID") {
+		t.Fatalf("mismatched response ID error = %v", err)
+	}
+	_, secondErr := client.RunProcedure(context.Background(), "session-id", "invoke", nil)
+	if secondErr == nil || !strings.Contains(secondErr.Error(), "unusable after a transport failure") {
+		t.Fatalf("client was reused after response correlation failed: %v", secondErr)
+	}
+}
+
+func TestClientFailsClosedOnMalformedFrame(t *testing.T) {
+	client := startProtocolClient(t, "malformed", io.Discard)
+	_, err := client.LoadProgram(context.Background(), "session-malformed", "fn run() { return 1; }")
+	if err == nil || !strings.Contains(err.Error(), "decode Silk frame") {
+		t.Fatalf("malformed frame error = %v", err)
+	}
+	if _, err := client.LoadProgram(context.Background(), "session-malformed", "fn run() { return 1; }"); err == nil || !strings.Contains(err.Error(), "unusable after a transport failure") {
+		t.Fatalf("client was reused after malformed frame: %v", err)
+	}
+}
+
+func TestClientRejectsTraceForAnotherSession(t *testing.T) {
+	client := startProtocolClient(t, "cross-session-trace", io.Discard)
+	_, err := client.CreateSession(context.Background(), SessionConfig{
+		ID: "session-trace",
+		HostFunctions: []HostCapability{{
+			Descriptor: HostFunctionDescriptor{Name: "catalog.read", Authority: "catalog.read", Effects: []string{"host_read"}, InputSchema: json.RawMessage(`{"type":"object"}`)},
+			Call:       func(context.Context, json.RawMessage) (json.RawMessage, error) { return json.RawMessage(`42`), nil },
+		}},
+		Grants: []Grant{{Authority: "catalog.read", EffectCeiling: []string{"host_read"}}},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = client.RunProcedure(context.Background(), "session-trace", "invoke", nil)
+	if err == nil || !strings.Contains(err.Error(), "invalid session correlation") {
+		t.Fatalf("cross-session trace error = %v", err)
+	}
+}
+
+func TestGrantedConsequentialCallbackStillRequiresArachneGovernance(t *testing.T) {
+	client := startProtocolClient(t, "", io.Discard)
+	eventStore, err := cognition.NewMemoryStore(8)
+	if err != nil {
+		t.Fatal(err)
+	}
+	events, err := cognition.NewSpine("org-a", eventStore)
+	if err != nil {
+		t.Fatal(err)
+	}
+	governor, err := governance.New(governance.Policy{
+		ID: "external-effect", Version: "1", Approvers: []string{"reviewer"},
+		Rules: map[governance.ActionClass]governance.Rule{
+			governance.ActionExternalEffect: {MinimumApprovals: 1, RequireEvidence: true, AllowedTargets: []string{"account:primary"}},
+		},
+	}, events)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var externalEffects atomic.Int32
+	var decision governance.Outcome
+	_, err = client.CreateSession(context.Background(), SessionConfig{
+		ID: "session-consequential",
+		HostFunctions: []HostCapability{{
+			Descriptor: HostFunctionDescriptor{Name: "payments.transfer", Authority: "payments.transfer", Effects: []string{"host_write"}, InputSchema: json.RawMessage(`{"type":"object"}`)},
+			Call: func(ctx context.Context, _ json.RawMessage) (json.RawMessage, error) {
+				result, err := governor.Evaluate(ctx, governance.Proposal{
+					ID: "proposal-1", InteractionID: "interaction-1", ProposerID: "agent-1",
+					Class: governance.ActionExternalEffect, Target: "account:primary", Action: "transfer",
+					Payload: json.RawMessage(`{"amount":10}`), CreatedAt: time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC),
+					SourceEventIDs: []string{"source-1"}, EvidenceEventIDs: []string{"evidence-1"},
+				}, nil)
+				if err != nil {
+					return nil, err
+				}
+				decision = result.Outcome
+				if result.Outcome != governance.OutcomeApproved {
+					return nil, fmt.Errorf("Arachne governance outcome: %s", result.Outcome)
+				}
+				externalEffects.Add(1)
+				return json.RawMessage(`{"transferred":true}`), nil
+			},
+		}},
+		Grants: []Grant{{Authority: "payments.transfer", EffectCeiling: []string{"host_write"}}},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = client.RunProcedure(context.Background(), "session-consequential", "invoke", nil)
+	if err == nil || !strings.Contains(err.Error(), "pending") {
+		t.Fatalf("ungoverned consequential call error = %v", err)
+	}
+	if decision != governance.OutcomePending || externalEffects.Load() != 0 {
+		t.Fatalf("Silk grant bypassed Arachne governance: decision=%s effects=%d", decision, externalEffects.Load())
+	}
+}
+
+func TestClientCancellationDoesNotRetryDispatchedHostCallback(t *testing.T) {
+	started := make(chan struct{}, 1)
+	release := make(chan struct{})
+	var dispatches atomic.Int32
+	client := startProtocolClient(t, "", io.Discard)
+	t.Cleanup(func() { close(release); _ = client.Close() })
+	_, err := client.CreateSession(context.Background(), SessionConfig{
+		ID: "session-effect",
+		HostFunctions: []HostCapability{{
+			Descriptor: HostFunctionDescriptor{Name: "catalog.read", Authority: "catalog.read", Effects: []string{"host_read"}, InputSchema: json.RawMessage(`{"type":"object"}`)},
+			Call: func(context.Context, json.RawMessage) (json.RawMessage, error) {
+				dispatches.Add(1)
+				started <- struct{}{}
+				<-release
+				return json.RawMessage(`{"done":true}`), nil
+			},
+		}},
+		Grants: []Grant{{Authority: "catalog.read", EffectCeiling: []string{"host_read"}}},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	result := make(chan error, 1)
+	go func() {
+		_, err := client.RunProcedure(ctx, "session-effect", "invoke", nil)
+		result <- err
+	}()
+	select {
+	case <-started:
+	case <-time.After(time.Second):
+		t.Fatal("granted host callback was not dispatched")
+	}
+	cancel()
+	select {
+	case err := <-result:
+		if !errors.Is(err, context.Canceled) {
+			t.Fatalf("cancelled dispatched operation error = %v", err)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("cancelled operation remained blocked in host callback")
+	}
+	if got := dispatches.Load(); got != 1 {
+		t.Fatalf("host callback dispatch count = %d, want one with no retry", got)
+	}
+}
+
+func startProtocolClient(t *testing.T, mode string, stderr io.Writer) *Client {
+	t.Helper()
+	env := []string{testPeerEnv + "=1"}
+	if mode != "" {
+		env = append(env, testPeerModeEnv+"="+mode)
+	}
+	client, err := Start(context.Background(), Command{
+		Path: os.Args[0], Args: []string{"-test.run=^TestSilkProtocolPeer$"}, Env: env, Err: stderr,
+	})
+	if err != nil {
+		t.Fatalf("start protocol peer: %v", err)
+	}
+	t.Cleanup(func() { _ = client.Close() })
+	return client
+}
+
+type writerFunc func([]byte) (int, error)
+
+func (write writerFunc) Write(data []byte) (int, error) { return write(data) }
+
+type signaledContext struct {
+	done    chan struct{}
+	waiting chan struct{}
+}
+
+func newSignaledContext() *signaledContext {
+	return &signaledContext{done: make(chan struct{}), waiting: make(chan struct{}, 1)}
+}
+
+func (c *signaledContext) Deadline() (time.Time, bool) { return time.Time{}, false }
+func (c *signaledContext) Done() <-chan struct{} {
+	select {
+	case c.waiting <- struct{}{}:
+	default:
+	}
+	return c.done
+}
+func (c *signaledContext) Err() error {
+	select {
+	case <-c.done:
+		return context.Canceled
+	default:
+		return nil
+	}
+}
+func (c *signaledContext) Value(any) any { return nil }
+func (c *signaledContext) cancel()       { close(c.done) }
+
+func serveTestPeer(input io.Reader, output io.Writer, mode string) error {
 	reader := bufio.NewReader(input)
 	sessions := make(map[string]peerSession)
 	for {
@@ -177,6 +497,22 @@ func serveTestPeer(input io.Reader, output io.Writer) error {
 			if err := writeFrame(output, map[string]any{"jsonrpc": "2.0", "id": request.ID, "result": map[string]any{}}); err != nil {
 				return err
 			}
+		case "program.load":
+			switch mode {
+			case "wrong-id":
+				if err := writeFrame(output, map[string]any{"jsonrpc": "2.0", "id": 999, "result": map[string]any{}}); err != nil {
+					return err
+				}
+				continue
+			case "malformed":
+				if _, err := output.Write([]byte{0, 0, 0, 1, '{'}); err != nil {
+					return err
+				}
+				continue
+			}
+			if err := writeFrame(output, map[string]any{"jsonrpc": "2.0", "id": request.ID, "result": map[string]string{"program_id": "program-1"}}); err != nil {
+				return err
+			}
 		case "procedure.run":
 			var params struct {
 				SessionID string `json:"session_id"`
@@ -185,7 +521,25 @@ func serveTestPeer(input io.Reader, output io.Writer) error {
 			if err := json.Unmarshal(request.Params, &params); err != nil {
 				return err
 			}
-			if !peerAllows(sessions[params.SessionID], "memory.write") {
+			if mode == "wrong-id" {
+				if err := writeFrame(output, map[string]any{"jsonrpc": "2.0", "id": 999, "result": map[string]any{}}); err != nil {
+					return err
+				}
+				continue
+			}
+			if mode == "block" {
+				_, _ = fmt.Fprintln(os.Stderr, "blocked")
+				_, _ = io.Copy(io.Discard, reader)
+				return nil
+			}
+			if mode == "exit" {
+				os.Exit(3)
+			}
+			function := ""
+			if registered := sessions[params.SessionID].functions; len(registered) > 0 {
+				function = registered[0].Name
+			}
+			if !peerAllows(sessions[params.SessionID], function) {
 				if err := writeFrame(output, map[string]any{
 					"jsonrpc": "2.0", "id": request.ID,
 					"error": map[string]any{"code": -32011, "message": "procedure execution failed"},
@@ -198,11 +552,18 @@ func serveTestPeer(input io.Reader, output io.Writer) error {
 			if err := writeFrame(output, map[string]any{
 				"jsonrpc": "2.0", "id": hostID, "method": "host.call",
 				"params": map[string]any{
-					"session_id": params.SessionID, "function": "memory.write",
+					"session_id": params.SessionID, "function": function,
 					"arguments": map[string]string{"session": params.SessionID}, "deadline_ms": 1000,
 				},
 			}); err != nil {
 				return err
+			}
+			if mode == "unknown-notification" {
+				if err := writeFrame(output, map[string]any{
+					"jsonrpc": "2.0", "method": "trace.future", "params": map[string]string{"session_id": params.SessionID},
+				}); err != nil {
+					return err
+				}
 			}
 			hostResponse, err := readFrame(reader)
 			if err != nil {
@@ -229,9 +590,13 @@ func serveTestPeer(input io.Reader, output io.Writer) error {
 				"procedure":             params.Procedure,
 				"event":                 map[string]string{"kind": "host.call"},
 			}
+			traceSession := params.SessionID
+			if mode == "cross-session-trace" {
+				traceSession = "another-session"
+			}
 			if err := writeFrame(output, map[string]any{
 				"jsonrpc": "2.0", "method": "trace.emit",
-				"params": map[string]any{"session_id": params.SessionID, "event": trace},
+				"params": map[string]any{"session_id": traceSession, "event": trace},
 			}); err != nil {
 				return err
 			}
