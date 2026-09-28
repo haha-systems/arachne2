@@ -1,0 +1,23 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/organism-arc/agents/memory_disabled_handoff.silk",
+  "source_sha256": "9661e50427d5240d01500f483d0708aa283ae731061f5e2b715173fe55c97a8e",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/organism-arc/agents/memory_disabled_handoff.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 13.84
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [],
+  "trace_sequence_complete": true
+}

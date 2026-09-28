@@ -1,0 +1,74 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/designer.silk",
+  "source_sha256": "3c6383bfb5b23f102b224bbbc5d4f4a4691ad0a982c736f850e15129ecc04239",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/nostalgic-blackwell-b181bf/agents/designer.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": null,
+    "timed_out": true,
+    "duration_ms": 5007.985
+  },
+  "stdout": "",
+  "output": "Designer/Synthesizer started.",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "print",
+      "args": [
+        "Designer/Synthesizer started."
+      ],
+      "result": null,
+      "duration": 41667
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1001247209
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1005259375
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1005731500
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1011314583
+    }
+  ],
+  "trace_sequence_complete": true
+}

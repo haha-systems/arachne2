@@ -1,0 +1,15 @@
+state agent_id = "worker-1"
+state bid_threshold = "0.95"
+
+// The target agent is intentionally inert in Experiment 002.
+// No mutation should happen. The whole point is that governance approves
+// the configuration change but the target is not yet modified.
+
+fn announce(msg) {
+  return {
+    status: "observed",
+    agent_id: agent_id,
+    bid_threshold: bid_threshold,
+    topic: "cnp.announce"
+  }
+}

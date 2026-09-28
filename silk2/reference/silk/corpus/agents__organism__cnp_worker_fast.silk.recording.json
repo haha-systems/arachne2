@@ -1,0 +1,23 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "agents/organism/cnp_worker_fast.silk",
+  "source_sha256": "4cb42c9d3468288f02a36b1710821a32abfa18f2ac7e3f5ebd694faffa47e9c1",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "agents/organism/cnp_worker_fast.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 24.956
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [],
+  "trace_sequence_complete": true
+}

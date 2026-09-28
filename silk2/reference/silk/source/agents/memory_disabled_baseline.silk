@@ -1,0 +1,8 @@
+// Memory-disabled baseline for the Silk agent memory access trial.
+
+capability "memory.disabled.baseline" {
+  topics = ["memory.baseline"]
+  tools = []
+}
+
+state result = "memory disabled baseline: make a generic plan without cited memory context; local fixture evidence only; not proof of consciousness/personhood/sentience"

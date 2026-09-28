@@ -1,0 +1,24 @@
+// Slow Contract-Net worker for the organism host (Tier 1).
+//
+// Lower confidence, higher price: this worker bids on every auction but should
+// usually lose to cnp_worker_fast. It exists to validate confidence-weighted
+// winner selection and to give the coordinator a second bidder for quorum.
+
+capability "organism.cnp.worker.slow" {
+  topics = ["cnp.announce", "cnp.assign"]
+}
+
+state bids_made = 0
+state jobs_done = 0
+
+fn announce(msg) {
+  bids_made = bids_made + 1
+  contract_net.submit_bid(msg.auction_id, organism.agent_id(), {confidence: 0.55, price: 20})
+}
+
+fn assign(msg) {
+  // Longer simulated work than the fast worker, but still bounded.
+  sleep(40 + ((jobs_done * 23) % 80))
+  jobs_done = jobs_done + 1
+  contract_net.complete(msg.auction_id, organism.agent_id(), {status: "success", kind: "slow"})
+}

@@ -1,0 +1,26 @@
+// Fast Worker: High confidence, low price. Should win.
+// Run with agent-id=worker-fast
+
+handle announce(msg) {
+  print("FastWorker received announce: " + msg.auction_id + " for task: " + msg.payload.task)
+  let bid = {confidence: 0.95, price: 5}
+  contract_net.submit_bid(msg.auction_id, "worker-fast", bid)
+  print("FastWorker submitted bid")
+}
+
+handle assign(msg) {
+  print("FastWorker assigned task! processing...")
+  sleep(500)
+  contract_net.complete(msg.auction_id, "worker-fast", {status: "success"})
+  print("FastWorker completed task")
+}
+
+act run() {
+  print("FastWorker started. Listening...")
+  print("FastWorker initialized")
+  while true {
+    sleep(1000)
+  }
+}
+
+run()

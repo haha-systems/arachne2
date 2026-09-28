@@ -1,0 +1,23 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "agents/agw_1/tf3/resolver.silk",
+  "source_sha256": "172ebcb3f063d593fa22d3122562192980aca3817eceeed5837ef79fea45efd9",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "agents/agw_1/tf3/resolver.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 1,
+    "timed_out": false,
+    "duration_ms": 289.147
+  },
+  "stdout": "",
+  "output": "\u001b[31merror\u001b[0m: undefined identifier: 'task_input'\n\n\u001b[36mnote\u001b[0m: Variables must be declared before use. Use 'state' or 'let' to define variables.\n\u001b[31merror\u001b[0m: Runtime error: UndefinedVariable\nerror: UndefinedVariable\n/Users/xiy/code/arachne/src/Interpreter.zig:1073:21: 0x102d246db in evalExpression (silk)\n                    return Error.UndefinedVariable;\n                    ^\n/Users/xiy/code/arachne/src/Interpreter.zig:1089:30: 0x102d2528f in evalExpression (silk)\n                const left = try self.evalExpression(de.left);\n                             ^\n/Users/xiy/code/arachne/src/Interpreter.zig:1481:29: 0x102d27e0f in evalCallExpression (silk)\n            arg_values[i] = try self.evalExpression(arg);\n                            ^\n/Users/xiy/code/arachne/src/Interpreter.zig:1087:32: 0x102d251db in evalExpression (silk)\n            .call_expr => |ce| try self.evalCallExpression(ce.function, ce.arguments, ce.named_args),\n                               ^\n/Users/xiy/code/arachne/src/Interpreter.zig:686:31: 0x1030104c7 in evalDeclaration (silk)\n                const value = try self.evalExpression(sd.initializer);\n                              ^\n/Users/xiy/code/arachne/src/Interpreter.zig:612:17: 0x10300ede3 in execute (silk)\n                return err;\n                ^\n/Users/xiy/code/arachne/src/main.zig:524:9: 0x102bf36d7 in runFile (silk)\n        return err;\n        ^\n/Users/xiy/code/arachne/src/main.zig:62:13: 0x102c4b6f7 in main (silk)\n            try runFile(allocator, args[2], &interpreter);\n            ^",
+  "trace": [],
+  "trace_sequence_complete": true
+}

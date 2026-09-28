@@ -1,0 +1,24 @@
+// Seeder for the organism simulation swarm.
+//
+// On load it publishes a single cnp.complete with kind="seed", which kicks the
+// resident sim workers into their sleep-and-forward loop. It also keeps a
+// `complete` handler with the same behaviour as a worker so it stays part of the
+// swarm after the initial seed. Host tick injection (organism.setInject) can be
+// enabled to keep the swarm active even after the initial seed wave subsides.
+
+state jobs_done = 0
+state max_hops = 1000000
+
+// Top-level boot: fire one seed message as soon as the agent is loaded.
+contract_net.complete("sim-boot", "seeder", {hop: 0, kind: "seed"})
+
+fn complete(msg) {
+  if msg.payload.kind != "work" {
+    if jobs_done < max_hops {
+      let work_ms = 20 + ((jobs_done * 53 + 17) % 100)
+      sleep(work_ms)
+      jobs_done = jobs_done + 1
+      contract_net.complete("sim-seed-" + jobs_done, organism.agent_id(), {hop: jobs_done, kind: "work"})
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "agents/organism/sim_memory.silk",
+  "source_sha256": "a4699ff39ab82eced8f67346f13e62084cc3d58d69a19cb88ce4178b260c0de7",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "agents/organism/sim_memory.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 13.802
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [],
+  "trace_sequence_complete": true
+}

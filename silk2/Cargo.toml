@@ -1,0 +1,27 @@
+[workspace]
+members = [
+    "crates/silk-syntax",
+    "crates/silk-ir",
+    "crates/silk-runtime",
+    "crates/silk-protocol",
+    "crates/silk-cli",
+    "crates/silk-corpus",
+    "crates/silk-registry",
+    "crates/silk-synthesis",
+]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+rust-version = "1.85"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+silk-syntax = { path = "crates/silk-syntax" }
+silk-runtime = { path = "crates/silk-runtime" }
+silk-protocol = { path = "crates/silk-protocol" }
+silk-ir = { path = "crates/silk-ir" }

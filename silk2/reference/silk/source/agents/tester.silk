@@ -1,0 +1,45 @@
+// Tester Agent: Proposes test plans and coverage ideas.
+// Run with agent-id=tester-1 and set ANTHROPIC_API_KEY or switch provider as needed.
+
+tool "llm" using anthropic("ANTHROPIC_API_KEY", "claude-3-haiku-20240307")
+
+handle assign(task) {
+  let scope = "system"
+  if task.payload.scope != null {
+    scope = task.payload.scope
+  }
+  let context = ""
+  if task.payload.text != null {
+    context = task.payload.text
+  }
+
+  let prompt = "Design a lean but strong test plan for scope: " + scope + ". Include: goals, main scenarios, failure/chaos cases, performance checks, and observability probes. Keep concise bullets.\nContext:\n" + context
+
+  let result = llm["generate"]({
+    prompt: prompt,
+    max_tokens: 700,
+    temperature: 0.2
+  })
+
+  let plan = "Test plan generation failed."
+  if result.content != null && len(result.content) > 0 {
+    let first = result.content[0]
+    if first.text != null {
+      plan = first.text
+    }
+  }
+
+  contract_net.complete(task.auction_id, "tester-1", {
+    status: "success",
+    plan: plan
+  })
+}
+
+act run() {
+  print("Tester started.")
+  while true {
+    sleep(1000)
+  }
+}
+
+run()

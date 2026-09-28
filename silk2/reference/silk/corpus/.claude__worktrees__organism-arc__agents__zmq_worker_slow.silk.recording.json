@@ -1,0 +1,84 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/organism-arc/agents/zmq_worker_slow.silk",
+  "source_sha256": "6561e4fd1eca5de4d5c331cff3d12cdf18992f572e0635bb9ac0429d02bb3e1a",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/organism-arc/agents/zmq_worker_slow.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": null,
+    "timed_out": true,
+    "duration_ms": 5004.227
+  },
+  "stdout": "",
+  "output": "SlowWorker started. Listening...\nSlowWorker initialized",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "print",
+      "args": [
+        "SlowWorker started. Listening..."
+      ],
+      "result": null,
+      "duration": 28083
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "print",
+      "args": [
+        "SlowWorker initialized"
+      ],
+      "result": null,
+      "duration": 1250
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1003601000
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1007174500
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1004454708
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 5,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1004623958
+    }
+  ],
+  "trace_sequence_complete": true
+}

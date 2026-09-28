@@ -1,0 +1,205 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "agents/cnp_leader.silk",
+  "source_sha256": "8ca62edc96310a5bb4fa03712c285ff890a1ca48eee2f657a5f78f6a06058b4b",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "agents/cnp_leader.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 42.405
+  },
+  "stdout": "",
+  "output": "registered: ok\nbid: accepted\nwinner: worker-1\nassignment -> worker-1\ncompletion -> ok\n\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "contract_net_on_assignment",
+      "args": [
+        "<function>"
+      ],
+      "result": null,
+      "duration": 6292
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "contract_net_on_complete",
+      "args": [
+        "<function>"
+      ],
+      "result": null,
+      "duration": 666
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "contract_net_register_agent",
+      "args": [
+        "worker-1",
+        {
+          "skills": [
+            "demo"
+          ]
+        }
+      ],
+      "result": {
+        "status": "ok",
+        "agent_id": "worker-1"
+      },
+      "duration": 210959
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "print",
+      "args": [
+        "registered: ok"
+      ],
+      "result": null,
+      "duration": 4625
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "contract_net_announce",
+      "args": [
+        {
+          "topic": "demo.task"
+        },
+        750,
+        {
+          "price_weight": 0.4,
+          "confidence_weight": 0.6
+        }
+      ],
+      "result": {
+        "auction_id": "auc-0",
+        "status": "created",
+        "deadline_ms": 750
+      },
+      "duration": 637917
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 5,
+      "name": "contract_net_submit_bid",
+      "args": [
+        "auc-0",
+        "worker-1",
+        {
+          "notes": "fast-local",
+          "price": 1.2,
+          "confidence": 0.82
+        }
+      ],
+      "result": {
+        "status": "accepted",
+        "bid_count": 1,
+        "confidence": 0.82
+      },
+      "duration": 1915625
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 6,
+      "name": "print",
+      "args": [
+        "bid: accepted"
+      ],
+      "result": null,
+      "duration": 5042
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 7,
+      "name": "contract_net_close",
+      "args": [
+        "auc-0"
+      ],
+      "result": {
+        "bid_count": 1,
+        "authority": "advisory_only",
+        "status": "ok",
+        "score": 0.011999999999999955,
+        "auction_id": "auc-0",
+        "confidence": 0.82,
+        "winner": "worker-1"
+      },
+      "duration": 604708
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 8,
+      "name": "print",
+      "args": [
+        "winner: worker-1"
+      ],
+      "result": null,
+      "duration": 2541
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 10,
+      "name": "print",
+      "args": [
+        "assignment -> worker-1"
+      ],
+      "result": null,
+      "duration": 3375
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 9,
+      "name": "contract_net_assign",
+      "args": [
+        "auc-0",
+        "worker-1",
+        {
+          "task": "demo"
+        }
+      ],
+      "result": {
+        "status": "ok"
+      },
+      "duration": 1257583
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 12,
+      "name": "print",
+      "args": [
+        "completion -> ok"
+      ],
+      "result": null,
+      "duration": 3500
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 11,
+      "name": "contract_net_complete",
+      "args": [
+        "auc-0",
+        "worker-1",
+        {
+          "status": "ok",
+          "task": "demo",
+          "completed_by": "worker-1"
+        }
+      ],
+      "result": {
+        "status": "ok"
+      },
+      "duration": 861125
+    }
+  ],
+  "trace_sequence_complete": true
+}

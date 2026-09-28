@@ -1,0 +1,2857 @@
+{
+  "schema_version": "silk.corpus_shim_classification.v1",
+  "generated_from": "docs/silk2/corpus/MANIFEST.json",
+  "summary": {
+    "total_programs": 200,
+    "stub_sufficient": 116,
+    "host_dependent": 84,
+    "host_dependent_fraction": 0.42,
+    "host_dependent_organism": 81,
+    "host_dependent_organism_fraction": 0.405,
+    "host_dependent_generic_host_only": 3,
+    "host_dependent_by_reason": {
+      "dispatch_timeout": 40,
+      "generic_host_unavailable": 3,
+      "task_input_unbound": 41
+    },
+    "stub_sufficient_using_organism_builtins": 31,
+    "stub_sufficient_no_organism_builtins": 85
+  },
+  "entries": [
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/active_inference_adaptive_routing_organism.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__active_inference_adaptive_routing_organism.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters",
+        "contract_net_complete",
+        "swr_continuity",
+        "swr_pending_delta",
+        "swr_ripple_tag",
+        "swr_safety_counters",
+        "swr_schedule_replay",
+        "swr_trace"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/brain_manager.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__brain_manager.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [
+        "contract_net_announce",
+        "contract_net_assign"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/cnp_leader.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__cnp_leader.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce",
+        "contract_net_assign",
+        "contract_net_close",
+        "contract_net_complete",
+        "contract_net_on_assignment",
+        "contract_net_on_complete",
+        "contract_net_register_agent",
+        "contract_net_submit_bid"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/cnp_worker.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__cnp_worker.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/codegen.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__codegen.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/critic.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__critic.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/designer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__designer.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/episodic_loop_smoke.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__episodic_loop_smoke.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters",
+        "contract_net_complete"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/leader.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__leader.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/manager.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__manager.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_baseline.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_disabled_baseline.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_governance_actor.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_disabled_governance_actor.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_handoff.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_disabled_handoff.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_planner.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_disabled_planner.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_reviewer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_disabled_reviewer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_governance_actor.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_governance_actor.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_handoff.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_handoff.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_planner.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_planner.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_reviewer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_reviewer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/researcher.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__researcher.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/summarizer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__summarizer.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/tester.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__tester.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/zmq_leader.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__zmq_leader.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/zmq_worker.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__zmq_worker.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/zmq_worker_fast.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__zmq_worker_fast.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/zmq_worker_medium.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__zmq_worker_medium.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/zmq_worker_slow.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__zmq_worker_slow.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/active_inference_episodic_substrate.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__active_inference_episodic_substrate.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/active_inference_minimal.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__active_inference_minimal.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/active_inference_semantic_candidate.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__active_inference_semantic_candidate.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_semantic_candidate"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/demo.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__demo.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/mcp_agent.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__mcp_agent.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "__mcp__:c7:get-library-docs"
+      ],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "generic_host",
+      "host_dependent_reasons": [
+        "generic_host_unavailable"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/swr_signal_lane_minimal.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__swr_signal_lane_minimal.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "swr_continuity",
+        "swr_pending_delta",
+        "swr_ripple_tag",
+        "swr_safety_counters",
+        "swr_schedule_replay",
+        "swr_trace"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/001_cross_agent_protected_change/governance.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__001_cross_agent_protected_change__governance.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/001_cross_agent_protected_change/observer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__001_cross_agent_protected_change__observer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/001_cross_agent_protected_change/proposer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__001_cross_agent_protected_change__proposer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/001_cross_agent_protected_change/target.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__001_cross_agent_protected_change__target.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/002_constrained_policy_adaptation/governance.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__002_constrained_policy_adaptation__governance.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/002_constrained_policy_adaptation/observer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__002_constrained_policy_adaptation__observer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/002_constrained_policy_adaptation/proposer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__002_constrained_policy_adaptation__proposer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/002_constrained_policy_adaptation/target.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__002_constrained_policy_adaptation__target.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/test_modules/math.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__test_modules__math.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/test_modules/utils.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__test_modules__utils.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/active_inference_adaptive_routing_organism.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__active_inference_adaptive_routing_organism.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters",
+        "contract_net_complete",
+        "swr_continuity",
+        "swr_pending_delta",
+        "swr_ripple_tag",
+        "swr_safety_counters",
+        "swr_schedule_replay",
+        "swr_trace"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/brain_manager.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__brain_manager.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [
+        "contract_net_announce",
+        "contract_net_assign"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/cnp_leader.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__cnp_leader.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce",
+        "contract_net_assign",
+        "contract_net_close",
+        "contract_net_complete",
+        "contract_net_on_assignment",
+        "contract_net_on_complete",
+        "contract_net_register_agent",
+        "contract_net_submit_bid"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/cnp_worker.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__cnp_worker.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/codegen.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__codegen.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/critic.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__critic.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/designer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__designer.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/episodic_loop_smoke.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__episodic_loop_smoke.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters",
+        "contract_net_complete"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/first_real_usage_researcher.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__first_real_usage_researcher.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [
+        "active_inference_declare_belief",
+        "active_inference_reset"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/leader.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__leader.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/manager.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__manager.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_disabled_baseline.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_disabled_baseline.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_disabled_governance_actor.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_disabled_governance_actor.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_disabled_handoff.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_disabled_handoff.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_disabled_planner.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_disabled_planner.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_disabled_reviewer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_disabled_reviewer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_governance_actor.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_governance_actor.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_handoff.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_handoff.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_planner.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_planner.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_reviewer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_reviewer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/researcher.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__researcher.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/summarizer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__summarizer.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/tester.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__tester.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/zmq_leader.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__zmq_leader.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/zmq_worker.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__zmq_worker.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/zmq_worker_fast.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__zmq_worker_fast.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/zmq_worker_medium.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__zmq_worker_medium.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/zmq_worker_slow.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__zmq_worker_slow.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/active_inference_episodic_substrate.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__active_inference_episodic_substrate.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/active_inference_minimal.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__active_inference_minimal.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/active_inference_semantic_candidate.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__active_inference_semantic_candidate.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_semantic_candidate"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/demo.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__demo.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/mcp_agent.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__mcp_agent.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "__mcp__:c7:get-library-docs"
+      ],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "generic_host",
+      "host_dependent_reasons": [
+        "generic_host_unavailable"
+      ]
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/swr_signal_lane_minimal.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__swr_signal_lane_minimal.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "swr_continuity",
+        "swr_pending_delta",
+        "swr_ripple_tag",
+        "swr_safety_counters",
+        "swr_schedule_replay",
+        "swr_trace"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/001_cross_agent_protected_change/governance.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__001_cross_agent_protected_change__governance.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/001_cross_agent_protected_change/observer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__001_cross_agent_protected_change__observer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/001_cross_agent_protected_change/proposer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__001_cross_agent_protected_change__proposer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/001_cross_agent_protected_change/target.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__001_cross_agent_protected_change__target.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/002_constrained_policy_adaptation/governance.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__002_constrained_policy_adaptation__governance.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/002_constrained_policy_adaptation/observer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__002_constrained_policy_adaptation__observer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/002_constrained_policy_adaptation/proposer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__002_constrained_policy_adaptation__proposer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/002_constrained_policy_adaptation/target.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__002_constrained_policy_adaptation__target.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/test_modules/math.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__test_modules__math.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/test_modules/utils.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__test_modules__utils.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/active_inference_adaptive_routing_organism.silk",
+      "fixture": "corpus/agents__active_inference_adaptive_routing_organism.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters",
+        "contract_net_complete",
+        "swr_continuity",
+        "swr_pending_delta",
+        "swr_ripple_tag",
+        "swr_safety_counters",
+        "swr_schedule_replay",
+        "swr_trace"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/agw_1/b2/set_resolver.silk",
+      "fixture": "corpus/agents__agw_1__b2__set_resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/b2/set_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__b2__set_response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/br1/belief_revision_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__br1__belief_revision_response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/common/ablation_response.silk",
+      "fixture": "corpus/agents__agw_1__common__ablation_response.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/common/direct_control.silk",
+      "fixture": "corpus/agents__agw_1__common__direct_control.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/common/environment_observer.silk",
+      "fixture": "corpus/agents__agw_1__common__environment_observer.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/common/identity_set_resolver.silk",
+      "fixture": "corpus/agents__agw_1__common__identity_set_resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/common/intervention_producer.silk",
+      "fixture": "corpus/agents__agw_1__common__intervention_producer.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/common/stimulus_interpreter.silk",
+      "fixture": "corpus/agents__agw_1__common__stimulus_interpreter.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/common/workspace_probe.silk",
+      "fixture": "corpus/agents__agw_1__common__workspace_probe.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/mk1/candidate_stub.silk",
+      "fixture": "corpus/agents__agw_1__mk1__candidate_stub.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/mk1/consumer_stub.silk",
+      "fixture": "corpus/agents__agw_1__mk1__consumer_stub.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/mk1/response_stub.silk",
+      "fixture": "corpus/agents__agw_1__mk1__response_stub.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/non_oracle_reasoning/set_dual_sign_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__non_oracle_reasoning__set_dual_sign_response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/non_oracle_reasoning/set_reasoning_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__non_oracle_reasoning__set_reasoning_response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/sensitivity/set_aggregator_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__sensitivity__set_aggregator_response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/sensitivity/set_budget_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__sensitivity__set_budget_response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/sensitivity/set_recovery_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__sensitivity__set_recovery_response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/tf1/associator.silk",
+      "fixture": "corpus/agents__agw_1__tf1__associator.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/tf1/property_resolver.silk",
+      "fixture": "corpus/agents__agw_1__tf1__property_resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/tf1/response_actor.silk",
+      "fixture": "corpus/agents__agw_1__tf1__response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/tf1/taxonomy_resolver.silk",
+      "fixture": "corpus/agents__agw_1__tf1__taxonomy_resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/tf2/associator.silk",
+      "fixture": "corpus/agents__agw_1__tf2__associator.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/tf2/attribute_resolver.silk",
+      "fixture": "corpus/agents__agw_1__tf2__attribute_resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/tf2/response_actor.silk",
+      "fixture": "corpus/agents__agw_1__tf2__response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/tf3/candidate_producer.silk",
+      "fixture": "corpus/agents__agw_1__tf3__candidate_producer.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/tf3/resolver.silk",
+      "fixture": "corpus/agents__agw_1__tf3__resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/agw_1/tf3/response_actor.silk",
+      "fixture": "corpus/agents__agw_1__tf3__response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/brain_manager.silk",
+      "fixture": "corpus/agents__brain_manager.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [
+        "contract_net_announce",
+        "contract_net_assign"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/cnp_leader.silk",
+      "fixture": "corpus/agents__cnp_leader.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce",
+        "contract_net_assign",
+        "contract_net_close",
+        "contract_net_complete",
+        "contract_net_on_assignment",
+        "contract_net_on_complete",
+        "contract_net_register_agent",
+        "contract_net_submit_bid"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/cnp_worker.silk",
+      "fixture": "corpus/agents__cnp_worker.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/codegen.silk",
+      "fixture": "corpus/agents__codegen.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/critic.silk",
+      "fixture": "corpus/agents__critic.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/designer.silk",
+      "fixture": "corpus/agents__designer.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/episodic_loop_smoke.silk",
+      "fixture": "corpus/agents__episodic_loop_smoke.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters",
+        "contract_net_complete"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/jl_1/associator.silk",
+      "fixture": "corpus/agents__jl_1__associator.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/jl_1/property_resolver.silk",
+      "fixture": "corpus/agents__jl_1__property_resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/jl_1/response_actor.silk",
+      "fixture": "corpus/agents__jl_1__response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/jl_1/secondary_resolver.silk",
+      "fixture": "corpus/agents__jl_1__secondary_resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/leader.silk",
+      "fixture": "corpus/agents__leader.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/manager.silk",
+      "fixture": "corpus/agents__manager.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/mb_1/memory_evidence_associator.silk",
+      "fixture": "corpus/agents__mb_1__memory_evidence_associator.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/mc_1/memory_associator.silk",
+      "fixture": "corpus/agents__mc_1__memory_associator.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/mc_1/memory_disabled_associator.silk",
+      "fixture": "corpus/agents__mc_1__memory_disabled_associator.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/mc_1/memory_property_resolver.silk",
+      "fixture": "corpus/agents__mc_1__memory_property_resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/mc_1/memory_secondary_resolver.silk",
+      "fixture": "corpus/agents__mc_1__memory_secondary_resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "agents/memory_disabled_baseline.silk",
+      "fixture": "corpus/agents__memory_disabled_baseline.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/memory_disabled_governance_actor.silk",
+      "fixture": "corpus/agents__memory_disabled_governance_actor.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/memory_disabled_handoff.silk",
+      "fixture": "corpus/agents__memory_disabled_handoff.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/memory_disabled_planner.silk",
+      "fixture": "corpus/agents__memory_disabled_planner.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/memory_disabled_reviewer.silk",
+      "fixture": "corpus/agents__memory_disabled_reviewer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/memory_governance_actor.silk",
+      "fixture": "corpus/agents__memory_governance_actor.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/memory_handoff.silk",
+      "fixture": "corpus/agents__memory_handoff.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/memory_planner.silk",
+      "fixture": "corpus/agents__memory_planner.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/memory_reviewer.silk",
+      "fixture": "corpus/agents__memory_reviewer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "memory_query"
+      ],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/adaptive_router.silk",
+      "fixture": "corpus/agents__organism__adaptive_router.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_declare_belief",
+        "active_inference_reset"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/author_create.silk",
+      "fixture": "corpus/agents__organism__author_create.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/author_patch.silk",
+      "fixture": "corpus/agents__organism__author_patch.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/cnp_coordinator.silk",
+      "fixture": "corpus/agents__organism__cnp_coordinator.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/cnp_worker_fast.silk",
+      "fixture": "corpus/agents__organism__cnp_worker_fast.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/cnp_worker_slow.silk",
+      "fixture": "corpus/agents__organism__cnp_worker_slow.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/keystone_worker.silk",
+      "fixture": "corpus/agents__organism__keystone_worker.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/load_flood.silk",
+      "fixture": "corpus/agents__organism__load_flood.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/reasoning_coordinator.silk",
+      "fixture": "corpus/agents__organism__reasoning_coordinator.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/reasoning_keystone.silk",
+      "fixture": "corpus/agents__organism__reasoning_keystone.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/route_worker_cheap.silk",
+      "fixture": "corpus/agents__organism__route_worker_cheap.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/route_worker_fast.silk",
+      "fixture": "corpus/agents__organism__route_worker_fast.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/route_worker_steady.silk",
+      "fixture": "corpus/agents__organism__route_worker_steady.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/sim_memory.silk",
+      "fixture": "corpus/agents__organism__sim_memory.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/sim_seeder.silk",
+      "fixture": "corpus/agents__organism__sim_seeder.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_complete"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/sim_worker.silk",
+      "fixture": "corpus/agents__organism__sim_worker.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/task_capability.silk",
+      "fixture": "corpus/agents__organism__task_capability.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/task_counter.silk",
+      "fixture": "corpus/agents__organism__task_counter.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/organism/worker_seed.silk",
+      "fixture": "corpus/agents__organism__worker_seed.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "agents/researcher.silk",
+      "fixture": "corpus/agents__researcher.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/summarizer.silk",
+      "fixture": "corpus/agents__summarizer.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/tester.silk",
+      "fixture": "corpus/agents__tester.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/zmq_leader.silk",
+      "fixture": "corpus/agents__zmq_leader.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/zmq_worker.silk",
+      "fixture": "corpus/agents__zmq_worker.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/zmq_worker_fast.silk",
+      "fixture": "corpus/agents__zmq_worker_fast.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/zmq_worker_medium.silk",
+      "fixture": "corpus/agents__zmq_worker_medium.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "agents/zmq_worker_slow.silk",
+      "fixture": "corpus/agents__zmq_worker_slow.silk.recording.json",
+      "exit_code": null,
+      "timed_out": true,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "dispatch_timeout"
+      ]
+    },
+    {
+      "program": "examples/active_inference_episodic_substrate.silk",
+      "fixture": "corpus/examples__active_inference_episodic_substrate.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "examples/active_inference_minimal.silk",
+      "fixture": "corpus/examples__active_inference_minimal.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_apply_learn_update",
+        "active_inference_compute_prediction_error",
+        "active_inference_declare_belief",
+        "active_inference_inspect",
+        "active_inference_learn_contract",
+        "active_inference_record_observation",
+        "active_inference_record_prediction",
+        "active_inference_reset",
+        "active_inference_safety_counters"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "examples/active_inference_semantic_candidate.silk",
+      "fixture": "corpus/examples__active_inference_semantic_candidate.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "active_inference_semantic_candidate"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "examples/demo.silk",
+      "fixture": "corpus/examples__demo.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "examples/mcp_agent.silk",
+      "fixture": "corpus/examples__mcp_agent.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [
+        "__mcp__:c7:get-library-docs"
+      ],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "generic_host",
+      "host_dependent_reasons": [
+        "generic_host_unavailable"
+      ]
+    },
+    {
+      "program": "examples/swr_signal_lane_minimal.silk",
+      "fixture": "corpus/examples__swr_signal_lane_minimal.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "swr_continuity",
+        "swr_pending_delta",
+        "swr_ripple_tag",
+        "swr_safety_counters",
+        "swr_schedule_replay",
+        "swr_trace"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "examples/workspace_consumer.silk",
+      "fixture": "corpus/examples__workspace_consumer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "examples/workspace_producer.silk",
+      "fixture": "corpus/examples__workspace_producer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "experiments/001_cross_agent_protected_change/governance.silk",
+      "fixture": "corpus/experiments__001_cross_agent_protected_change__governance.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "experiments/001_cross_agent_protected_change/observer.silk",
+      "fixture": "corpus/experiments__001_cross_agent_protected_change__observer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "experiments/001_cross_agent_protected_change/proposer.silk",
+      "fixture": "corpus/experiments__001_cross_agent_protected_change__proposer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "experiments/001_cross_agent_protected_change/target.silk",
+      "fixture": "corpus/experiments__001_cross_agent_protected_change__target.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "experiments/002_constrained_policy_adaptation/governance.silk",
+      "fixture": "corpus/experiments__002_constrained_policy_adaptation__governance.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "experiments/002_constrained_policy_adaptation/observer.silk",
+      "fixture": "corpus/experiments__002_constrained_policy_adaptation__observer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "experiments/002_constrained_policy_adaptation/proposer.silk",
+      "fixture": "corpus/experiments__002_constrained_policy_adaptation__proposer.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [
+        "contract_net_announce"
+      ],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "experiments/002_constrained_policy_adaptation/target.silk",
+      "fixture": "corpus/experiments__002_constrained_policy_adaptation__target.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "packets/agw_1/tf3/public_candidate_producer.silk",
+      "fixture": "corpus/packets__agw_1__tf3__public_candidate_producer.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "packets/agw_1/tf3/public_set_consumer.silk",
+      "fixture": "corpus/packets__agw_1__tf3__public_set_consumer.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "packets/agw_1/tf3/public_set_resolver.silk",
+      "fixture": "corpus/packets__agw_1__tf3__public_set_resolver.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "packets/agw_1/tf3/public_set_response_actor.silk",
+      "fixture": "corpus/packets__agw_1__tf3__public_set_response_actor.silk.recording.json",
+      "exit_code": 1,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": false,
+      "host_dependent": true,
+      "host_dependent_class": "organism",
+      "host_dependent_reasons": [
+        "task_input_unbound"
+      ]
+    },
+    {
+      "program": "runs/organism/long_horizon_loop/agent_final.silk",
+      "fixture": "corpus/runs__organism__long_horizon_loop__agent_final.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "runs/organism/long_horizon_loop/agent_v1.silk",
+      "fixture": "corpus/runs__organism__long_horizon_loop__agent_v1.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "runs/organism/self_recursive_loop_llm/author_llm.silk",
+      "fixture": "corpus/runs__organism__self_recursive_loop_llm__author_llm.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "runs/organism/self_recursive_loop_llm_escalate/author_llm.silk",
+      "fixture": "corpus/runs__organism__self_recursive_loop_llm_escalate__author_llm.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "runs/organism/self_recursive_loop_llm_theatre/author_llm.silk",
+      "fixture": "corpus/runs__organism__self_recursive_loop_llm_theatre__author_llm.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "test_modules/math.silk",
+      "fixture": "corpus/test_modules__math.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "test_modules/self_recursive_create_escalate.silk",
+      "fixture": "corpus/test_modules__self_recursive_create_escalate.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "test_modules/self_recursive_escalate.silk",
+      "fixture": "corpus/test_modules__self_recursive_escalate.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "test_modules/self_recursive_theatre.silk",
+      "fixture": "corpus/test_modules__self_recursive_theatre.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    },
+    {
+      "program": "test_modules/utils.silk",
+      "fixture": "corpus/test_modules__utils.silk.recording.json",
+      "exit_code": 0,
+      "timed_out": false,
+      "organism_builtins_used": [],
+      "generic_host_builtins_used": [],
+      "completed_clean": true,
+      "host_dependent": false,
+      "host_dependent_class": null,
+      "host_dependent_reasons": []
+    }
+  ]
+}

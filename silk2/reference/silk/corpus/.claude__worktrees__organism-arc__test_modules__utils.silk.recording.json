@@ -1,0 +1,23 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/organism-arc/test_modules/utils.silk",
+  "source_sha256": "07d9accce22489798148327630cb052c7715283faaf87ca075d7e62dc95926d0",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/organism-arc/test_modules/utils.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 13.889
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [],
+  "trace_sequence_complete": true
+}

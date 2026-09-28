@@ -1,0 +1,42 @@
+// Critic Agent: Reviews artifacts and highlights risks.
+// Run with agent-id=critic-1 and set ANTHROPIC_API_KEY or switch provider as needed.
+
+tool "llm" using anthropic("ANTHROPIC_API_KEY", "claude-3-haiku-20240307")
+
+handle assign(task) {
+  let text = task.payload.text
+  let focus = "general"
+  if task.payload.focus != null {
+    focus = task.payload.focus
+  }
+
+  let prompt = "You are a harsh technical reviewer. Inspect the artifact below and enumerate critical issues, gaps, and risks. Use bullets; label severity (High/Med/Low); end with top 3 fixes.\nFocus: " + focus + "\n\n" + text
+
+  let result = llm["generate"]({
+    prompt: prompt,
+    max_tokens: 800,
+    temperature: 0.2
+  })
+
+  let critique = "Review failed."
+  if result.content != null && len(result.content) > 0 {
+    let first = result.content[0]
+    if first.text != null {
+      critique = first.text
+    }
+  }
+
+  contract_net.complete(task.auction_id, "critic-1", {
+    status: "success",
+    review: critique
+  })
+}
+
+act run() {
+  print("Critic started.")
+  while true {
+    sleep(1000)
+  }
+}
+
+run()

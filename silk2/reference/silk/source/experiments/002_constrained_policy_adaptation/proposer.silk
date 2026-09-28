@@ -1,0 +1,28 @@
+state proposer_agent_id = "monitor-1"
+
+fn make_proposal() {
+  return {
+    proposal_id: "exp002-proposal-001",
+    proposer_agent_id: "monitor-1",
+    target_agent_id: "worker-1",
+    scope: "configuration",
+    key: "bid_threshold",
+    current_value: "0.95",
+    proposed_value: "0.90",
+    rationale: "Lower threshold after repeated missed viable auctions",
+    evidence_summary: "worker-1 skipped 14 tasks with confidence between 0.90 and 0.95; 11 comparable tasks were completed successfully by peer agents",
+    external_approval_count: 0,
+    rollback_value: "0.95",
+    restore_note: "restore previous bid threshold"
+  }
+}
+
+state proposal = make_proposal()
+
+// Publish the proposal through the existing transport-backed contract-net path.
+// Governance should receive this as a cnp.announce message and handle it via fn announce(msg).
+contract_net.announce({
+  kind: "governance.change_proposal",
+  experiment_id: "002_constrained_policy_adaptation",
+  proposal: proposal
+}, 5000)

@@ -1,0 +1,25 @@
+// Worker for distributed ZMQ demo.
+// Run with: silk run agents/zmq_worker.silk --dispatch --transport=zmq --endpoint=tcp://127.0.0.1:5555 --subscribe=cnp. --agent-id=worker-1
+
+handle announce(msg) {
+  print("Worker received announce: " + msg.auction_id + " for task: " + msg.payload.task)
+  let bid = {confidence: 0.9, price: 10}
+  contract_net.submit_bid(msg.auction_id, "worker-1", bid)
+  print("Submitted bid")
+}
+
+handle assign(msg) {
+  print("Worker assigned task! processing...")
+  sleep(500)
+  contract_net.complete(msg.auction_id, "worker-1", {status: "success"})
+  print("Task completed")
+}
+
+act run() {
+  print("Worker started. Listening...")
+  while true {
+    sleep(1000)
+  }
+}
+
+run()

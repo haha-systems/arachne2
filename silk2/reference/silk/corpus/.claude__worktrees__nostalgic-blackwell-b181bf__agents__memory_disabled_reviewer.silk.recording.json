@@ -1,0 +1,23 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_reviewer.silk",
+  "source_sha256": "bf5afe26d6be5071306b8f99de793ef53c33327fc8f4d55d299095bc81665f70",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_reviewer.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 20.738
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [],
+  "trace_sequence_complete": true
+}

@@ -1,0 +1,82 @@
+// Researcher Agent: Finds documentation using Context7.
+// Run with agent-id=researcher-1
+
+tool "c7" using mcp("python3 test_modules/mock_mcp_server.py", stdio)
+
+handle assign(task) {
+  print("Researcher assigned: " + task.payload.query)
+  
+  // 1. Resolve Library ID
+  print("Resolving library ID for: " + task.payload.query)
+  let res = c7["resolve-library-id"]({libraryName: task.payload.query})
+  
+  if res == null || res.content == null {
+    print("Failed to resolve library.")
+    contract_net.complete(task.auction_id, "researcher-1", {status: "error", message: "resolve-library-id failed"})
+    return {status: "error", message: "resolve-library-id failed"}
+  }
+  
+  let text = res.content[0].text
+  let lines = strings.split(text, "\n")
+  let lib_id = ""
+  
+  for line in lines {
+    if strings.contains(line, "- Context7-compatible library ID: ") {
+      // Extract ID. Line format: "- Context7-compatible library ID: /org/repo"
+      // We can split by ": "
+      let parts = strings.split(line, ": ")
+      if len(parts) > 1 {
+        lib_id = parts[1]
+        // Break after finding the first one (usually the most relevant)
+        break
+      }
+    }
+  }
+  
+  if lib_id == "" {
+    print("No library ID found in response.")
+    contract_net.complete(task.auction_id, "researcher-1", {status: "error", message: "Library ID not found"})
+    return {status: "error", message: "Library ID not found"}
+  }
+  
+  print("Found Library ID: " + lib_id)
+  
+  // 2. Fetch Documentation
+  print("Fetching documentation...")
+  let docs = c7["get-library-docs"]({
+    context7CompatibleLibraryID: lib_id,
+    topic: "release notes",
+    mode: "code"
+  })
+  
+  if docs == null || docs.content == null {
+     contract_net.complete(task.auction_id, "researcher-1", {status: "error", message: "get-library-docs failed"})
+     return {status: "error", message: "get-library-docs failed"}
+  }
+  
+  let doc_text = docs.content[0].text
+  print("Fetched " + len(doc_text) + " bytes of documentation.")
+  
+  // Return result to manager
+  contract_net.complete(task.auction_id, "researcher-1", {
+    status: "success",
+    docs: doc_text,
+    source: lib_id
+  })
+}
+
+handle announce(msg) {
+  print("Researcher saw announce: " + msg.auction_id)
+  // Bid to ensure Manager assigns to us (Manager assigns to 'researcher-1' anyway, but good practice)
+  contract_net.submit_bid(msg.auction_id, "researcher-1", {confidence: 1.0})
+}
+
+act run() {
+  print("Researcher started.")
+  while true {
+    sleep(1000)
+    // print("Researcher active...")
+  }
+}
+
+run()

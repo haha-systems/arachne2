@@ -1,0 +1,119 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "agents/organism/adaptive_router.silk",
+  "source_sha256": "169d2da342802abb383d488aae08bee0a5cc312454a13cc744eb0cdeb61e3e69",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "agents/organism/adaptive_router.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 20.09
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "active_inference_reset",
+      "args": [],
+      "result": null,
+      "duration": 194208
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "active_inference_declare_belief",
+      "args": [
+        {
+          "scope": "routing",
+          "timestamp_ms": 1,
+          "owner": "silk-active-inference-organism",
+          "belief_id": "belief-worker-fast-reliable",
+          "confidence": 0.75,
+          "provenance": "agents/organism/adaptive_router.silk#prior-fast",
+          "claim": "fast worker usually completes routing tasks quickly and accurately"
+        }
+      ],
+      "result": {
+        "scope": "routing",
+        "last_updated_ms": 1,
+        "prior_confidence": 0.75,
+        "owner": "silk-active-inference-organism",
+        "confidence": 0.75,
+        "belief_id": "belief-worker-fast-reliable",
+        "provenance": "agents/organism/adaptive_router.silk#prior-fast",
+        "update_count": 0,
+        "promotion_status": "episodic",
+        "claim": "fast worker usually completes routing tasks quickly and accurately"
+      },
+      "duration": 553459
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "active_inference_declare_belief",
+      "args": [
+        {
+          "scope": "routing",
+          "timestamp_ms": 1,
+          "owner": "silk-active-inference-organism",
+          "belief_id": "belief-worker-steady-reliable",
+          "confidence": 0.65,
+          "provenance": "agents/organism/adaptive_router.silk#prior-steady",
+          "claim": "steady worker is slower but robust across shifts"
+        }
+      ],
+      "result": {
+        "scope": "routing",
+        "last_updated_ms": 1,
+        "prior_confidence": 0.65,
+        "owner": "silk-active-inference-organism",
+        "confidence": 0.65,
+        "belief_id": "belief-worker-steady-reliable",
+        "provenance": "agents/organism/adaptive_router.silk#prior-steady",
+        "update_count": 0,
+        "promotion_status": "episodic",
+        "claim": "steady worker is slower but robust across shifts"
+      },
+      "duration": 484084
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "active_inference_declare_belief",
+      "args": [
+        {
+          "scope": "routing",
+          "timestamp_ms": 1,
+          "owner": "silk-active-inference-organism",
+          "belief_id": "belief-worker-cheap-reliable",
+          "confidence": 0.45,
+          "provenance": "agents/organism/adaptive_router.silk#prior-cheap",
+          "claim": "cheap worker is available but quality is uncertain"
+        }
+      ],
+      "result": {
+        "scope": "routing",
+        "last_updated_ms": 1,
+        "prior_confidence": 0.45,
+        "owner": "silk-active-inference-organism",
+        "confidence": 0.45,
+        "belief_id": "belief-worker-cheap-reliable",
+        "provenance": "agents/organism/adaptive_router.silk#prior-cheap",
+        "update_count": 0,
+        "promotion_status": "episodic",
+        "claim": "cheap worker is available but quality is uncertain"
+      },
+      "duration": 532958
+    }
+  ],
+  "trace_sequence_complete": true
+}

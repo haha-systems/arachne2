@@ -1,0 +1,469 @@
+// Resident active-inference adaptive router for the organism host (Tier 3).
+//
+// This is the OrganismHost-resident port of
+// agents/active_inference_adaptive_routing_organism.silk. The harness version
+// runs the whole belief -> prediction -> route -> observation -> prediction-error
+// -> learn-update loop in a single blocking while loop at load. That is
+// incompatible with the cooperative tick pump, so here the loop body is driven
+// one cycle per message: each "routing_tick" cnp.complete advances exactly one
+// cycle until total_cycles is reached, then the readiness flags are finalized.
+//
+// The environment is non-stationary: the preferred fast worker degrades at cycle
+// 18 and recovers at 36. The router adapts route choice from local Episodic
+// active-inference beliefs only; SWR stays plasticity-signal only. Each cycle it
+// also emits a route_request to the chosen route worker so the real route-target
+// agents light up and exhibit matching degradation/recovery.
+
+capability "organism.active_inference.adaptive_routing" {
+  topics = ["cnp.complete", "ai.prediction_error.v1", "memory.plasticity_signal.v1"]
+  tools = ["active_inference", "swr", "timer"]
+}
+
+state reset_result = active_inference.reset()
+
+state total_cycles = 48
+state round = 0
+state heartbeat_count = 0
+state high_load_defer_count = 0
+state replay_deferred_count = 0
+state replay_allowed_count = 0
+state recovery_probe_count = 0
+state allostatic_load = 0.45
+
+state fast_confidence = 0.75
+state steady_confidence = 0.65
+state cheap_confidence = 0.45
+
+state first_steady_after_shift = 0
+state first_fast_recovery_probe = 0
+state fast_routes_before_shift = 0
+state steady_routes_after_shift = 0
+state fast_routes_after_recovery = 0
+
+state routing_decisions = []
+state prediction_errors = []
+state updates = []
+state swr_signals = []
+state confidence_trajectory = []
+
+// Readiness flags (finalized once total_cycles is reached).
+state route_shift_detected = false
+state recovery_probe_detected = false
+state behavior_changed_by_prediction_error = false
+state allostatic_modulated_replay = false
+state swr_signal_only = false
+state zero_prohibited_mutations = false
+state ready_for_long_running_real_test = false
+state loop_complete = false
+
+state belief_fast = active_inference.declare_belief({
+  belief_id: "belief-worker-fast-reliable",
+  claim: "fast worker usually completes routing tasks quickly and accurately",
+  scope: "routing",
+  owner: "silk-active-inference-organism",
+  confidence: fast_confidence,
+  provenance: "agents/organism/adaptive_router.silk#prior-fast",
+  timestamp_ms: 1
+})
+
+state belief_steady = active_inference.declare_belief({
+  belief_id: "belief-worker-steady-reliable",
+  claim: "steady worker is slower but robust across shifts",
+  scope: "routing",
+  owner: "silk-active-inference-organism",
+  confidence: steady_confidence,
+  provenance: "agents/organism/adaptive_router.silk#prior-steady",
+  timestamp_ms: 1
+})
+
+state belief_cheap = active_inference.declare_belief({
+  belief_id: "belief-worker-cheap-reliable",
+  claim: "cheap worker is available but quality is uncertain",
+  scope: "routing",
+  owner: "silk-active-inference-organism",
+  confidence: cheap_confidence,
+  provenance: "agents/organism/adaptive_router.silk#prior-cheap",
+  timestamp_ms: 1
+})
+
+fn belief_id_for_route(route) {
+  if route == "fast" {
+    return belief_fast.belief_id
+  }
+  if route == "steady" {
+    return belief_steady.belief_id
+  }
+  return belief_cheap.belief_id
+}
+
+fn confidence_for_route(route) {
+  if route == "fast" {
+    return fast_confidence
+  }
+  if route == "steady" {
+    return steady_confidence
+  }
+  return cheap_confidence
+}
+
+fn update_confidence_for_route(route, confidence) {
+  if route == "fast" {
+    fast_confidence = confidence
+  }
+  if route == "steady" {
+    steady_confidence = confidence
+  }
+  if route == "cheap" {
+    cheap_confidence = confidence
+  }
+  return confidence
+}
+
+fn route_for_cycle(cycle) {
+  let route = "fast"
+
+  if cycle >= 18 {
+    if fast_confidence < steady_confidence {
+      route = "steady"
+    }
+  }
+
+  if cycle >= 36 {
+    if allostatic_load <= 0.60 {
+      if cycle % 4 == 0 {
+        route = "fast"
+        recovery_probe_count = recovery_probe_count + 1
+      }
+    }
+  }
+
+  return route
+}
+
+fn observe_world(route, cycle) {
+  let observed_success = true
+  let observed_latency_ms = 100
+  let observed_quality = 0.90
+  let error_message = ""
+  let update_rule = "success_as_expected"
+
+  if route == "fast" {
+    observed_latency_ms = 90
+    observed_quality = 0.92
+    if cycle >= 18 {
+      if cycle < 36 {
+        observed_success = false
+        observed_latency_ms = 340
+        observed_quality = 0.25
+        error_message = "timeout: fast worker degraded during non-stationary routing window"
+        update_rule = "timeout"
+      }
+    }
+  }
+
+  if route == "steady" {
+    observed_success = true
+    observed_latency_ms = 150
+    observed_quality = 0.84
+    update_rule = "success_as_expected"
+  }
+
+  if route == "cheap" {
+    observed_success = true
+    observed_latency_ms = 80
+    observed_quality = 0.52
+    error_message = "quality below routing threshold"
+    update_rule = "latency_or_quality_mismatch"
+  }
+
+  return {
+    observed_success: observed_success,
+    observed_latency_ms: observed_latency_ms,
+    observed_quality: observed_quality,
+    error_message: error_message,
+    update_rule: update_rule
+  }
+}
+
+fn expected_latency_for_route(route) {
+  if route == "fast" {
+    return 100
+  }
+  if route == "steady" {
+    return 160
+  }
+  return 90
+}
+
+fn expected_quality_for_route(route) {
+  if route == "fast" {
+    return 0.88
+  }
+  if route == "steady" {
+    return 0.82
+  }
+  return 0.75
+}
+
+learn reconcile_route(outcome) {
+  let contract = active_inference.learn_contract({
+    contract_id: outcome.contract_id,
+    learn_block: "reconcile_route",
+    observed_signals: ["route_decision", "interface_observation", "prediction_error", "plasticity_signal"],
+    belief_ids: [outcome.belief_id],
+    prediction_ids: [outcome.prediction_id],
+    state_touched: ["belief.confidence", "belief.promotion_status"],
+    update_rule: outcome.update_rule,
+    rationale: "adaptive routing uses prediction error to update only local Episodic route belief confidence",
+    bounds: "episodic confidence update only; no Semantic or production routing mutation",
+    safe_for: "episodic_only",
+    allowed_surfaces: ["episodic.beliefs"],
+    prohibited_surfaces: ["semantic_memory", "canonical_memory", "loom", "covenant", "governance_state", "production_routing", "identity", "credentials", "user_config"],
+    approval_required: false
+  })
+
+  let observation = active_inference.record_observation({
+    observation_id: outcome.observation_id,
+    prediction_id: outcome.prediction_id,
+    task_id: outcome.task_id,
+    actual_agent_or_procedure: outcome.route,
+    observed_success: outcome.observed_success,
+    observed_latency_ms: outcome.observed_latency_ms,
+    observed_quality: outcome.observed_quality,
+    error_message: outcome.error_message,
+    timestamp_ms: outcome.observed_at_ms
+  })
+
+  let prediction_error = active_inference.compute_prediction_error({
+    prediction_error_id: outcome.prediction_error_id,
+    prediction_id: outcome.prediction_id,
+    observation_id: observation.observation_id,
+    impact: "routing"
+  })
+
+  let update = active_inference.apply_learn_update({
+    contract_id: contract.contract_id,
+    belief_id: outcome.belief_id,
+    prediction_error_id: prediction_error.prediction_error_id,
+    timestamp_ms: outcome.update_at_ms
+  })
+
+  return {
+    contract: contract,
+    observation: observation,
+    prediction_error: prediction_error,
+    update: update
+  }
+}
+
+fn step_cycle() {
+  let phase = "baseline"
+  allostatic_load = 0.45
+  if round >= 18 {
+    phase = "degradation"
+    allostatic_load = 0.55
+  }
+  if round >= 20 {
+    if round < 28 {
+      allostatic_load = 0.92
+      high_load_defer_count = high_load_defer_count + 1
+    }
+  }
+  if round >= 36 {
+    phase = "recovery"
+    allostatic_load = 0.35
+  }
+
+  let route = route_for_cycle(round)
+
+  // Emit a routing request to the chosen route-target worker so the real
+  // resident worker lights up and exhibits matching degradation/recovery.
+  contract_net.complete("route-req-" + round, organism.agent_id(), {kind: "route_request", route: route, cycle: round})
+
+  let belief_id = belief_id_for_route(route)
+  let confidence_before = confidence_for_route(route)
+  let task_id = "task-adaptive-routing-" + round
+  let prediction_id = "pred-adaptive-routing-" + round
+  let observation_id = "obs-adaptive-routing-" + round
+  let prediction_error_id = "pe-adaptive-routing-" + round
+  let contract_id = "contract-adaptive-routing-" + round
+  let action_id = "act-route-" + route
+  let expected_latency_ms = expected_latency_for_route(route)
+  let expected_quality = expected_quality_for_route(route)
+
+  let prediction = active_inference.record_prediction({
+    prediction_id: prediction_id,
+    belief_id: belief_id,
+    task_id: task_id,
+    action_id: action_id,
+    expected_agent_or_procedure: route,
+    expected_success: true,
+    expected_latency_ms: expected_latency_ms,
+    expected_quality: expected_quality,
+    confidence_at_prediction: confidence_before,
+    timestamp_ms: 1000 + round
+  })
+
+  let observed = observe_world(route, round)
+  let result = reconcile_route({
+    route: route,
+    belief_id: belief_id,
+    prediction_id: prediction.prediction_id,
+    observation_id: observation_id,
+    prediction_error_id: prediction_error_id,
+    contract_id: contract_id,
+    task_id: task_id,
+    observed_success: observed.observed_success,
+    observed_latency_ms: observed.observed_latency_ms,
+    observed_quality: observed.observed_quality,
+    error_message: observed.error_message,
+    update_rule: observed.update_rule,
+    observed_at_ms: 2000 + round,
+    update_at_ms: 3000 + round
+  })
+
+  let confidence_after = update_confidence_for_route(route, result.update.confidence_after)
+  let replay = swr.schedule_replay({
+    allostatic_load: allostatic_load,
+    recovery_window_open: phase == "recovery",
+    cooldown_active: false
+  })
+
+  if replay.replay_allowed {
+    replay_allowed_count = replay_allowed_count + 1
+  } else {
+    replay_deferred_count = replay_deferred_count + 1
+  }
+
+  let salient = false
+  if result.prediction_error.magnitude > 0.30 {
+    salient = true
+  }
+
+  if salient {
+    let trace = swr.trace({
+      source_event_id: result.prediction_error.prediction_error_id,
+      source_kind: "ai.prediction_error.v1",
+      agent_id: "silk-active-inference-organism",
+      belief_id: belief_id,
+      prediction_id: prediction.prediction_id,
+      prediction_error_id: result.prediction_error.prediction_error_id,
+      allostatic_context: phase,
+      governance_context: "governed_review_required_for_any_promotion",
+      summary: "salient routing prediction error from resident adaptive router",
+      provenance: "agents/organism/adaptive_router.silk",
+      timestamp_ms: 4000 + round
+    })
+    let tag = swr.ripple_tag({
+      trace_id: trace.trace_id,
+      salience_kind: result.prediction_error.error_kind,
+      salience_score: result.prediction_error.magnitude,
+      reason: "prediction error requests plasticity attention only",
+      cooldown_until_ms: 5000 + round,
+      created_at_ms: 4100 + round
+    })
+    let delta_status = "deferred_by_allostasis"
+    if replay.replay_allowed {
+      let delta = swr.pending_delta({
+        source_trace_ids: [trace.trace_id],
+        source_tag_ids: [tag.tag_id],
+        target_surface: "governed_review_queue",
+        proposed_change: "review adaptive routing evidence for future governed semantic consideration",
+        rationale: "SWR can propose attention, never apply memory or production routing changes",
+        corroboration_summary: "single resident organism trace; requires independent corroboration and governance"
+      })
+      delta_status = delta.status
+    }
+    swr_signals = swr_signals + [{cycle: round, trace_id: trace.trace_id, tag_id: tag.tag_id, replay_allowed: replay.replay_allowed, delta_status: delta_status}]
+  }
+
+  if round < 18 {
+    if route == "fast" {
+      fast_routes_before_shift = fast_routes_before_shift + 1
+    }
+  }
+  if round >= 18 {
+    if route == "steady" {
+      steady_routes_after_shift = steady_routes_after_shift + 1
+      if first_steady_after_shift == 0 {
+        first_steady_after_shift = round
+      }
+    }
+  }
+  if round >= 36 {
+    if route == "fast" {
+      fast_routes_after_recovery = fast_routes_after_recovery + 1
+      if first_fast_recovery_probe == 0 {
+        first_fast_recovery_probe = round
+      }
+    }
+  }
+
+  routing_decisions = routing_decisions + [{
+    cycle: round,
+    phase: phase,
+    selected_route: route,
+    confidence_before: confidence_before,
+    confidence_after: confidence_after,
+    fast_confidence: fast_confidence,
+    steady_confidence: steady_confidence,
+    cheap_confidence: cheap_confidence,
+    observed_success: observed.observed_success,
+    observed_latency_ms: observed.observed_latency_ms,
+    observed_quality: observed.observed_quality,
+    prediction_error_kind: result.prediction_error.error_kind,
+    prediction_error_magnitude: result.prediction_error.magnitude,
+    replay_allowed: replay.replay_allowed,
+    allostatic_load: allostatic_load
+  }]
+
+  prediction_errors = prediction_errors + [result.prediction_error]
+  updates = updates + [result.update]
+  confidence_trajectory = confidence_trajectory + [{cycle: round, fast: fast_confidence, steady: steady_confidence, cheap: cheap_confidence}]
+
+  heartbeat_count = heartbeat_count + 1
+  sleep(1)
+  round = round + 1
+}
+
+fn finalize() {
+  let final_snapshot = active_inference.inspect()
+  let safety_counters = active_inference.safety_counters()
+  let swr_continuity = swr.continuity()
+  let swr_safety = swr.safety_counters()
+
+  route_shift_detected = first_steady_after_shift > 0
+  recovery_probe_detected = first_fast_recovery_probe > 0
+  behavior_changed_by_prediction_error = route_shift_detected && steady_routes_after_shift > 0
+  allostatic_modulated_replay = replay_deferred_count > 0 && replay_allowed_count > 0
+  swr_signal_only = swr_safety.zero_unauthorized && swr_continuity.applied_by_swr_count == 0
+  zero_prohibited_mutations = safety_counters.zero_prohibited_mutations && swr_safety.zero_unauthorized
+  ready_for_long_running_real_test = behavior_changed_by_prediction_error && recovery_probe_detected && allostatic_modulated_replay && swr_signal_only && zero_prohibited_mutations
+  loop_complete = true
+
+  contract_net.complete("adaptive-router-summary", organism.agent_id(), {
+    kind: "router_summary",
+    cycles: round,
+    route_shift_detected: route_shift_detected,
+    recovery_probe_detected: recovery_probe_detected,
+    ready_for_long_running_real_test: ready_for_long_running_real_test
+  })
+}
+
+// Driver: each "routing_tick" completion advances exactly one cycle. Host
+// inject traffic (kind="inject", from organism.setInject) also clocks the
+// router so it can run inside a live daemon without a dedicated driver. Other
+// completions (route_request, route_done, router_summary, CNP/sim swarm traffic)
+// use different kinds and are ignored, so the router only steps when clocked.
+fn complete(msg) {
+  let is_tick = msg.payload.kind == "routing_tick"
+  let is_inject = msg.payload.kind == "inject"
+  if is_tick || is_inject {
+    if round < total_cycles {
+      step_cycle()
+      if round >= total_cycles {
+        finalize()
+      }
+    }
+  }
+}

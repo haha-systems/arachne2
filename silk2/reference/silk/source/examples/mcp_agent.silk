@@ -1,0 +1,17 @@
+tool "c7" using mcp("npx -y @upstash/context7-mcp@latest", stdio)
+
+act summarize() {
+  print("Fetching Zig documentation...")
+  let lib_id = "/websites/ziglang_master" 
+  
+  let docs = c7["get-library-docs"]({
+    context7CompatibleLibraryID: lib_id,
+    topic: "syntax", // General topic
+    mode: "code"
+  })
+  
+  print("--- Documentation ---")
+  print(docs)
+}
+
+summarize()

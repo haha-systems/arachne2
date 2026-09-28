@@ -1,0 +1,314 @@
+// Import some leader specific helpers from the Webber agent framework
+// import "webber/leader"
+
+capability "auction.leader" {
+  topics   = ["auction.management"]
+  latency  <= 2000ms
+  quality  >= 0.9
+  tools    = ["zmq", "timer"]
+}
+
+// A map to hold a registry of registered worker agents
+state registry = {}
+
+// A map to hold a record of completed auctions
+state auctions = {}
+
+state next_auction_id = 0
+
+// Initialize the leader agent
+handle initialize(ctx) {
+  zmq.log("info", "INIT", {agent_id: ctx.agent_id, role: ctx.role})
+
+  // Wait for workers to connect and register
+  sleep(2000)
+
+  // Test claims with varying difficulties for UCB1 learning
+  let test_claims = [
+    "Bitcoin supply cap is 21 million",
+    "The sky is blue",
+    "Water boils at 100 degrees Celsius",
+    "Python is a programming language",
+    "The Earth is flat"
+  ]
+
+  // Run multiple auction rounds for UCB1 learning validation
+  let total_rounds = 15
+  let round = 0
+
+  zmq.log("info", "MULTI_ROUND_START", {total_rounds: total_rounds, claims: len(test_claims)})
+
+  while round < total_rounds {
+    let claim_index = round % len(test_claims)
+    let claim = test_claims[claim_index]
+
+    zmq.log("info", "ROUND_START", {round: round, claim: claim})
+
+    let stimulus = {claim: claim}
+    run_auction(stimulus)
+
+    // Wait for complete auction cycle (bid, assignment, result, judge, reward)
+    sleep(3000)
+
+    round = round + 1
+  }
+
+  zmq.log("info", "MULTI_ROUND_COMPLETE", {total_rounds: total_rounds})
+
+  return "initialized"
+}
+
+// Handle incoming REGISTER messages
+handle register(env) {
+  let sender_id = env.sender_id
+  let capabilities = env.payload.capabilities
+
+  // Store agent in registry
+  registry[sender_id] = {
+    last_seen: now(),
+    capabilities: capabilities
+  }
+
+  zmq.log("in", "REGISTER", env)
+
+  // Send confirmation back
+  let confirm = {
+    kind: "REGISTER_CONFIRM",
+    msg_id: generate_id(),
+    corr_id: env.msg_id,
+    sender_id: "silk-leader-1",
+    target_id: sender_id,
+    ts: now(),
+    payload: {
+      status: "registered",
+      capabilities: capabilities
+    }
+  }
+
+  zmq.send(sender_id, confirm)
+  zmq.log("out", "REGISTER_CONFIRM", confirm)
+
+  return "registered"
+}
+
+// Handle incoming HEARTBEAT messages
+handle heartbeat(env) {
+  let sender_id = env.sender_id
+
+  if registry[sender_id] != null {
+    registry[sender_id].last_seen = now()
+  }
+
+  return "heartbeat"
+}
+
+// Handle incoming BID messages
+handle bid(env) {
+  let auction_id = env.auction_id
+  let sender_id = env.sender_id
+
+  zmq.log("in", "BID", env)
+
+  if auctions[auction_id] != null {
+    let auction = auctions[auction_id]
+    zmq.log("info", "BEFORE_BID_STORE", {auction_id: auction_id, bid_count: len(auction.bids)})
+    let updated_bids = auction.bids + [env]
+    zmq.log("info", "AFTER_BID_APPEND", {auction_id: auction_id, bid_count: len(updated_bids)})
+    auctions[auction_id] = {
+      stimulus: auction.stimulus,
+      deadline: auction.deadline,
+      bids: updated_bids
+    }
+    zmq.log("info", "BID_STORED", {auction_id: auction_id, sender: sender_id})
+  }
+
+  return "bid_received"
+}
+
+// Handle incoming RESULT messages
+handle result(env) {
+  zmq.log("in", "RESULT", env)
+
+  // Get original claim from auction state
+  let auction = auctions[env.auction_id]
+  let claim = auction.stimulus.claim
+
+  // Forward to judge for scoring - construct payload from env fields
+  let judge_msg = {
+    kind: "RESULT",
+    msg_id: generate_id(),
+    sender_id: "silk-leader-1",
+    ts: now(),
+    auction_id: env.auction_id,
+    payload: {
+      claim: claim,
+      verdict: env.verdict,
+      reasoning: env.reasoning,
+      strategy: env.strategy,
+      worker_id: env.sender_id
+    }
+  }
+
+  zmq.publish("judge.score", judge_msg)
+  zmq.log("out", "JUDGE_REQUEST", judge_msg)
+
+  return "forwarded_to_judge"
+}
+
+// Run an auction
+act run_auction(stimulus: Stimulus) {
+  let auction_id = "auc-" + next_auction_id
+  next_auction_id = next_auction_id + 1
+
+  let deadline = now() + 1500
+
+  // Initialize auction state
+  auctions[auction_id] = {
+    stimulus: stimulus,
+    deadline: deadline,
+    bids: []
+  }
+
+  // Publish stimulus
+  let stimulus_msg = {
+    kind: "STIMULUS",
+    msg_id: generate_id(),
+    sender_id: "silk-leader-1",
+    ts: now(),
+    auction_id: auction_id,
+    payload: stimulus,
+    extras: {deadline: deadline}
+  }
+
+  zmq.publish("claims.verify", stimulus_msg)
+  zmq.log("out", "STIMULUS", stimulus_msg)
+
+  // Wait for bids to arrive (deadline-based collection)
+  sleep(1500)  // Wait 1500ms for bids
+
+  zmq.log("info", "SELECTING_WINNER", {auction_id: auction_id})
+
+  // Select winner from collected bids
+  let winner_result = select_winner(auction_id)
+  let winner = winner_result.value
+
+  zmq.log("info", "WINNER_SELECTED", {auction_id: auction_id, winner: winner})
+
+  if winner != "" && winner != null {
+    send_assignment(winner, stimulus, auction_id)
+  }
+
+  return auction_id
+}
+
+// Helper function to select a winner
+fn select_winner(auction_id) {
+  let auction = auctions[auction_id]
+  zmq.log("info", "SELECT_WINNER_AUCTION", {auction_id: auction_id, found: auction != null})
+  if auction == null {
+    return Result.ok("")
+  }
+
+  let bids = auction.bids
+  zmq.log("info", "SELECT_WINNER_BIDS", {auction_id: auction_id, bid_count: len(bids)})
+  if len(bids) == 0 {
+    return Result.ok("")
+  }
+
+  // Find bid with highest confidence
+  let best_bid = null
+  let best_confidence = 0.0
+
+  for bid in bids {
+    let conf = bid.confidence
+    let comparison_result = conf > best_confidence
+    zmq.log("info", "CHECKING_BID", {sender: bid.sender_id, confidence: conf, best_conf: best_confidence, is_greater: comparison_result})
+    if comparison_result {
+      zmq.log("info", "UPDATING_BEST", {new_best: bid.sender_id, new_conf: conf})
+      best_confidence = conf
+      best_bid = bid
+    }
+  }
+
+  zmq.log("info", "BEST_BID_FOUND", {best_bid_null: best_bid == null, best_confidence: best_confidence})
+
+  if best_bid == null {
+    zmq.log("info", "NO_WINNER", {reason: "best_bid_is_null"})
+    return Result.ok("")
+  }
+
+  let winner_id = best_bid.sender_id
+  zmq.log("info", "RETURNING_WINNER", {winner: winner_id})
+  return winner_id
+}
+
+// Helper function for sending assignments
+act send_assignment(winner, task, auction_id) {
+  let assignment = {
+    kind: "ASSIGNMENT",
+    msg_id: "msg-" + now(),
+    corr_id: "corr-" + now(),
+    sender_id: "silk-leader-1",
+    target_id: winner,
+    ts: now(),
+    auction_id: auction_id,
+    payload: {task: task}
+  }
+
+  zmq.send(winner, assignment)
+  zmq.log("out", "ASSIGNMENT", assignment)
+
+  return "sent"
+}
+
+// Handle incoming JUDGE_RESULT messages and send rewards
+handle judge_result(env) -> string {
+  zmq.log("in", "JUDGE_RESULT", env)
+
+  let auction_id = env.auction_id
+  let score = env.payload.score
+  let correct = env.payload.correct
+  let feedback = env.payload.feedback
+
+  // Get winner from auction state
+  let auction = auctions[auction_id]
+  if auction == null {
+    zmq.log("info", "AUCTION_NOT_FOUND", {auction_id: auction_id})
+    return Result.ok("auction_not_found")
+  }
+
+  // Find the winner from bids (highest confidence)
+  let winner_result = select_winner(auction_id)
+  let worker_id = winner_result.value
+
+  if worker_id == "" || worker_id == null {
+    zmq.log("info", "NO_WINNER_FOUND", {auction_id: auction_id})
+    return Result.ok("no_winner")
+  }
+
+  // Calculate reward based on score (base reward * score)
+  let base_reward = 10.0
+  let reward_amount = base_reward * score
+
+  // Send REWARD message to worker
+  let reward_msg = {
+    kind: "REWARD",
+    msg_id: generate_id(),
+    corr_id: env.corr_id,
+    sender_id: "silk-leader-1",
+    target_id: worker_id,
+    ts: now(),
+    auction_id: auction_id,
+    payload: {
+      amount: reward_amount,
+      score: score,
+      correct: correct,
+      feedback: feedback
+    }
+  }
+
+  zmq.send(worker_id, reward_msg)
+  zmq.log("out", "REWARD", reward_msg)
+
+  return "reward_sent"
+}

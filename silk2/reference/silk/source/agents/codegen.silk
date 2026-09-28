@@ -1,0 +1,46 @@
+// Codegen Agent: Produces code stubs and module scaffolds.
+// Run with agent-id=coder-1 and set ANTHROPIC_API_KEY or switch provider as needed.
+
+tool "llm" using anthropic("ANTHROPIC_API_KEY", "claude-3-haiku-20240307")
+
+handle assign(task) {
+  let module = "module"
+  if task.payload.module != null {
+    module = task.payload.module
+  }
+  let context = ""
+  if task.payload.text != null {
+    context = task.payload.text
+  }
+
+  let prompt = "Generate concise code stubs for " + module + ". Keep it minimal and strongly typed. Include comments sparingly for intent only. Provide code blocks. Context:\n\n" + context
+
+  let result = llm["generate"]({
+    prompt: prompt,
+    max_tokens: 800,
+    temperature: 0.25
+  })
+
+  let code = "Codegen failed."
+  if result.content != null && len(result.content) > 0 {
+    let first = result.content[0]
+    if first.text != null {
+      code = first.text
+    }
+  }
+
+  contract_net.complete(task.auction_id, "coder-1", {
+    status: "success",
+    module: module,
+    code: code
+  })
+}
+
+act run() {
+  print("Codegen started.")
+  while true {
+    sleep(1000)
+  }
+}
+
+run()

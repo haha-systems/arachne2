@@ -1,0 +1,9 @@
+// Memory-disabled handoff baseline for the live cluster memory probe.
+// Executes the handoff-uncertainty assignment without memory.query access.
+
+capability "memory.disabled.handoff" {
+  topics = ["memory.baseline.handoff"]
+  tools = []
+}
+
+state result = "memory disabled baseline: handoff agent has no memory.query binding for the handoff-uncertainty-vs-false-completeness assignment, so it emits a generic completion handoff and cannot name memory-supported open sections; local fixture evidence only; not proof of consciousness/personhood/sentience"

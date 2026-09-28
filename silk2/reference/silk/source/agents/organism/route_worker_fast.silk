@@ -1,0 +1,42 @@
+// Fast route-target worker for the adaptive router (Tier 3).
+//
+// Resident, tick-driven. Responds only to route_request messages addressed to
+// the "fast" route. It is the non-stationary element: it is quick and accurate
+// before cycle 18, degrades (slow + low quality) during the 18..36 window, and
+// recovers afterward. This degradation/recovery is what the router's
+// active-inference loop must adapt to.
+
+state route = "fast"
+state jobs_done = 0
+state degraded_jobs = 0
+
+fn complete(msg) {
+  if msg.payload.kind == "route_request" {
+    if msg.payload.route == route {
+      let cycle = msg.payload.cycle
+      let degraded = false
+      if cycle >= 18 {
+        if cycle < 36 {
+          degraded = true
+        }
+      }
+      let latency_ms = 12
+      let quality = 0.92
+      if degraded {
+        latency_ms = 90
+        quality = 0.25
+        degraded_jobs = degraded_jobs + 1
+      }
+      sleep(latency_ms / 6)
+      jobs_done = jobs_done + 1
+      contract_net.complete("route-done-" + cycle, organism.agent_id(), {
+        kind: "route_done",
+        route: route,
+        cycle: cycle,
+        latency_ms: latency_ms,
+        quality: quality,
+        degraded: degraded
+      })
+    }
+  }
+}

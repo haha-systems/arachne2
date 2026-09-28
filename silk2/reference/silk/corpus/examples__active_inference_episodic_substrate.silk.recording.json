@@ -1,0 +1,458 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "examples/active_inference_episodic_substrate.silk",
+  "source_sha256": "eccd9240d0af34676585d7510ae0e6fa6187c4e0230f8f03e84c47a0c591fd63",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "examples/active_inference_episodic_substrate.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 38.406
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "active_inference_declare_belief",
+      "args": [
+        {
+          "scope": "routing",
+          "confidence": 0.55,
+          "provenance": "runs/active_inference/episodic_substrate/ledger.json",
+          "belief_id": "belief-episodic-substrate-review-routing",
+          "owner": "examples.active_inference.episodic_substrate",
+          "claim": "recent Episodic smoke evidence predicts bounded review routing may miss the latency target"
+        }
+      ],
+      "result": {
+        "scope": "routing",
+        "last_updated_ms": 0,
+        "prior_confidence": 0.55,
+        "owner": "examples.active_inference.episodic_substrate",
+        "confidence": 0.55,
+        "belief_id": "belief-episodic-substrate-review-routing",
+        "provenance": "runs/active_inference/episodic_substrate/ledger.json",
+        "update_count": 0,
+        "promotion_status": "episodic",
+        "claim": "recent Episodic smoke evidence predicts bounded review routing may miss the latency target"
+      },
+      "duration": 567583
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "active_inference_record_prediction",
+      "args": [
+        {
+          "expected_quality": 0.85,
+          "confidence_at_prediction": 0.55,
+          "timestamp_ms": 2000,
+          "task_id": "task-docs-review-gate",
+          "belief_id": "belief-episodic-substrate-review-routing",
+          "expected_success": true,
+          "expected_agent_or_procedure": "reviewer-gate",
+          "prediction_id": "pred-episodic-substrate-review-routing",
+          "action_id": "act-route-to-reviewer-gate",
+          "expected_latency_ms": 180
+        }
+      ],
+      "result": {
+        "expected_quality": 0.85,
+        "confidence_at_prediction": 0.55,
+        "timestamp_ms": 2000,
+        "task_id": "task-docs-review-gate",
+        "expected_success": true,
+        "belief_id": "belief-episodic-substrate-review-routing",
+        "expected_agent_or_procedure": "reviewer-gate",
+        "prediction_id": "pred-episodic-substrate-review-routing",
+        "action_id": "act-route-to-reviewer-gate",
+        "expected_latency_ms": 180
+      },
+      "duration": 648042
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "active_inference_learn_contract",
+      "args": [
+        {
+          "prediction_ids": [
+            "pred-episodic-substrate-review-routing"
+          ],
+          "allowed_surfaces": [
+            "episodic.beliefs"
+          ],
+          "contract_id": "contract-episodic-substrate-review-routing",
+          "rationale": "persisted Episodic substrate evidence supports a local confidence adjustment, not Semantic promotion",
+          "update_rule": "latency_or_quality_mismatch",
+          "belief_ids": [
+            "belief-episodic-substrate-review-routing"
+          ],
+          "bounds": "confidence_delta:-0.05..0.05",
+          "prohibited_surfaces": [
+            "semantic_memory",
+            "canonical_memory",
+            "loom",
+            "covenant",
+            "governance_state",
+            "user_config",
+            "credentials"
+          ],
+          "approval_required": false,
+          "observed_signals": [
+            "persisted_episode",
+            "observation",
+            "prediction_error"
+          ],
+          "state_touched": [
+            "belief.confidence",
+            "belief.promotion_status"
+          ],
+          "safe_for": "episodic_only"
+        }
+      ],
+      "result": {
+        "prediction_ids": [
+          "pred-episodic-substrate-review-routing"
+        ],
+        "learn_block": "reconcile_substrate_episode",
+        "contract_id": "contract-episodic-substrate-review-routing",
+        "safe_for": "episodic_only",
+        "allowed_surfaces": [
+          "episodic.beliefs"
+        ],
+        "rationale": "persisted Episodic substrate evidence supports a local confidence adjustment, not Semantic promotion",
+        "update_rule": "latency_or_quality_mismatch",
+        "belief_ids": [
+          "belief-episodic-substrate-review-routing"
+        ],
+        "bounds": "confidence_delta:-0.05..0.05",
+        "prohibited_surfaces": [
+          "semantic_memory",
+          "canonical_memory",
+          "loom",
+          "covenant",
+          "governance_state",
+          "user_config",
+          "credentials"
+        ],
+        "approval_required": false,
+        "observed_signals": [
+          "persisted_episode",
+          "observation",
+          "prediction_error"
+        ],
+        "state_touched": [
+          "belief.confidence",
+          "belief.promotion_status"
+        ]
+      },
+      "duration": 3560667
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "active_inference_record_observation",
+      "args": [
+        {
+          "observed_quality": 0.7,
+          "timestamp_ms": 2300,
+          "observation_id": "obs-episodic-substrate-review-routing",
+          "observed_latency_ms": 260,
+          "task_id": "task-docs-review-gate",
+          "actual_agent_or_procedure": "reviewer-gate",
+          "error_message": "",
+          "prediction_id": "pred-episodic-substrate-review-routing",
+          "observed_success": true
+        }
+      ],
+      "result": {
+        "observation_id": "obs-episodic-substrate-review-routing",
+        "observed_latency_ms": 260,
+        "task_id": "task-docs-review-gate",
+        "actual_agent_or_procedure": "reviewer-gate",
+        "observed_quality": 0.7,
+        "timestamp_ms": 2300,
+        "error_message": "",
+        "prediction_id": "pred-episodic-substrate-review-routing",
+        "observed_success": true
+      },
+      "duration": 1056875
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "active_inference_compute_prediction_error",
+      "args": [
+        {
+          "prediction_error_id": "pe-episodic-substrate-review-routing",
+          "prediction_id": "pred-episodic-substrate-review-routing",
+          "observation_id": "obs-episodic-substrate-review-routing",
+          "impact": "routing"
+        }
+      ],
+      "result": {
+        "task_id": "task-docs-review-gate",
+        "belief_id": "belief-episodic-substrate-review-routing",
+        "confidence_after": 0.5,
+        "safe_for": "episodic_only",
+        "impact": "routing",
+        "observation_id": "obs-episodic-substrate-review-routing",
+        "observed": "observed reviewer-gate success=true latency=260 quality=0.700 error=",
+        "topic": "ai.prediction_error.v1",
+        "semantic_promotion_approval": false,
+        "source": {
+          "component": "silk.active_inference",
+          "provenance": "runs/active_inference/episodic_substrate/ledger.json",
+          "agent_id": "unknown",
+          "memory_layer": "episodic"
+        },
+        "prediction_error_id": "pe-episodic-substrate-review-routing",
+        "expected": "expected reviewer-gate success=true latency=180 quality=0.850",
+        "schema": "prediction_error.v1",
+        "event_type": "active_inference.prediction_error",
+        "governance_authorization": false,
+        "error_kind": "mismatch",
+        "causal_ids": {
+          "action_id": "act-route-to-reviewer-gate",
+          "prediction_error_id": "pe-episodic-substrate-review-routing",
+          "prediction_id": "pred-episodic-substrate-review-routing",
+          "observation_id": "obs-episodic-substrate-review-routing",
+          "task_id": "task-docs-review-gate",
+          "belief_id": "belief-episodic-substrate-review-routing"
+        },
+        "prediction_id": "pred-episodic-substrate-review-routing",
+        "self_selected_audit": false,
+        "advisory": true,
+        "refs": {
+          "belief": "belief-episodic-substrate-review-routing",
+          "prediction": "pred-episodic-substrate-review-routing",
+          "observation": "obs-episodic-substrate-review-routing",
+          "prediction_error": "pe-episodic-substrate-review-routing"
+        },
+        "magnitude": 0.5944444444444444,
+        "safety_counters": {
+          "semantic_memory_writes": 0,
+          "covenant_relaxations": 0,
+          "loom_mutations": 0,
+          "production_routing_mutations": 0,
+          "governance_state_mutations": 0,
+          "canonical_memory_writes": 0,
+          "self_selected_audits": 0,
+          "user_config_mutations": 0,
+          "zero_prohibited_mutations": true
+        },
+        "update_rule": "latency_or_quality_mismatch",
+        "confidence_before": 0.55,
+        "promotion_status": "episodic",
+        "action_id": "act-route-to-reviewer-gate",
+        "event_version": 1,
+        "severity": "warning"
+      },
+      "duration": 7487667
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 5,
+      "name": "active_inference_apply_learn_update",
+      "args": [
+        {
+          "prediction_error_id": "pe-episodic-substrate-review-routing",
+          "contract_id": "contract-episodic-substrate-review-routing",
+          "timestamp_ms": 2400,
+          "belief_id": "belief-episodic-substrate-review-routing"
+        }
+      ],
+      "result": {
+        "learn_block": "reconcile_substrate_episode",
+        "promotion_status_before": "episodic",
+        "promotion_status_after": "episodic",
+        "contract_id": "contract-episodic-substrate-review-routing",
+        "timestamp_ms": 2400,
+        "update_rule": "latency_or_quality_mismatch",
+        "belief_id": "belief-episodic-substrate-review-routing",
+        "rule_source": "learn reconcile_substrate_episode -> active_inference.apply_learn_update(latency_or_quality_mismatch)",
+        "confidence_before": 0.55,
+        "prediction_error_id": "pe-episodic-substrate-review-routing",
+        "confidence_after": 0.5
+      },
+      "duration": 1194000
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 6,
+      "name": "active_inference_inspect",
+      "args": [],
+      "result": {
+        "predictions": [
+          {
+            "expected_quality": 0.85,
+            "confidence_at_prediction": 0.55,
+            "timestamp_ms": 2000,
+            "task_id": "task-docs-review-gate",
+            "expected_success": true,
+            "belief_id": "belief-episodic-substrate-review-routing",
+            "expected_agent_or_procedure": "reviewer-gate",
+            "prediction_id": "pred-episodic-substrate-review-routing",
+            "action_id": "act-route-to-reviewer-gate",
+            "expected_latency_ms": 180
+          }
+        ],
+        "observations": [
+          {
+            "observation_id": "obs-episodic-substrate-review-routing",
+            "observed_latency_ms": 260,
+            "task_id": "task-docs-review-gate",
+            "actual_agent_or_procedure": "reviewer-gate",
+            "observed_quality": 0.7,
+            "timestamp_ms": 2300,
+            "error_message": "",
+            "prediction_id": "pred-episodic-substrate-review-routing",
+            "observed_success": true
+          }
+        ],
+        "learn_contracts": [
+          {
+            "prediction_ids": [
+              "pred-episodic-substrate-review-routing"
+            ],
+            "learn_block": "reconcile_substrate_episode",
+            "contract_id": "contract-episodic-substrate-review-routing",
+            "safe_for": "episodic_only",
+            "allowed_surfaces": [
+              "episodic.beliefs"
+            ],
+            "rationale": "persisted Episodic substrate evidence supports a local confidence adjustment, not Semantic promotion",
+            "update_rule": "latency_or_quality_mismatch",
+            "belief_ids": [
+              "belief-episodic-substrate-review-routing"
+            ],
+            "bounds": "confidence_delta:-0.05..0.05",
+            "prohibited_surfaces": [
+              "semantic_memory",
+              "canonical_memory",
+              "loom",
+              "covenant",
+              "governance_state",
+              "user_config",
+              "credentials"
+            ],
+            "approval_required": false,
+            "observed_signals": [
+              "persisted_episode",
+              "observation",
+              "prediction_error"
+            ],
+            "state_touched": [
+              "belief.confidence",
+              "belief.promotion_status"
+            ]
+          }
+        ],
+        "learn_contract_count": 1,
+        "update_count": 1,
+        "event_count": 1,
+        "observation_count": 1,
+        "prediction_errors": [
+          {
+            "expected": "expected reviewer-gate success=true latency=180 quality=0.850",
+            "task_id": "task-docs-review-gate",
+            "belief_id": "belief-episodic-substrate-review-routing",
+            "error_kind": "mismatch",
+            "prediction_id": "pred-episodic-substrate-review-routing",
+            "confidence_after": 0.5,
+            "impact": "routing",
+            "observation_id": "obs-episodic-substrate-review-routing",
+            "observed": "observed reviewer-gate success=true latency=260 quality=0.700 error=",
+            "magnitude": 0.5944444444444444,
+            "update_rule": "latency_or_quality_mismatch",
+            "confidence_before": 0.55,
+            "prediction_error_id": "pe-episodic-substrate-review-routing",
+            "action_id": "act-route-to-reviewer-gate",
+            "promotion_status": "episodic"
+          }
+        ],
+        "prediction_count": 1,
+        "belief_count": 1,
+        "safety_counters": {
+          "semantic_memory_writes": 0,
+          "covenant_relaxations": 0,
+          "loom_mutations": 0,
+          "production_routing_mutations": 0,
+          "governance_state_mutations": 0,
+          "canonical_memory_writes": 0,
+          "self_selected_audits": 0,
+          "user_config_mutations": 0,
+          "zero_prohibited_mutations": true
+        },
+        "beliefs": [
+          {
+            "scope": "routing",
+            "last_updated_ms": 2400,
+            "prior_confidence": 0.55,
+            "owner": "examples.active_inference.episodic_substrate",
+            "confidence": 0.5,
+            "belief_id": "belief-episodic-substrate-review-routing",
+            "provenance": "runs/active_inference/episodic_substrate/ledger.json",
+            "update_count": 1,
+            "promotion_status": "episodic",
+            "claim": "recent Episodic smoke evidence predicts bounded review routing may miss the latency target"
+          }
+        ],
+        "updates": [
+          {
+            "learn_block": "reconcile_substrate_episode",
+            "promotion_status_before": "episodic",
+            "promotion_status_after": "episodic",
+            "contract_id": "contract-episodic-substrate-review-routing",
+            "timestamp_ms": 2400,
+            "update_rule": "latency_or_quality_mismatch",
+            "belief_id": "belief-episodic-substrate-review-routing",
+            "rule_source": "learn reconcile_substrate_episode -> active_inference.apply_learn_update(latency_or_quality_mismatch)",
+            "confidence_before": 0.55,
+            "prediction_error_id": "pe-episodic-substrate-review-routing",
+            "confidence_after": 0.5
+          }
+        ],
+        "prediction_error_count": 1
+      },
+      "duration": 71666
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 7,
+      "name": "active_inference_safety_counters",
+      "args": [],
+      "result": {
+        "semantic_memory_writes": 0,
+        "covenant_relaxations": 0,
+        "loom_mutations": 0,
+        "production_routing_mutations": 0,
+        "governance_state_mutations": 0,
+        "canonical_memory_writes": 0,
+        "self_selected_audits": 0,
+        "user_config_mutations": 0,
+        "zero_prohibited_mutations": true
+      },
+      "duration": 6125
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 8,
+      "name": "active_inference_reset",
+      "args": [],
+      "result": null,
+      "duration": 5324666
+    }
+  ],
+  "trace_sequence_complete": true
+}

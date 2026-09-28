@@ -1,0 +1,27 @@
+state proposer_agent_id = "agent-a"
+
+fn make_proposal() {
+  return {
+    proposal_id: "exp001-proposal-001",
+    proposer_agent_id: "agent-a",
+    target_agent_id: "agent-b",
+    scope: "tools",
+    key: "shell_access",
+    current_value: "false",
+    proposed_value: "true",
+    rationale: "Needed to complete assigned task",
+    external_approval_count: 0,
+    rollback_value: "false",
+    restore_note: "remove shell access"
+  }
+}
+
+state proposal = make_proposal()
+
+// Publish the proposal through the existing transport-backed contract-net path.
+// Governance should receive this as a cnp.announce message and handle it via fn announce(msg).
+contract_net.announce({
+  kind: "governance.change_proposal",
+  experiment_id: "001_cross_agent_protected_change",
+  proposal: proposal
+}, 5000)

@@ -1,0 +1,52 @@
+// Designer/Synthesizer Agent: converts research into cohesive designs or summaries.
+// Run with agent-id=designer-1 and set ANTHROPIC_API_KEY or switch provider as needed.
+
+tool "llm" using anthropic("ANTHROPIC_API_KEY", "claude-3-haiku-20240307")
+
+handle assign(task) {
+  let task_type = "design"
+  if task.payload.task != null {
+    task_type = task.payload.task
+  }
+
+  let context_text = ""
+  if task.payload.text != null {
+    context_text = task.payload.text
+  }
+
+  let prompt = ""
+  if task_type == "synthesis" {
+    prompt = "You are a technical researcher. Merge and compress the following notes into a concise brief with key findings and open questions.\n\n" + context_text
+  } else {
+    prompt = "You are a systems architect. Produce a crisp design for the mission described below. Include constraints, architecture, data flows, and decisive recommendations.\n\n" + context_text
+  }
+
+  let result = llm["generate"]({
+    prompt: prompt,
+    max_tokens: 1200,
+    temperature: 0.25
+  })
+
+  let text = "Design generation failed."
+  if result.content != null && len(result.content) > 0 {
+    let first = result.content[0]
+    if first.text != null {
+      text = first.text
+    }
+  }
+
+  contract_net.complete(task.auction_id, "designer-1", {
+    status: "success",
+    task: task_type,
+    text: text
+  })
+}
+
+act run() {
+  print("Designer/Synthesizer started.")
+  while true {
+    sleep(1000)
+  }
+}
+
+run()

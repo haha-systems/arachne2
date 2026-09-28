@@ -1,0 +1,36 @@
+// Demo file for Silk REPL features
+// Load this file with :load examples/demo.silk
+
+state counter = 0
+
+fn increment() {
+    counter = counter + 1
+    return counter
+}
+
+fn fibonacci(n) {
+    if n <= 1 {
+        return n
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+fn greet_user(name) {
+    return "Welcome to Silk, " + name + "!"
+}
+
+// Example data structures
+state user_data = {
+    name: "Alice",
+    age: 30,
+    active: true,
+    tags: ["developer", "silk-user"]
+}
+
+fn get_user_info() {
+    return {
+        display_name: user_data.name,
+        is_active: user_data.active,
+        tag_count: user_data.tags.len()
+    }
+}

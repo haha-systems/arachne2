@@ -1,0 +1,175 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "agents/brain_manager.silk",
+  "source_sha256": "a4ad6f3ab03a1f1d1f717e702746ade51a48a9348e9df87838b809c9975b643f",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "agents/brain_manager.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": null,
+    "timed_out": true,
+    "duration_ms": 5003.176
+  },
+  "stdout": "",
+  "output": "Brain Manager starting mission: Design a scalable, low-latency distributed cache with eviction and consistency plan",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "args",
+      "args": [],
+      "result": [],
+      "duration": 3375
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "len",
+      "args": [
+        []
+      ],
+      "result": 0,
+      "duration": 1583
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "print",
+      "args": [
+        "Brain Manager starting mission: Design a scalable, low-latency distributed cache with eviction and consistency plan"
+      ],
+      "result": null,
+      "duration": 3208
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "sleep",
+      "args": [
+        2000
+      ],
+      "result": null,
+      "duration": 2009745708
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "contract_net_announce",
+      "args": [
+        {
+          "task": "research",
+          "topic": "architecture",
+          "mission": "Design a scalable, low-latency distributed cache with eviction and consistency plan"
+        },
+        10000
+      ],
+      "result": {
+        "auction_id": "auc-0",
+        "status": "created",
+        "deadline_ms": 10000
+      },
+      "duration": 1174208
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 5,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1007965709
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 6,
+      "name": "contract_net_assign",
+      "args": [
+        "auc-0",
+        "researcher-1",
+        {
+          "auction_id": "auc-0",
+          "topic": "architecture",
+          "query": "Design a scalable, low-latency distributed cache with eviction and consistency plan - architecture"
+        }
+      ],
+      "result": {
+        "status": "ok"
+      },
+      "duration": 2180583
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 7,
+      "name": "contract_net_announce",
+      "args": [
+        {
+          "task": "research",
+          "topic": "consistency",
+          "mission": "Design a scalable, low-latency distributed cache with eviction and consistency plan"
+        },
+        10000
+      ],
+      "result": {
+        "auction_id": "auc-1",
+        "status": "created",
+        "deadline_ms": 10000
+      },
+      "duration": 1025042
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 8,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1005471417
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 9,
+      "name": "contract_net_assign",
+      "args": [
+        "auc-1",
+        "researcher-1",
+        {
+          "auction_id": "auc-1",
+          "topic": "consistency",
+          "query": "Design a scalable, low-latency distributed cache with eviction and consistency plan - consistency"
+        }
+      ],
+      "result": {
+        "status": "ok"
+      },
+      "duration": 1702250
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 10,
+      "name": "contract_net_announce",
+      "args": [
+        {
+          "task": "research",
+          "topic": "eviction",
+          "mission": "Design a scalable, low-latency distributed cache with eviction and consistency plan"
+        },
+        10000
+      ],
+      "result": {
+        "auction_id": "auc-2",
+        "status": "created",
+        "deadline_ms": 10000
+      },
+      "duration": 926958
+    }
+  ],
+  "trace_sequence_complete": true
+}

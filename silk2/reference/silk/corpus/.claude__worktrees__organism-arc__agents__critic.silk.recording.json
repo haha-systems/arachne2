@@ -1,0 +1,74 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/organism-arc/agents/critic.silk",
+  "source_sha256": "5204dabfd88e2834c02be24d4e188a911e0b3b74d43cb76b310d421ffef490c2",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/organism-arc/agents/critic.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": null,
+    "timed_out": true,
+    "duration_ms": 5005.526
+  },
+  "stdout": "",
+  "output": "Critic started.",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "print",
+      "args": [
+        "Critic started."
+      ],
+      "result": null,
+      "duration": 58458
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1000037792
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1005374125
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1008868375
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1011557209
+    }
+  ],
+  "trace_sequence_complete": true
+}

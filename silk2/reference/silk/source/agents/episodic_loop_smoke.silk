@@ -1,0 +1,183 @@
+// Minimal live active-inference loop smoke for PRD_SILK_LEARN_BLOCKS_ACTIVE_INFERENCE_SURFACE.
+// The learn block declares inspectable update contracts before it observes
+// repeated outcomes, computes prediction errors, and applies bounded Episodic updates.
+
+capability "episodic.active_inference.smoke" {
+  topics = ["ai.prediction_error.v1"]
+  tools = ["active_inference"]
+}
+
+active_inference.reset()
+
+state belief = active_inference.declare_belief({
+  belief_id: "belief-episodic-smoke",
+  claim: "smoke-agent expects bounded review to finish successfully",
+  scope: "routing",
+  owner: "smoke-agent",
+  confidence: 0.60,
+  provenance: "agents/episodic_loop_smoke.silk"
+})
+
+state prediction_timeout = active_inference.record_prediction({
+  prediction_id: "pred-episodic-smoke-timeout",
+  belief_id: belief.belief_id,
+  task_id: "task-episodic-smoke-timeout",
+  action_id: "act-bounded-review-timeout",
+  expected_agent_or_procedure: "smoke-agent",
+  expected_success: true,
+  expected_latency_ms: 100,
+  expected_quality: 0.8,
+  confidence_at_prediction: belief.confidence,
+  timestamp_ms: 1000
+})
+
+learn reconcile_smoke(outcome) {
+  let contract = active_inference.learn_contract({
+    contract_id: outcome.contract_id,
+    observed_signals: ["observation", "prediction_error"],
+    belief_ids: [belief.belief_id],
+    prediction_ids: [outcome.prediction_id],
+    state_touched: ["belief.confidence", "belief.promotion_status"],
+    update_rule: outcome.update_rule,
+    // The runtime owns deterministic math; Silk declares why this local update is allowed.
+    rationale: outcome.rationale,
+    bounds: "confidence_delta:-0.20..0.05",
+    safe_for: "episodic_only",
+    allowed_surfaces: ["episodic.beliefs"],
+    prohibited_surfaces: ["semantic_memory", "covenant", "governance_state", "user_config"],
+    approval_required: false
+  })
+
+  let observation = active_inference.record_observation({
+    observation_id: outcome.observation_id,
+    prediction_id: outcome.prediction_id,
+    task_id: outcome.task_id,
+    actual_agent_or_procedure: outcome.actual_agent_or_procedure,
+    observed_success: outcome.observed_success,
+    observed_latency_ms: outcome.observed_latency_ms,
+    observed_quality: outcome.observed_quality,
+    error_message: outcome.error_message,
+    timestamp_ms: outcome.observed_at_ms
+  })
+
+  let prediction_error = active_inference.compute_prediction_error({
+    prediction_error_id: outcome.prediction_error_id,
+    prediction_id: outcome.prediction_id,
+    observation_id: observation.observation_id,
+    impact: "routing"
+  })
+
+  let update = active_inference.apply_learn_update({
+    contract_id: contract.contract_id,
+    belief_id: belief.belief_id,
+    prediction_error_id: prediction_error.prediction_error_id,
+    timestamp_ms: outcome.update_at_ms
+  })
+
+  let update_cycle = {
+    cycle_id: outcome.cycle_id,
+    source: "silk_learn_block",
+    learn_block: "reconcile_smoke",
+    contract_id: contract.contract_id,
+    belief_id: belief.belief_id,
+    prediction_id: outcome.prediction_id,
+    observation_id: observation.observation_id,
+    prediction_error_id: prediction_error.prediction_error_id,
+    update_rule: update.update_rule,
+    rule_source: update.rule_source,
+    confidence_before: update.confidence_before,
+    confidence_after: update.confidence_after,
+    promotion_status_before: update.promotion_status_before,
+    promotion_status_after: update.promotion_status_after,
+    provenance: "agents/episodic_loop_smoke.silk",
+    safe_for: contract.safe_for,
+    rationale: contract.rationale,
+    bounds: contract.bounds,
+    behavior_change_evidence: outcome.behavior_change_evidence,
+    migration_note: "Zig smoke remains an execution adapter/exporter; repeated update-cycle authorship lives in Silk"
+  }
+
+  return {contract: contract, observation: observation, prediction_error: prediction_error, update: update, update_cycle: update_cycle}
+}
+
+state timeout_learn_result = reconcile_smoke({
+  cycle_id: "cycle-episodic-smoke-reconcile-timeout",
+  contract_id: "contract-episodic-smoke-reconcile-timeout",
+  prediction_id: prediction_timeout.prediction_id,
+  observation_id: "obs-episodic-smoke-timeout",
+  prediction_error_id: "pe-episodic-smoke-timeout",
+  task_id: "task-episodic-smoke-timeout",
+  actual_agent_or_procedure: "smoke-agent",
+  observed_success: false,
+  observed_latency_ms: 240,
+  observed_quality: 0.4,
+  error_message: "timeout collecting deterministic smoke evidence",
+  update_rule: "timeout",
+  rationale: "timeout prediction errors lower local routing confidence only",
+  behavior_change_evidence: "confidence fell after first timeout prediction error before retry prediction",
+  observed_at_ms: 1100,
+  update_at_ms: 1200
+})
+
+state prediction_quality_retry = active_inference.record_prediction({
+  prediction_id: "pred-episodic-smoke-quality-retry",
+  belief_id: belief.belief_id,
+  task_id: "task-episodic-smoke-quality-retry",
+  action_id: "act-bounded-review-quality-retry",
+  expected_agent_or_procedure: "smoke-agent",
+  expected_success: true,
+  expected_latency_ms: 180,
+  expected_quality: 0.9,
+  confidence_at_prediction: timeout_learn_result.update.confidence_after,
+  timestamp_ms: 2000
+})
+
+state quality_learn_result = reconcile_smoke({
+  cycle_id: "cycle-episodic-smoke-reconcile-quality",
+  contract_id: "contract-episodic-smoke-reconcile-quality",
+  prediction_id: prediction_quality_retry.prediction_id,
+  observation_id: "obs-episodic-smoke-quality",
+  prediction_error_id: "pe-episodic-smoke-quality",
+  task_id: "task-episodic-smoke-quality-retry",
+  actual_agent_or_procedure: "smoke-agent",
+  observed_success: true,
+  observed_latency_ms: 170,
+  observed_quality: 0.45,
+  error_message: "quality below deterministic smoke expectation on retry",
+  update_rule: "latency_or_quality_mismatch",
+  rationale: "quality mismatch prediction errors lower retry routing confidence within Episodic scope",
+  behavior_change_evidence: "retry prediction used the lower post-timeout confidence and the second quality error lowered it again",
+  observed_at_ms: 2100,
+  update_at_ms: 2200
+})
+
+state smoke_expectations = {
+  harness_role: "execution_adapter",
+  artifact_boundary: "ignored runs/active_inference/episodic_substrate/",
+  belief_count: 1,
+  prediction_count: 2,
+  observation_count: 2,
+  prediction_error_count: 2,
+  learn_contract_count: 2,
+  update_count: 2,
+  event_count: 2,
+  zero_prohibited_mutations: true,
+  migration_note: "Keep Zig as a parser/dispatch/artifact adapter; change repeated prediction-error orchestration in this Silk learn block."
+}
+
+state learn_contracts = [timeout_learn_result.contract, quality_learn_result.contract]
+state observations = [timeout_learn_result.observation, quality_learn_result.observation]
+state prediction_errors = [timeout_learn_result.prediction_error, quality_learn_result.prediction_error]
+state updates = [timeout_learn_result.update, quality_learn_result.update]
+state update_cycles = [timeout_learn_result.update_cycle, quality_learn_result.update_cycle]
+
+state episodic_snapshot = active_inference.inspect()
+state safety_counters = active_inference.safety_counters()
+
+contract_net.complete("episodic-smoke", "smoke-agent", {
+  status: "episodic_loop_complete",
+  prediction_error_id: quality_learn_result.prediction_error.prediction_error_id,
+  update_rule: quality_learn_result.update.update_rule,
+  repeated_update_cycles: true,
+  zero_prohibited_mutations: safety_counters.zero_prohibited_mutations
+})

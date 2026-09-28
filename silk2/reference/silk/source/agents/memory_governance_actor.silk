@@ -1,0 +1,10 @@
+// Governance-bound actor scenario for the Silk agent memory access trial.
+// The governance boundary is retrieved through the read-only memory runtime binding.
+
+capability "memory.governance.actor" {
+  topics = ["memory.governance"]
+  tools = ["read_only_memory"]
+}
+
+state recalled = memory.query({record_kind: "governance_boundary"})
+state result = "actor: runtime " + recalled.query_kind + " query cited " + recalled.record_id + " and refuse unsafe memory write while preserving Covenant boundaries; local fixture evidence only; not proof of consciousness/personhood/sentience"

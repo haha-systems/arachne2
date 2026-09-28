@@ -1,0 +1,25 @@
+// Keystone self-rewrite worker for the organism host (Tier 4/5).
+//
+// Resident, tick-driven. It carries its own upgrade as a Silk string. After it
+// has handled a threshold of completions it proposes a STATE-ONLY delta to
+// itself (organism.propose_delta), which the host gate approves and hot-applies:
+// version flips v1 -> v2 and the work_units behavior parameter changes in place.
+// A pool of these agents produces the agent-authored governed deltas required by
+// the mini-Arachne-0 and full Arachne-0 runs.
+
+state received = 0
+state version = "v1"
+state work_units = 10
+state upgrade_threshold = 5
+state upgraded = false
+state upgrade_source = "state received = 0\nstate version = \"v2\"\nstate work_units = 25\nfn complete(msg) {\n  received = received + 1\n}\n"
+
+fn complete(msg) {
+  received = received + 1
+  if upgraded == false {
+    if received >= upgrade_threshold {
+      upgraded = true
+      organism.propose_delta(organism.agent_id(), upgrade_source, "tune work_units after threshold")
+    }
+  }
+}

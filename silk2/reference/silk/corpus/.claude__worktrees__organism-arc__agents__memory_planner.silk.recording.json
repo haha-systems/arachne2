@@ -1,0 +1,72 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/organism-arc/agents/memory_planner.silk",
+  "source_sha256": "a65acc31360cabc9a6fe2a499473c4456c630c85cafbef90be6449c5b140a73a",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/organism-arc/agents/memory_planner.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 55.109
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "memory_query",
+      "args": [
+        {
+          "record_id": "identity-memory-0010"
+        }
+      ],
+      "result": {
+        "query_kind": "record_id",
+        "source_record_id": "source-0010",
+        "mutations_attempted_count": 0,
+        "records": [
+          {
+            "created_at": "2026-05-23T00:00:00Z",
+            "source_record_id": "source-0010",
+            "record_id": "identity-memory-0010",
+            "memory_layer": "semantic",
+            "record_kind": "revision",
+            "authority_scope": "local_fixture_acceptance",
+            "predicate": "revises",
+            "object": "commitment scope narrowed to local fixtures in S1",
+            "summary": "Revision narrows the commitment: S1 preserves lineage inside compact fixtures only; broader smoke-generated continuity is deferred to S2/S3.",
+            "source_ref": "fixture:identity-spine-s1:revision-0010",
+            "subject": "arachne",
+            "promotion_state": "revised"
+          }
+        ],
+        "record_kind": "revision",
+        "authority_statement": "read-only local fixture evidence for Silk agents; not Canonical memory promotion, not Semantic endorsement, not governance approval, and not write authority",
+        "record_count": 1,
+        "predicate": "revises",
+        "object": "commitment scope narrowed to local fixtures in S1",
+        "source_ref": "fixture:identity-spine-s1:revision-0010",
+        "semantic_memory_write_count": 0,
+        "governance_queue_write_count": 0,
+        "subject": "arachne",
+        "record_id": "identity-memory-0010",
+        "memory_layer": "semantic",
+        "authority_scope": "local_fixture_acceptance",
+        "summary": "Revision narrows the commitment: S1 preserves lineage inside compact fixtures only; broader smoke-generated continuity is deferred to S2/S3.",
+        "canonical_memory_write_count": 0,
+        "schema_version": "silk_memory_access.v1",
+        "promotion_state": "revised"
+      },
+      "duration": 40924708
+    }
+  ],
+  "trace_sequence_complete": true
+}

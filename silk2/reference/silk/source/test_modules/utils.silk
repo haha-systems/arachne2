@@ -1,0 +1,7 @@
+// Utility functions
+
+fn greet(name) {
+    return "Hello, " + name
+}
+
+state version = "1.0.0"

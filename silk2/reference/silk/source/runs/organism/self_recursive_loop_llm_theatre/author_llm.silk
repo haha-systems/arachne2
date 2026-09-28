@@ -1,0 +1,80 @@
+tool "llm" using anthropic("MOCK_KEY", "mock-model", "http://127.0.0.1:18769/srltheatre/v1/messages")
+
+capability "organism.task.author" {
+  topics = ["cnp.announce", "cnp.assign", "organism.delta_result"]
+}
+
+state bids_made = 0
+state jobs_done = 0
+state last_patch = ""
+state last_observe_accepted = 0
+state provider_failed = 0
+
+fn line_fence(s) {
+    if strings.index_of(s, "```") == 0 {
+        return 0
+    }
+    let nlf = strings.index_of(s, "\n```")
+    if nlf < 0 {
+        return -1
+    }
+    return nlf + 1
+}
+
+fn strip_fence(s) {
+    let open = line_fence(s)
+    if open < 0 {
+        return s
+    }
+    let after = strings.substring(s, open, len(s))
+    let nl = strings.index_of(after, "\n")
+    if nl < 0 {
+        return s
+    }
+    let body = strings.substring(after, nl + 1, len(after))
+    let close = line_fence(body)
+    if close < 0 {
+        return body
+    }
+    return strings.substring(body, 0, close)
+}
+
+fn announce(msg) {
+  if msg.payload.role == "author" {
+    bids_made = bids_made + 1
+    contract_net.submit_bid(msg.auction_id, organism.agent_id(), {confidence: 0.9, price: 1})
+  }
+}
+
+fn assign(msg) {
+  last_patch = "llm-create"
+  let reply = llm["generate"]({
+    system: "You write Silk workers. Reply with complete Silk source only. Capability must be organism.task.worker with topics cnp.announce and cnp.assign. No tools, no import, no second capability.",
+    prompt: "Write a worker. do_count(text, needle) counts matching lines. announce bids when payload.role is worker. assign sets last_count from do_count and completes.",
+    max_tokens: 2000,
+    temperature: 0.0
+  })
+  if reply.error != null {
+    provider_failed = 1
+  } else {
+    organism.propose_delta("task-created", strip_fence(reply.content[0].text), "llm create worker")
+  }
+  jobs_done = jobs_done + 1
+  contract_net.complete(msg.auction_id, organism.agent_id(), {status: "success", patch: last_patch})
+}
+
+fn delta_result(msg) {
+  if msg.payload.ok {
+    let receipt = memory.observe({
+      subject: "self-recursive-loop",
+      predicate: "created",
+      object: "task-created",
+      summary: "llm author created a worker",
+      evidence_refs: [msg.payload.proposal_id],
+      timestamp: "2026-08-15T00:00:00Z",
+      confidence: 0.9,
+      source_event_id: msg.payload.proposal_id
+    })
+    last_observe_accepted = if receipt.accepted then 1 else 0
+  }
+}

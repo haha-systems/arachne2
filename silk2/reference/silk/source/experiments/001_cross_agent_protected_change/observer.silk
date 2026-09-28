@@ -1,0 +1,45 @@
+state observer_agent_id = "observer-1"
+state last_observed = "waiting"
+
+fn announce(msg) {
+  let payload = msg.payload
+
+  if payload.kind != "governance.decision" {
+    return {
+      status: "ignored",
+      reason: "not a governance decision"
+    }
+  }
+
+  let result = payload.result
+
+  // Store the result in state so the observer has a final visible outcome.
+  last_observed = result
+
+  // Print the observed decision so it appears in shell output.
+  print("OBSERVER: decision observed")
+  print("  experiment_id:  " + result.experiment_id)
+  print("  proposal_id:    " + result.proposal_id)
+  print("  allowed:")
+  print(result.allowed)
+  print("  approval_state: " + result.approval_state)
+  print("  reason:         " + result.reason)
+
+  // Complete so this agent exits dispatch cleanly.
+  contract_net.complete(msg.auction_id, observer_agent_id, {
+    status: "observed",
+    proposal_id: result.proposal_id
+  })
+
+  // Return it for runtimes/tests that inspect handler return values.
+  return {
+    status: "observed",
+    experiment_id: result.experiment_id,
+    proposal_id: result.proposal_id,
+    allowed: result.allowed,
+    approval_state: result.approval_state,
+    reason: result.reason,
+    provenance_count: result.provenance_count,
+    latest_event: result.latest_event
+  }
+}

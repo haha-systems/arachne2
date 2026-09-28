@@ -1,0 +1,86 @@
+// Manager Agent: Orchestrates Research -> Summarize workflow.
+// Run with agent-id=manager-1
+
+state research_done = false
+state summary_done = false
+state research_result = null
+state final_summary = null
+
+fn emit_artifact(label, format, content) {
+  print(":::silk:artifact:start label=" + label + " format=" + format)
+  print(content)
+  print(":::silk:artifact:end")
+}
+
+handle complete(msg) {
+  print("Manager received completion from " + msg.sender_id)
+  if msg.sender_id == "researcher-1" {
+    research_result = msg.payload
+    research_done = true
+  } else {
+    if msg.sender_id == "summarizer-1" {
+      final_summary = msg.payload
+      summary_done = true
+    }
+  }
+}
+
+act run() {
+  print("Manager started. Waiting for workers...")
+  
+  let query = "Zig"
+  let args_list = args()
+  if len(args_list) > 0 {
+    query = args_list[0]
+  }
+  
+  print("Research Topic: " + query)
+  
+  sleep(5000)
+  
+  // 1. Announce Research
+  print("--- Step 1: Research ---")
+  let auc1 = contract_net.announce({task: "research", query: query}, 10000)
+  sleep(2000) // Wait for bids
+  
+  // For simplicity, assign to researcher-1 if available
+  contract_net.assign(auc1.auction_id, "researcher-1", {
+    query: query,
+    auction_id: auc1.auction_id // Pass ID so worker can complete it
+  })
+  
+  // Wait for research
+  while !research_done {
+    sleep(1000)
+  }
+  
+  if research_result.status != "success" {
+    print("Research failed!")
+    return null
+  }
+  
+  print("Research successful. Source: " + research_result.source)
+  // Emit raw research docs as an artifact for downstream consumers
+  emit_artifact("research-docs", "text", research_result.docs)
+  
+  // 2. Announce Summarize
+  print("--- Step 2: Summarize ---")
+  let auc2 = contract_net.announce({task: "summarize"}, 10000)
+  sleep(2000)
+  
+  contract_net.assign(auc2.auction_id, "summarizer-1", {
+    text: research_result.docs,
+    source: research_result.source,
+    auction_id: auc2.auction_id
+  })
+  
+  // Wait for summary
+  while !summary_done {
+    sleep(1000)
+  }
+  
+  print("--- FINAL RESULT ---")
+  emit_artifact("summary", "markdown", final_summary.summary)
+}
+
+run()

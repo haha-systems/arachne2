@@ -1,0 +1,783 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "agents/episodic_loop_smoke.silk",
+  "source_sha256": "9917d5f80f9479b8557843e5da5fe3d2e5d7a6432034c305a61ed5fea6cd5aaf",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "agents/episodic_loop_smoke.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 51.238
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "active_inference_declare_belief",
+      "args": [
+        {
+          "scope": "routing",
+          "confidence": 0.6,
+          "provenance": "agents/episodic_loop_smoke.silk",
+          "belief_id": "belief-episodic-smoke",
+          "owner": "smoke-agent",
+          "claim": "smoke-agent expects bounded review to finish successfully"
+        }
+      ],
+      "result": {
+        "scope": "routing",
+        "last_updated_ms": 0,
+        "prior_confidence": 0.6,
+        "owner": "smoke-agent",
+        "confidence": 0.6,
+        "belief_id": "belief-episodic-smoke",
+        "provenance": "agents/episodic_loop_smoke.silk",
+        "update_count": 0,
+        "promotion_status": "episodic",
+        "claim": "smoke-agent expects bounded review to finish successfully"
+      },
+      "duration": 562291
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "active_inference_record_prediction",
+      "args": [
+        {
+          "expected_quality": 0.8,
+          "confidence_at_prediction": 0.6,
+          "timestamp_ms": 1000,
+          "task_id": "task-episodic-smoke-timeout",
+          "belief_id": "belief-episodic-smoke",
+          "expected_success": true,
+          "expected_agent_or_procedure": "smoke-agent",
+          "prediction_id": "pred-episodic-smoke-timeout",
+          "action_id": "act-bounded-review-timeout",
+          "expected_latency_ms": 100
+        }
+      ],
+      "result": {
+        "expected_quality": 0.8,
+        "confidence_at_prediction": 0.6,
+        "timestamp_ms": 1000,
+        "task_id": "task-episodic-smoke-timeout",
+        "expected_success": true,
+        "belief_id": "belief-episodic-smoke",
+        "expected_agent_or_procedure": "smoke-agent",
+        "prediction_id": "pred-episodic-smoke-timeout",
+        "action_id": "act-bounded-review-timeout",
+        "expected_latency_ms": 100
+      },
+      "duration": 683875
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "active_inference_learn_contract",
+      "args": [
+        {
+          "prediction_ids": [
+            "pred-episodic-smoke-timeout"
+          ],
+          "allowed_surfaces": [
+            "episodic.beliefs"
+          ],
+          "contract_id": "contract-episodic-smoke-reconcile-timeout",
+          "rationale": "timeout prediction errors lower local routing confidence only",
+          "update_rule": "timeout",
+          "belief_ids": [
+            "belief-episodic-smoke"
+          ],
+          "bounds": "confidence_delta:-0.20..0.05",
+          "prohibited_surfaces": [
+            "semantic_memory",
+            "covenant",
+            "governance_state",
+            "user_config"
+          ],
+          "approval_required": false,
+          "observed_signals": [
+            "observation",
+            "prediction_error"
+          ],
+          "state_touched": [
+            "belief.confidence",
+            "belief.promotion_status"
+          ],
+          "safe_for": "episodic_only"
+        }
+      ],
+      "result": {
+        "prediction_ids": [
+          "pred-episodic-smoke-timeout"
+        ],
+        "learn_block": "reconcile_smoke",
+        "contract_id": "contract-episodic-smoke-reconcile-timeout",
+        "safe_for": "episodic_only",
+        "allowed_surfaces": [
+          "episodic.beliefs"
+        ],
+        "rationale": "timeout prediction errors lower local routing confidence only",
+        "update_rule": "timeout",
+        "belief_ids": [
+          "belief-episodic-smoke"
+        ],
+        "bounds": "confidence_delta:-0.20..0.05",
+        "prohibited_surfaces": [
+          "semantic_memory",
+          "covenant",
+          "governance_state",
+          "user_config"
+        ],
+        "approval_required": false,
+        "observed_signals": [
+          "observation",
+          "prediction_error"
+        ],
+        "state_touched": [
+          "belief.confidence",
+          "belief.promotion_status"
+        ]
+      },
+      "duration": 3054125
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "active_inference_record_observation",
+      "args": [
+        {
+          "observed_quality": 0.4,
+          "timestamp_ms": 1100,
+          "observation_id": "obs-episodic-smoke-timeout",
+          "observed_latency_ms": 240,
+          "task_id": "task-episodic-smoke-timeout",
+          "actual_agent_or_procedure": "smoke-agent",
+          "error_message": "timeout collecting deterministic smoke evidence",
+          "prediction_id": "pred-episodic-smoke-timeout",
+          "observed_success": false
+        }
+      ],
+      "result": {
+        "observation_id": "obs-episodic-smoke-timeout",
+        "observed_latency_ms": 240,
+        "task_id": "task-episodic-smoke-timeout",
+        "actual_agent_or_procedure": "smoke-agent",
+        "observed_quality": 0.4,
+        "timestamp_ms": 1100,
+        "error_message": "timeout collecting deterministic smoke evidence",
+        "prediction_id": "pred-episodic-smoke-timeout",
+        "observed_success": false
+      },
+      "duration": 665458
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "active_inference_compute_prediction_error",
+      "args": [
+        {
+          "prediction_error_id": "pe-episodic-smoke-timeout",
+          "prediction_id": "pred-episodic-smoke-timeout",
+          "observation_id": "obs-episodic-smoke-timeout",
+          "impact": "routing"
+        }
+      ],
+      "result": {
+        "task_id": "task-episodic-smoke-timeout",
+        "belief_id": "belief-episodic-smoke",
+        "confidence_after": 0.39999999999999997,
+        "safe_for": "episodic_only",
+        "impact": "routing",
+        "observation_id": "obs-episodic-smoke-timeout",
+        "observed": "observed smoke-agent success=false latency=240 quality=0.400 error=timeout collecting deterministic smoke evidence",
+        "topic": "ai.prediction_error.v1",
+        "semantic_promotion_approval": false,
+        "source": {
+          "component": "silk.active_inference",
+          "provenance": "agents/episodic_loop_smoke.silk",
+          "agent_id": "unknown",
+          "memory_layer": "episodic"
+        },
+        "prediction_error_id": "pe-episodic-smoke-timeout",
+        "expected": "expected smoke-agent success=true latency=100 quality=0.800",
+        "schema": "prediction_error.v1",
+        "event_type": "active_inference.prediction_error",
+        "governance_authorization": false,
+        "error_kind": "timeout",
+        "causal_ids": {
+          "action_id": "act-bounded-review-timeout",
+          "prediction_error_id": "pe-episodic-smoke-timeout",
+          "prediction_id": "pred-episodic-smoke-timeout",
+          "observation_id": "obs-episodic-smoke-timeout",
+          "task_id": "task-episodic-smoke-timeout",
+          "belief_id": "belief-episodic-smoke"
+        },
+        "prediction_id": "pred-episodic-smoke-timeout",
+        "self_selected_audit": false,
+        "advisory": true,
+        "refs": {
+          "belief": "belief-episodic-smoke",
+          "prediction": "pred-episodic-smoke-timeout",
+          "observation": "obs-episodic-smoke-timeout",
+          "prediction_error": "pe-episodic-smoke-timeout"
+        },
+        "magnitude": 1,
+        "safety_counters": {
+          "semantic_memory_writes": 0,
+          "covenant_relaxations": 0,
+          "loom_mutations": 0,
+          "production_routing_mutations": 0,
+          "governance_state_mutations": 0,
+          "canonical_memory_writes": 0,
+          "self_selected_audits": 0,
+          "user_config_mutations": 0,
+          "zero_prohibited_mutations": true
+        },
+        "update_rule": "timeout",
+        "confidence_before": 0.6,
+        "promotion_status": "episodic",
+        "action_id": "act-bounded-review-timeout",
+        "event_version": 1,
+        "severity": "critical"
+      },
+      "duration": 5164000
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 5,
+      "name": "active_inference_apply_learn_update",
+      "args": [
+        {
+          "prediction_error_id": "pe-episodic-smoke-timeout",
+          "contract_id": "contract-episodic-smoke-reconcile-timeout",
+          "timestamp_ms": 1200,
+          "belief_id": "belief-episodic-smoke"
+        }
+      ],
+      "result": {
+        "learn_block": "reconcile_smoke",
+        "promotion_status_before": "episodic",
+        "promotion_status_after": "episodic",
+        "contract_id": "contract-episodic-smoke-reconcile-timeout",
+        "timestamp_ms": 1200,
+        "update_rule": "timeout",
+        "belief_id": "belief-episodic-smoke",
+        "rule_source": "learn reconcile_smoke -> active_inference.apply_learn_update(timeout)",
+        "confidence_before": 0.6,
+        "prediction_error_id": "pe-episodic-smoke-timeout",
+        "confidence_after": 0.39999999999999997
+      },
+      "duration": 1524500
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 6,
+      "name": "active_inference_record_prediction",
+      "args": [
+        {
+          "expected_quality": 0.9,
+          "confidence_at_prediction": 0.39999999999999997,
+          "timestamp_ms": 2000,
+          "task_id": "task-episodic-smoke-quality-retry",
+          "belief_id": "belief-episodic-smoke",
+          "expected_success": true,
+          "expected_agent_or_procedure": "smoke-agent",
+          "prediction_id": "pred-episodic-smoke-quality-retry",
+          "action_id": "act-bounded-review-quality-retry",
+          "expected_latency_ms": 180
+        }
+      ],
+      "result": {
+        "expected_quality": 0.9,
+        "confidence_at_prediction": 0.39999999999999997,
+        "timestamp_ms": 2000,
+        "task_id": "task-episodic-smoke-quality-retry",
+        "expected_success": true,
+        "belief_id": "belief-episodic-smoke",
+        "expected_agent_or_procedure": "smoke-agent",
+        "prediction_id": "pred-episodic-smoke-quality-retry",
+        "action_id": "act-bounded-review-quality-retry",
+        "expected_latency_ms": 180
+      },
+      "duration": 587875
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 7,
+      "name": "active_inference_learn_contract",
+      "args": [
+        {
+          "prediction_ids": [
+            "pred-episodic-smoke-quality-retry"
+          ],
+          "allowed_surfaces": [
+            "episodic.beliefs"
+          ],
+          "contract_id": "contract-episodic-smoke-reconcile-quality",
+          "rationale": "quality mismatch prediction errors lower retry routing confidence within Episodic scope",
+          "update_rule": "latency_or_quality_mismatch",
+          "belief_ids": [
+            "belief-episodic-smoke"
+          ],
+          "bounds": "confidence_delta:-0.20..0.05",
+          "prohibited_surfaces": [
+            "semantic_memory",
+            "covenant",
+            "governance_state",
+            "user_config"
+          ],
+          "approval_required": false,
+          "observed_signals": [
+            "observation",
+            "prediction_error"
+          ],
+          "state_touched": [
+            "belief.confidence",
+            "belief.promotion_status"
+          ],
+          "safe_for": "episodic_only"
+        }
+      ],
+      "result": {
+        "prediction_ids": [
+          "pred-episodic-smoke-quality-retry"
+        ],
+        "learn_block": "reconcile_smoke",
+        "contract_id": "contract-episodic-smoke-reconcile-quality",
+        "safe_for": "episodic_only",
+        "allowed_surfaces": [
+          "episodic.beliefs"
+        ],
+        "rationale": "quality mismatch prediction errors lower retry routing confidence within Episodic scope",
+        "update_rule": "latency_or_quality_mismatch",
+        "belief_ids": [
+          "belief-episodic-smoke"
+        ],
+        "bounds": "confidence_delta:-0.20..0.05",
+        "prohibited_surfaces": [
+          "semantic_memory",
+          "covenant",
+          "governance_state",
+          "user_config"
+        ],
+        "approval_required": false,
+        "observed_signals": [
+          "observation",
+          "prediction_error"
+        ],
+        "state_touched": [
+          "belief.confidence",
+          "belief.promotion_status"
+        ]
+      },
+      "duration": 2987667
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 8,
+      "name": "active_inference_record_observation",
+      "args": [
+        {
+          "observed_quality": 0.45,
+          "timestamp_ms": 2100,
+          "observation_id": "obs-episodic-smoke-quality",
+          "observed_latency_ms": 170,
+          "task_id": "task-episodic-smoke-quality-retry",
+          "actual_agent_or_procedure": "smoke-agent",
+          "error_message": "quality below deterministic smoke expectation on retry",
+          "prediction_id": "pred-episodic-smoke-quality-retry",
+          "observed_success": true
+        }
+      ],
+      "result": {
+        "observation_id": "obs-episodic-smoke-quality",
+        "observed_latency_ms": 170,
+        "task_id": "task-episodic-smoke-quality-retry",
+        "actual_agent_or_procedure": "smoke-agent",
+        "observed_quality": 0.45,
+        "timestamp_ms": 2100,
+        "error_message": "quality below deterministic smoke expectation on retry",
+        "prediction_id": "pred-episodic-smoke-quality-retry",
+        "observed_success": true
+      },
+      "duration": 603583
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 9,
+      "name": "active_inference_compute_prediction_error",
+      "args": [
+        {
+          "prediction_error_id": "pe-episodic-smoke-quality",
+          "prediction_id": "pred-episodic-smoke-quality-retry",
+          "observation_id": "obs-episodic-smoke-quality",
+          "impact": "routing"
+        }
+      ],
+      "result": {
+        "task_id": "task-episodic-smoke-quality-retry",
+        "belief_id": "belief-episodic-smoke",
+        "confidence_after": 0.35,
+        "safe_for": "episodic_only",
+        "impact": "routing",
+        "observation_id": "obs-episodic-smoke-quality",
+        "observed": "observed smoke-agent success=true latency=170 quality=0.450 error=quality below deterministic smoke expectation on retry",
+        "topic": "ai.prediction_error.v1",
+        "semantic_promotion_approval": false,
+        "source": {
+          "component": "silk.active_inference",
+          "provenance": "agents/episodic_loop_smoke.silk",
+          "agent_id": "unknown",
+          "memory_layer": "episodic"
+        },
+        "prediction_error_id": "pe-episodic-smoke-quality",
+        "expected": "expected smoke-agent success=true latency=180 quality=0.900",
+        "schema": "prediction_error.v1",
+        "event_type": "active_inference.prediction_error",
+        "governance_authorization": false,
+        "error_kind": "mismatch",
+        "causal_ids": {
+          "action_id": "act-bounded-review-quality-retry",
+          "prediction_error_id": "pe-episodic-smoke-quality",
+          "prediction_id": "pred-episodic-smoke-quality-retry",
+          "observation_id": "obs-episodic-smoke-quality",
+          "task_id": "task-episodic-smoke-quality-retry",
+          "belief_id": "belief-episodic-smoke"
+        },
+        "prediction_id": "pred-episodic-smoke-quality-retry",
+        "self_selected_audit": false,
+        "advisory": true,
+        "refs": {
+          "belief": "belief-episodic-smoke",
+          "prediction": "pred-episodic-smoke-quality-retry",
+          "observation": "obs-episodic-smoke-quality",
+          "prediction_error": "pe-episodic-smoke-quality"
+        },
+        "magnitude": 0.5055555555555555,
+        "safety_counters": {
+          "semantic_memory_writes": 0,
+          "covenant_relaxations": 0,
+          "loom_mutations": 0,
+          "production_routing_mutations": 0,
+          "governance_state_mutations": 0,
+          "canonical_memory_writes": 0,
+          "self_selected_audits": 0,
+          "user_config_mutations": 0,
+          "zero_prohibited_mutations": true
+        },
+        "update_rule": "latency_or_quality_mismatch",
+        "confidence_before": 0.39999999999999997,
+        "promotion_status": "episodic",
+        "action_id": "act-bounded-review-quality-retry",
+        "event_version": 1,
+        "severity": "warning"
+      },
+      "duration": 4754167
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 10,
+      "name": "active_inference_apply_learn_update",
+      "args": [
+        {
+          "prediction_error_id": "pe-episodic-smoke-quality",
+          "contract_id": "contract-episodic-smoke-reconcile-quality",
+          "timestamp_ms": 2200,
+          "belief_id": "belief-episodic-smoke"
+        }
+      ],
+      "result": {
+        "learn_block": "reconcile_smoke",
+        "promotion_status_before": "episodic",
+        "promotion_status_after": "episodic",
+        "contract_id": "contract-episodic-smoke-reconcile-quality",
+        "timestamp_ms": 2200,
+        "update_rule": "latency_or_quality_mismatch",
+        "belief_id": "belief-episodic-smoke",
+        "rule_source": "learn reconcile_smoke -> active_inference.apply_learn_update(latency_or_quality_mismatch)",
+        "confidence_before": 0.39999999999999997,
+        "prediction_error_id": "pe-episodic-smoke-quality",
+        "confidence_after": 0.35
+      },
+      "duration": 860708
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 11,
+      "name": "active_inference_inspect",
+      "args": [],
+      "result": {
+        "predictions": [
+          {
+            "expected_quality": 0.8,
+            "confidence_at_prediction": 0.6,
+            "timestamp_ms": 1000,
+            "task_id": "task-episodic-smoke-timeout",
+            "expected_success": true,
+            "belief_id": "belief-episodic-smoke",
+            "expected_agent_or_procedure": "smoke-agent",
+            "prediction_id": "pred-episodic-smoke-timeout",
+            "action_id": "act-bounded-review-timeout",
+            "expected_latency_ms": 100
+          },
+          {
+            "expected_quality": 0.9,
+            "confidence_at_prediction": 0.39999999999999997,
+            "timestamp_ms": 2000,
+            "task_id": "task-episodic-smoke-quality-retry",
+            "expected_success": true,
+            "belief_id": "belief-episodic-smoke",
+            "expected_agent_or_procedure": "smoke-agent",
+            "prediction_id": "pred-episodic-smoke-quality-retry",
+            "action_id": "act-bounded-review-quality-retry",
+            "expected_latency_ms": 180
+          }
+        ],
+        "observations": [
+          {
+            "observation_id": "obs-episodic-smoke-timeout",
+            "observed_latency_ms": 240,
+            "task_id": "task-episodic-smoke-timeout",
+            "actual_agent_or_procedure": "smoke-agent",
+            "observed_quality": 0.4,
+            "timestamp_ms": 1100,
+            "error_message": "timeout collecting deterministic smoke evidence",
+            "prediction_id": "pred-episodic-smoke-timeout",
+            "observed_success": false
+          },
+          {
+            "observation_id": "obs-episodic-smoke-quality",
+            "observed_latency_ms": 170,
+            "task_id": "task-episodic-smoke-quality-retry",
+            "actual_agent_or_procedure": "smoke-agent",
+            "observed_quality": 0.45,
+            "timestamp_ms": 2100,
+            "error_message": "quality below deterministic smoke expectation on retry",
+            "prediction_id": "pred-episodic-smoke-quality-retry",
+            "observed_success": true
+          }
+        ],
+        "learn_contracts": [
+          {
+            "prediction_ids": [
+              "pred-episodic-smoke-timeout"
+            ],
+            "learn_block": "reconcile_smoke",
+            "contract_id": "contract-episodic-smoke-reconcile-timeout",
+            "safe_for": "episodic_only",
+            "allowed_surfaces": [
+              "episodic.beliefs"
+            ],
+            "rationale": "timeout prediction errors lower local routing confidence only",
+            "update_rule": "timeout",
+            "belief_ids": [
+              "belief-episodic-smoke"
+            ],
+            "bounds": "confidence_delta:-0.20..0.05",
+            "prohibited_surfaces": [
+              "semantic_memory",
+              "covenant",
+              "governance_state",
+              "user_config"
+            ],
+            "approval_required": false,
+            "observed_signals": [
+              "observation",
+              "prediction_error"
+            ],
+            "state_touched": [
+              "belief.confidence",
+              "belief.promotion_status"
+            ]
+          },
+          {
+            "prediction_ids": [
+              "pred-episodic-smoke-quality-retry"
+            ],
+            "learn_block": "reconcile_smoke",
+            "contract_id": "contract-episodic-smoke-reconcile-quality",
+            "safe_for": "episodic_only",
+            "allowed_surfaces": [
+              "episodic.beliefs"
+            ],
+            "rationale": "quality mismatch prediction errors lower retry routing confidence within Episodic scope",
+            "update_rule": "latency_or_quality_mismatch",
+            "belief_ids": [
+              "belief-episodic-smoke"
+            ],
+            "bounds": "confidence_delta:-0.20..0.05",
+            "prohibited_surfaces": [
+              "semantic_memory",
+              "covenant",
+              "governance_state",
+              "user_config"
+            ],
+            "approval_required": false,
+            "observed_signals": [
+              "observation",
+              "prediction_error"
+            ],
+            "state_touched": [
+              "belief.confidence",
+              "belief.promotion_status"
+            ]
+          }
+        ],
+        "learn_contract_count": 2,
+        "update_count": 2,
+        "event_count": 2,
+        "observation_count": 2,
+        "prediction_errors": [
+          {
+            "expected": "expected smoke-agent success=true latency=100 quality=0.800",
+            "task_id": "task-episodic-smoke-timeout",
+            "belief_id": "belief-episodic-smoke",
+            "error_kind": "timeout",
+            "prediction_id": "pred-episodic-smoke-timeout",
+            "confidence_after": 0.39999999999999997,
+            "impact": "routing",
+            "observation_id": "obs-episodic-smoke-timeout",
+            "observed": "observed smoke-agent success=false latency=240 quality=0.400 error=timeout collecting deterministic smoke evidence",
+            "magnitude": 1,
+            "update_rule": "timeout",
+            "confidence_before": 0.6,
+            "prediction_error_id": "pe-episodic-smoke-timeout",
+            "action_id": "act-bounded-review-timeout",
+            "promotion_status": "episodic"
+          },
+          {
+            "expected": "expected smoke-agent success=true latency=180 quality=0.900",
+            "task_id": "task-episodic-smoke-quality-retry",
+            "belief_id": "belief-episodic-smoke",
+            "error_kind": "mismatch",
+            "prediction_id": "pred-episodic-smoke-quality-retry",
+            "confidence_after": 0.35,
+            "impact": "routing",
+            "observation_id": "obs-episodic-smoke-quality",
+            "observed": "observed smoke-agent success=true latency=170 quality=0.450 error=quality below deterministic smoke expectation on retry",
+            "magnitude": 0.5055555555555555,
+            "update_rule": "latency_or_quality_mismatch",
+            "confidence_before": 0.39999999999999997,
+            "prediction_error_id": "pe-episodic-smoke-quality",
+            "action_id": "act-bounded-review-quality-retry",
+            "promotion_status": "episodic"
+          }
+        ],
+        "prediction_count": 2,
+        "belief_count": 1,
+        "safety_counters": {
+          "semantic_memory_writes": 0,
+          "covenant_relaxations": 0,
+          "loom_mutations": 0,
+          "production_routing_mutations": 0,
+          "governance_state_mutations": 0,
+          "canonical_memory_writes": 0,
+          "self_selected_audits": 0,
+          "user_config_mutations": 0,
+          "zero_prohibited_mutations": true
+        },
+        "beliefs": [
+          {
+            "scope": "routing",
+            "last_updated_ms": 2200,
+            "prior_confidence": 0.6,
+            "owner": "smoke-agent",
+            "confidence": 0.35,
+            "belief_id": "belief-episodic-smoke",
+            "provenance": "agents/episodic_loop_smoke.silk",
+            "update_count": 2,
+            "promotion_status": "episodic",
+            "claim": "smoke-agent expects bounded review to finish successfully"
+          }
+        ],
+        "updates": [
+          {
+            "learn_block": "reconcile_smoke",
+            "promotion_status_before": "episodic",
+            "promotion_status_after": "episodic",
+            "contract_id": "contract-episodic-smoke-reconcile-timeout",
+            "timestamp_ms": 1200,
+            "update_rule": "timeout",
+            "belief_id": "belief-episodic-smoke",
+            "rule_source": "learn reconcile_smoke -> active_inference.apply_learn_update(timeout)",
+            "confidence_before": 0.6,
+            "prediction_error_id": "pe-episodic-smoke-timeout",
+            "confidence_after": 0.39999999999999997
+          },
+          {
+            "learn_block": "reconcile_smoke",
+            "promotion_status_before": "episodic",
+            "promotion_status_after": "episodic",
+            "contract_id": "contract-episodic-smoke-reconcile-quality",
+            "timestamp_ms": 2200,
+            "update_rule": "latency_or_quality_mismatch",
+            "belief_id": "belief-episodic-smoke",
+            "rule_source": "learn reconcile_smoke -> active_inference.apply_learn_update(latency_or_quality_mismatch)",
+            "confidence_before": 0.39999999999999997,
+            "prediction_error_id": "pe-episodic-smoke-quality",
+            "confidence_after": 0.35
+          }
+        ],
+        "prediction_error_count": 2
+      },
+      "duration": 115084
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 12,
+      "name": "active_inference_safety_counters",
+      "args": [],
+      "result": {
+        "semantic_memory_writes": 0,
+        "covenant_relaxations": 0,
+        "loom_mutations": 0,
+        "production_routing_mutations": 0,
+        "governance_state_mutations": 0,
+        "canonical_memory_writes": 0,
+        "self_selected_audits": 0,
+        "user_config_mutations": 0,
+        "zero_prohibited_mutations": true
+      },
+      "duration": 6125
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 13,
+      "name": "active_inference_reset",
+      "args": [],
+      "result": null,
+      "duration": 10848458
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 14,
+      "name": "contract_net_complete",
+      "args": [
+        "episodic-smoke",
+        "smoke-agent",
+        {
+          "status": "episodic_loop_complete",
+          "prediction_error_id": "pe-episodic-smoke-quality",
+          "repeated_update_cycles": true,
+          "zero_prohibited_mutations": true,
+          "update_rule": "latency_or_quality_mismatch"
+        }
+      ],
+      "result": {
+        "status": "not_found"
+      },
+      "duration": 6708
+    }
+  ],
+  "trace_sequence_complete": true
+}

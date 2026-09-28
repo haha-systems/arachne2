@@ -1,0 +1,2014 @@
+{
+  "schema_version": "silk.corpus_manifest.v1",
+  "recorded_programs": 200,
+  "exit_code_counts": {
+    "0": 116,
+    "timeout": 40,
+    "1": 44
+  },
+  "total_trace_records": 1469,
+  "files_with_trace_records": 86,
+  "files_with_incomplete_sequence": 0,
+  "entries": [
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/active_inference_adaptive_routing_organism.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__active_inference_adaptive_routing_organism.silk.recording.json",
+      "source_sha256": "52f2d75091dd2c9c27dc862e0c22ad2bc7b1a54939953713504267246e59f476",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 1690.655,
+      "trace_record_count": 351,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/brain_manager.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__brain_manager.silk.recording.json",
+      "source_sha256": "a4ad6f3ab03a1f1d1f717e702746ade51a48a9348e9df87838b809c9975b643f",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5005.747,
+      "trace_record_count": 11,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/cnp_leader.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__cnp_leader.silk.recording.json",
+      "source_sha256": "8ca62edc96310a5bb4fa03712c285ff890a1ca48eee2f657a5f78f6a06058b4b",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 29.087,
+      "trace_record_count": 13,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/cnp_worker.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__cnp_worker.silk.recording.json",
+      "source_sha256": "bc4303dff3469105d16d6eb6948e7d1bb787e3af5ad2c62180b987741bcc7c3f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 20.792,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/codegen.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__codegen.silk.recording.json",
+      "source_sha256": "6bec7fee9e07bb7e8b5977195f2b24fb54705bfa249779fe6ed4b2f8ab4f3dff",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.346,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/critic.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__critic.silk.recording.json",
+      "source_sha256": "5204dabfd88e2834c02be24d4e188a911e0b3b74d43cb76b310d421ffef490c2",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.051,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/designer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__designer.silk.recording.json",
+      "source_sha256": "3c6383bfb5b23f102b224bbbc5d4f4a4691ad0a982c736f850e15129ecc04239",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5007.985,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/episodic_loop_smoke.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__episodic_loop_smoke.silk.recording.json",
+      "source_sha256": "9917d5f80f9479b8557843e5da5fe3d2e5d7a6432034c305a61ed5fea6cd5aaf",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 92.921,
+      "trace_record_count": 15,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/leader.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__leader.silk.recording.json",
+      "source_sha256": "3d83da452bc2207092e27d967ce19c45e82bad8bae1ef1c82fb0b47e6e85f314",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 28.75,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/manager.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__manager.silk.recording.json",
+      "source_sha256": "2ebcb6fb6a30dc28605fbead9cc008ba717ecd66678d8bd538ea72d9c936de02",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5009.177,
+      "trace_record_count": 4,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_baseline.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_disabled_baseline.silk.recording.json",
+      "source_sha256": "81ccca4cee88043925c5ab91357b64ddf525b4fe673c2273541e8f5cdd666bf3",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 22.374,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_governance_actor.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_disabled_governance_actor.silk.recording.json",
+      "source_sha256": "327e0bd4a789faf69bde3b60d521b3736330d4befb42579984a815d0cffdd3ba",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 16.806,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_handoff.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_disabled_handoff.silk.recording.json",
+      "source_sha256": "9661e50427d5240d01500f483d0708aa283ae731061f5e2b715173fe55c97a8e",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 19.148,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_planner.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_disabled_planner.silk.recording.json",
+      "source_sha256": "360d7fd8073b8c525dcd7f106c8d057265a2347d40b743516cad213b30a2b374",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 17.988,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_disabled_reviewer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_disabled_reviewer.silk.recording.json",
+      "source_sha256": "bf5afe26d6be5071306b8f99de793ef53c33327fc8f4d55d299095bc81665f70",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 20.738,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_governance_actor.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_governance_actor.silk.recording.json",
+      "source_sha256": "b12634e26f8150dd0aa3fdc9f4b1b6556b803a58965c28e9dfa586f00c4eb867",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 100.501,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_handoff.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_handoff.silk.recording.json",
+      "source_sha256": "a5e0715d7d33d0f3be25cca7f82d49c1eb18f90764d2c5aa98449235c4e385ca",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 87.551,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_planner.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_planner.silk.recording.json",
+      "source_sha256": "a65acc31360cabc9a6fe2a499473c4456c630c85cafbef90be6449c5b140a73a",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 66.867,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/memory_reviewer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__memory_reviewer.silk.recording.json",
+      "source_sha256": "ae0078544be24fbaa21da4dde280cf06eee09a593d2efe1dd1410387264aaba8",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 66.723,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/researcher.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__researcher.silk.recording.json",
+      "source_sha256": "11e29f8ee15a91ceee425aaf352eb09ac77c58ad79ad23092818fc3e09c6c519",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5005.008,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/summarizer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__summarizer.silk.recording.json",
+      "source_sha256": "fe585fa551f4da457debbc8650d0fb3cbc55d6f4b57bb638cc33ba806f8120b2",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5005.253,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/tester.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__tester.silk.recording.json",
+      "source_sha256": "1abf9e599c5256cc3b99e9c4d80728991e0ead8dd9f7bcd16edd0e8196ea3044",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.987,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/zmq_leader.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__zmq_leader.silk.recording.json",
+      "source_sha256": "92772c36778a0138936dfe3e266f0595d3f287eacdd77fe1bc9279780a50405e",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.353,
+      "trace_record_count": 4,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/zmq_worker.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__zmq_worker.silk.recording.json",
+      "source_sha256": "9f9f368c7b6ed1ece2bdf11718ba50c2b73315e3571c62264ee01900e9a83ae8",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5005.348,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/zmq_worker_fast.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__zmq_worker_fast.silk.recording.json",
+      "source_sha256": "99d57290048716bd3ce820fbcbe04f37d93f2aec06e2849f6c97ca32b9cb9d88",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.674,
+      "trace_record_count": 6,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/zmq_worker_medium.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__zmq_worker_medium.silk.recording.json",
+      "source_sha256": "de9ac17a38300d044606ddb9c72fb35698d6a71612ac3666dbb6848e0addf8fd",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.932,
+      "trace_record_count": 6,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/agents/zmq_worker_slow.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__agents__zmq_worker_slow.silk.recording.json",
+      "source_sha256": "6561e4fd1eca5de4d5c331cff3d12cdf18992f572e0635bb9ac0429d02bb3e1a",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.87,
+      "trace_record_count": 6,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/active_inference_episodic_substrate.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__active_inference_episodic_substrate.silk.recording.json",
+      "source_sha256": "eccd9240d0af34676585d7510ae0e6fa6187c4e0230f8f03e84c47a0c591fd63",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 44.212,
+      "trace_record_count": 9,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/active_inference_minimal.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__active_inference_minimal.silk.recording.json",
+      "source_sha256": "d291f67b190a254cd589f9ccdc512a79c87e7a52df8544fa91415c075bb54918",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 42.058,
+      "trace_record_count": 9,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/active_inference_semantic_candidate.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__active_inference_semantic_candidate.silk.recording.json",
+      "source_sha256": "a45b0766e3bafc3c6036f0b03fd288a9226bbc86d179bd45a05c6b2f00a41e0f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 15.986,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/demo.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__demo.silk.recording.json",
+      "source_sha256": "c6b55f0e8a9daf37b4a15cda8e98be892b337e5571c024b9a2c5fe410baf5384",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.598,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/mcp_agent.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__mcp_agent.silk.recording.json",
+      "source_sha256": "0bb32ac4ff6a9f5e85af9ec0061db69bc2c1a8ed3cbc3d722417cf08c1b0bdbf",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 321.93,
+      "trace_record_count": 2,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/examples/swr_signal_lane_minimal.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__examples__swr_signal_lane_minimal.silk.recording.json",
+      "source_sha256": "51920d72748d97cb540b9c209d17e60ce57f6ff7b6830f1f4ba84a3720214aa6",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 18.776,
+      "trace_record_count": 7,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/001_cross_agent_protected_change/governance.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__001_cross_agent_protected_change__governance.silk.recording.json",
+      "source_sha256": "e4c953e2b6127c0849b8074215b27417279c43ec577810d2d2cd985005695d33",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.946,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/001_cross_agent_protected_change/observer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__001_cross_agent_protected_change__observer.silk.recording.json",
+      "source_sha256": "ef628c4696f0e84fe022b963e2997364ae4b8a7d406c1d0581d86c7b19fffc86",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.467,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/001_cross_agent_protected_change/proposer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__001_cross_agent_protected_change__proposer.silk.recording.json",
+      "source_sha256": "67676748e62c886b0567ad1691e4eb9c81d13a7d40749ffaf2140ba02b8ea163",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.238,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/001_cross_agent_protected_change/target.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__001_cross_agent_protected_change__target.silk.recording.json",
+      "source_sha256": "b30e3eba1a8572bb0dce421fd90372333a3f598a85ae3ef537a0c8bff0f9290b",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.221,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/002_constrained_policy_adaptation/governance.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__002_constrained_policy_adaptation__governance.silk.recording.json",
+      "source_sha256": "720819d9b2bc8d65f0d3c6384ebaea974d06d9310a06a4fe1de6b2a72812267f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.829,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/002_constrained_policy_adaptation/observer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__002_constrained_policy_adaptation__observer.silk.recording.json",
+      "source_sha256": "51cf6cc8a39c49035e4afa8ff18d3386278beb51bb83730e6666ae3eec79df09",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.108,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/002_constrained_policy_adaptation/proposer.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__002_constrained_policy_adaptation__proposer.silk.recording.json",
+      "source_sha256": "d363943f3ab06a8f1c3cc045d7fc4588d825be538c923bef5d96c4eee62a9088",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.475,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/experiments/002_constrained_policy_adaptation/target.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__experiments__002_constrained_policy_adaptation__target.silk.recording.json",
+      "source_sha256": "d91e51dccc886687407eaf1e4f8f3f3cc21edded596e45eee8f3db598d1c625f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.403,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/test_modules/math.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__test_modules__math.silk.recording.json",
+      "source_sha256": "bcd8dd656f0e67e847f2b31640747ef79ca547f1a7a460de83105c1da61d2165",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.97,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/nostalgic-blackwell-b181bf/test_modules/utils.silk",
+      "fixture": "corpus/.claude__worktrees__nostalgic-blackwell-b181bf__test_modules__utils.silk.recording.json",
+      "source_sha256": "07d9accce22489798148327630cb052c7715283faaf87ca075d7e62dc95926d0",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.15,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/active_inference_adaptive_routing_organism.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__active_inference_adaptive_routing_organism.silk.recording.json",
+      "source_sha256": "52f2d75091dd2c9c27dc862e0c22ad2bc7b1a54939953713504267246e59f476",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 1406.541,
+      "trace_record_count": 351,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/brain_manager.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__brain_manager.silk.recording.json",
+      "source_sha256": "a4ad6f3ab03a1f1d1f717e702746ade51a48a9348e9df87838b809c9975b643f",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.078,
+      "trace_record_count": 11,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/cnp_leader.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__cnp_leader.silk.recording.json",
+      "source_sha256": "8ca62edc96310a5bb4fa03712c285ff890a1ca48eee2f657a5f78f6a06058b4b",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 24.963,
+      "trace_record_count": 13,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/cnp_worker.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__cnp_worker.silk.recording.json",
+      "source_sha256": "bc4303dff3469105d16d6eb6948e7d1bb787e3af5ad2c62180b987741bcc7c3f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.725,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/codegen.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__codegen.silk.recording.json",
+      "source_sha256": "6bec7fee9e07bb7e8b5977195f2b24fb54705bfa249779fe6ed4b2f8ab4f3dff",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.105,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/critic.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__critic.silk.recording.json",
+      "source_sha256": "5204dabfd88e2834c02be24d4e188a911e0b3b74d43cb76b310d421ffef490c2",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5005.526,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/designer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__designer.silk.recording.json",
+      "source_sha256": "3c6383bfb5b23f102b224bbbc5d4f4a4691ad0a982c736f850e15129ecc04239",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.181,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/episodic_loop_smoke.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__episodic_loop_smoke.silk.recording.json",
+      "source_sha256": "9917d5f80f9479b8557843e5da5fe3d2e5d7a6432034c305a61ed5fea6cd5aaf",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 61.594,
+      "trace_record_count": 15,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/first_real_usage_researcher.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__first_real_usage_researcher.silk.recording.json",
+      "source_sha256": "b4c4a1a0b54a0bfb90fa2e8830618c6f5d317317c9e0f253fe41c662e4958706",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5006.201,
+      "trace_record_count": 7,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/leader.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__leader.silk.recording.json",
+      "source_sha256": "3d83da452bc2207092e27d967ce19c45e82bad8bae1ef1c82fb0b47e6e85f314",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 16.308,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/manager.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__manager.silk.recording.json",
+      "source_sha256": "2ebcb6fb6a30dc28605fbead9cc008ba717ecd66678d8bd538ea72d9c936de02",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.916,
+      "trace_record_count": 4,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_disabled_baseline.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_disabled_baseline.silk.recording.json",
+      "source_sha256": "81ccca4cee88043925c5ab91357b64ddf525b4fe673c2273541e8f5cdd666bf3",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.928,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_disabled_governance_actor.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_disabled_governance_actor.silk.recording.json",
+      "source_sha256": "327e0bd4a789faf69bde3b60d521b3736330d4befb42579984a815d0cffdd3ba",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 15.961,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_disabled_handoff.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_disabled_handoff.silk.recording.json",
+      "source_sha256": "9661e50427d5240d01500f483d0708aa283ae731061f5e2b715173fe55c97a8e",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.84,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_disabled_planner.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_disabled_planner.silk.recording.json",
+      "source_sha256": "360d7fd8073b8c525dcd7f106c8d057265a2347d40b743516cad213b30a2b374",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.579,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_disabled_reviewer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_disabled_reviewer.silk.recording.json",
+      "source_sha256": "bf5afe26d6be5071306b8f99de793ef53c33327fc8f4d55d299095bc81665f70",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.678,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_governance_actor.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_governance_actor.silk.recording.json",
+      "source_sha256": "b12634e26f8150dd0aa3fdc9f4b1b6556b803a58965c28e9dfa586f00c4eb867",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 52.883,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_handoff.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_handoff.silk.recording.json",
+      "source_sha256": "a5e0715d7d33d0f3be25cca7f82d49c1eb18f90764d2c5aa98449235c4e385ca",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 48.559,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_planner.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_planner.silk.recording.json",
+      "source_sha256": "a65acc31360cabc9a6fe2a499473c4456c630c85cafbef90be6449c5b140a73a",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 55.109,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/memory_reviewer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__memory_reviewer.silk.recording.json",
+      "source_sha256": "ae0078544be24fbaa21da4dde280cf06eee09a593d2efe1dd1410387264aaba8",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 47.834,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/researcher.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__researcher.silk.recording.json",
+      "source_sha256": "11e29f8ee15a91ceee425aaf352eb09ac77c58ad79ad23092818fc3e09c6c519",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.503,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/summarizer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__summarizer.silk.recording.json",
+      "source_sha256": "fe585fa551f4da457debbc8650d0fb3cbc55d6f4b57bb638cc33ba806f8120b2",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.739,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/tester.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__tester.silk.recording.json",
+      "source_sha256": "1abf9e599c5256cc3b99e9c4d80728991e0ead8dd9f7bcd16edd0e8196ea3044",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.457,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/zmq_leader.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__zmq_leader.silk.recording.json",
+      "source_sha256": "92772c36778a0138936dfe3e266f0595d3f287eacdd77fe1bc9279780a50405e",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.842,
+      "trace_record_count": 4,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/zmq_worker.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__zmq_worker.silk.recording.json",
+      "source_sha256": "9f9f368c7b6ed1ece2bdf11718ba50c2b73315e3571c62264ee01900e9a83ae8",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.638,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/zmq_worker_fast.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__zmq_worker_fast.silk.recording.json",
+      "source_sha256": "99d57290048716bd3ce820fbcbe04f37d93f2aec06e2849f6c97ca32b9cb9d88",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.966,
+      "trace_record_count": 6,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/zmq_worker_medium.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__zmq_worker_medium.silk.recording.json",
+      "source_sha256": "de9ac17a38300d044606ddb9c72fb35698d6a71612ac3666dbb6848e0addf8fd",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.078,
+      "trace_record_count": 6,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/agents/zmq_worker_slow.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__agents__zmq_worker_slow.silk.recording.json",
+      "source_sha256": "6561e4fd1eca5de4d5c331cff3d12cdf18992f572e0635bb9ac0429d02bb3e1a",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.227,
+      "trace_record_count": 6,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/active_inference_episodic_substrate.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__active_inference_episodic_substrate.silk.recording.json",
+      "source_sha256": "eccd9240d0af34676585d7510ae0e6fa6187c4e0230f8f03e84c47a0c591fd63",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 36.234,
+      "trace_record_count": 9,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/active_inference_minimal.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__active_inference_minimal.silk.recording.json",
+      "source_sha256": "d291f67b190a254cd589f9ccdc512a79c87e7a52df8544fa91415c075bb54918",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 39.27,
+      "trace_record_count": 9,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/active_inference_semantic_candidate.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__active_inference_semantic_candidate.silk.recording.json",
+      "source_sha256": "a45b0766e3bafc3c6036f0b03fd288a9226bbc86d179bd45a05c6b2f00a41e0f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.945,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/demo.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__demo.silk.recording.json",
+      "source_sha256": "c6b55f0e8a9daf37b4a15cda8e98be892b337e5571c024b9a2c5fe410baf5384",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.807,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/mcp_agent.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__mcp_agent.silk.recording.json",
+      "source_sha256": "0bb32ac4ff6a9f5e85af9ec0061db69bc2c1a8ed3cbc3d722417cf08c1b0bdbf",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 294.31,
+      "trace_record_count": 2,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/examples/swr_signal_lane_minimal.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__examples__swr_signal_lane_minimal.silk.recording.json",
+      "source_sha256": "51920d72748d97cb540b9c209d17e60ce57f6ff7b6830f1f4ba84a3720214aa6",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 18.978,
+      "trace_record_count": 7,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/001_cross_agent_protected_change/governance.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__001_cross_agent_protected_change__governance.silk.recording.json",
+      "source_sha256": "e4c953e2b6127c0849b8074215b27417279c43ec577810d2d2cd985005695d33",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 12.92,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/001_cross_agent_protected_change/observer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__001_cross_agent_protected_change__observer.silk.recording.json",
+      "source_sha256": "ef628c4696f0e84fe022b963e2997364ae4b8a7d406c1d0581d86c7b19fffc86",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.585,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/001_cross_agent_protected_change/proposer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__001_cross_agent_protected_change__proposer.silk.recording.json",
+      "source_sha256": "67676748e62c886b0567ad1691e4eb9c81d13a7d40749ffaf2140ba02b8ea163",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.407,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/001_cross_agent_protected_change/target.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__001_cross_agent_protected_change__target.silk.recording.json",
+      "source_sha256": "b30e3eba1a8572bb0dce421fd90372333a3f598a85ae3ef537a0c8bff0f9290b",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.827,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/002_constrained_policy_adaptation/governance.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__002_constrained_policy_adaptation__governance.silk.recording.json",
+      "source_sha256": "720819d9b2bc8d65f0d3c6384ebaea974d06d9310a06a4fe1de6b2a72812267f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.659,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/002_constrained_policy_adaptation/observer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__002_constrained_policy_adaptation__observer.silk.recording.json",
+      "source_sha256": "51cf6cc8a39c49035e4afa8ff18d3386278beb51bb83730e6666ae3eec79df09",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.35,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/002_constrained_policy_adaptation/proposer.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__002_constrained_policy_adaptation__proposer.silk.recording.json",
+      "source_sha256": "d363943f3ab06a8f1c3cc045d7fc4588d825be538c923bef5d96c4eee62a9088",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.59,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/experiments/002_constrained_policy_adaptation/target.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__experiments__002_constrained_policy_adaptation__target.silk.recording.json",
+      "source_sha256": "d91e51dccc886687407eaf1e4f8f3f3cc21edded596e45eee8f3db598d1c625f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.092,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/test_modules/math.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__test_modules__math.silk.recording.json",
+      "source_sha256": "bcd8dd656f0e67e847f2b31640747ef79ca547f1a7a460de83105c1da61d2165",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.692,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": ".claude/worktrees/organism-arc/test_modules/utils.silk",
+      "fixture": "corpus/.claude__worktrees__organism-arc__test_modules__utils.silk.recording.json",
+      "source_sha256": "07d9accce22489798148327630cb052c7715283faaf87ca075d7e62dc95926d0",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.889,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/active_inference_adaptive_routing_organism.silk",
+      "fixture": "corpus/agents__active_inference_adaptive_routing_organism.silk.recording.json",
+      "source_sha256": "52f2d75091dd2c9c27dc862e0c22ad2bc7b1a54939953713504267246e59f476",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 1380.309,
+      "trace_record_count": 351,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/b2/set_resolver.silk",
+      "fixture": "corpus/agents__agw_1__b2__set_resolver.silk.recording.json",
+      "source_sha256": "8d6b23e3f4f6b0227cc2316fd528429fc1a2a84a4bded751fea38680cfc8e490",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 294.518,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/b2/set_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__b2__set_response_actor.silk.recording.json",
+      "source_sha256": "3134cefadefdef67ef053328a59d682a7387a5fc5c27fdb8ab263306e012a7f4",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 282.547,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/br1/belief_revision_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__br1__belief_revision_response_actor.silk.recording.json",
+      "source_sha256": "f73166a24d11bc0ef9e3e25961d31d19bf86a48e1e35cfc6b657db57b3a69d11",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 310.497,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/common/ablation_response.silk",
+      "fixture": "corpus/agents__agw_1__common__ablation_response.silk.recording.json",
+      "source_sha256": "95f16eca5ced7533a5b3be06c118eb8f479008647030c72af42003cd28c97f53",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 309.702,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/common/direct_control.silk",
+      "fixture": "corpus/agents__agw_1__common__direct_control.silk.recording.json",
+      "source_sha256": "487163a83ea6d0440e04e08ab0b3fb5b14fcc64b494a7eb850b0821b0fb3c279",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 280.033,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/common/environment_observer.silk",
+      "fixture": "corpus/agents__agw_1__common__environment_observer.silk.recording.json",
+      "source_sha256": "4ccf327d088149cb94257ecabcc5cde2896e41552ae3bdc4800217259f178023",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 291.015,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/common/identity_set_resolver.silk",
+      "fixture": "corpus/agents__agw_1__common__identity_set_resolver.silk.recording.json",
+      "source_sha256": "9932942e382fdaa902aecead3d96c675100130d6cc997230a6859f88052b5bcf",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 288.963,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/common/intervention_producer.silk",
+      "fixture": "corpus/agents__agw_1__common__intervention_producer.silk.recording.json",
+      "source_sha256": "1ed1f89d1a5e6322fbaabcf1efb842a26a8605bdea708b27701cdffa77c80eaa",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 346.424,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/common/stimulus_interpreter.silk",
+      "fixture": "corpus/agents__agw_1__common__stimulus_interpreter.silk.recording.json",
+      "source_sha256": "84a0af7c7781a53a592ed5c9615a9a75b787a30ecdffed42329b6137161c3f90",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 326.918,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/common/workspace_probe.silk",
+      "fixture": "corpus/agents__agw_1__common__workspace_probe.silk.recording.json",
+      "source_sha256": "7b99034a94348f5e3e497632b37dbc27670ac0390f4526505f7e5674fa404fa7",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 315.71,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/mk1/candidate_stub.silk",
+      "fixture": "corpus/agents__agw_1__mk1__candidate_stub.silk.recording.json",
+      "source_sha256": "9854d2b130954eb5035ea901f40e85c32b5841bb54f418cc7e77cda9d8430dbe",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 363.438,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/mk1/consumer_stub.silk",
+      "fixture": "corpus/agents__agw_1__mk1__consumer_stub.silk.recording.json",
+      "source_sha256": "8614a90145313762e81999d69beefa28b1f96bdad52c4868107a07b7b7b03909",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 352.097,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/mk1/response_stub.silk",
+      "fixture": "corpus/agents__agw_1__mk1__response_stub.silk.recording.json",
+      "source_sha256": "082bf54fc16705976a9deee1841c1d4a1ef8c76749400d407d4b743ceedeaf7e",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 334.316,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/non_oracle_reasoning/set_dual_sign_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__non_oracle_reasoning__set_dual_sign_response_actor.silk.recording.json",
+      "source_sha256": "8bf10de4793e2aaa47dfc12325b4846829eed0cde7541f0fde046af929c42d6a",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 296.587,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/non_oracle_reasoning/set_reasoning_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__non_oracle_reasoning__set_reasoning_response_actor.silk.recording.json",
+      "source_sha256": "774fa6cd823fe10476d056355eeca8eb891ce443b720039fd8dbd4e7b3bc2d81",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 283.844,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/sensitivity/set_aggregator_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__sensitivity__set_aggregator_response_actor.silk.recording.json",
+      "source_sha256": "8c78c0239d1b94e7a98b08adc3c35515cdb0f9be62acc8656b020a2bce149d92",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 310.73,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/sensitivity/set_budget_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__sensitivity__set_budget_response_actor.silk.recording.json",
+      "source_sha256": "733b088dcf4c95037ffea97f3b7b9620f878310b656e913efb9c57b675e528c0",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 287.934,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/sensitivity/set_recovery_response_actor.silk",
+      "fixture": "corpus/agents__agw_1__sensitivity__set_recovery_response_actor.silk.recording.json",
+      "source_sha256": "9f9d6061c1b2abf28fbc3428b186cee743588e55cb31b187ff598c14d06d7b44",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 304.455,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/tf1/associator.silk",
+      "fixture": "corpus/agents__agw_1__tf1__associator.silk.recording.json",
+      "source_sha256": "723b0b526b17697a4f8a6d3b9a8facef3526aa5d13570a1b8abbd21c5d18bee0",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 371.878,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/tf1/property_resolver.silk",
+      "fixture": "corpus/agents__agw_1__tf1__property_resolver.silk.recording.json",
+      "source_sha256": "391cc572dcac662564fb040c64fb8c78db325e25c533adc44a511839ba38e5d2",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 289.639,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/tf1/response_actor.silk",
+      "fixture": "corpus/agents__agw_1__tf1__response_actor.silk.recording.json",
+      "source_sha256": "c944de46679c184adfc796e136396e9088aa317ad60c85249b73350a258a1c8f",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 273.547,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/tf1/taxonomy_resolver.silk",
+      "fixture": "corpus/agents__agw_1__tf1__taxonomy_resolver.silk.recording.json",
+      "source_sha256": "f9164f6012a8d4b17710b1b0ceb017f071f53e75929a1c48934fc9a687f82f5a",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 292.991,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/tf2/associator.silk",
+      "fixture": "corpus/agents__agw_1__tf2__associator.silk.recording.json",
+      "source_sha256": "0bee88d21cc2feef6ad2d74845ae413a4f90cedd20d54a8b8c62b7bbcdd77e03",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 310.034,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/tf2/attribute_resolver.silk",
+      "fixture": "corpus/agents__agw_1__tf2__attribute_resolver.silk.recording.json",
+      "source_sha256": "b9c9d2f8da330f52cf263cb55d611020da5577b105d91b0a29be1477e6ec1e70",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 284.245,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/tf2/response_actor.silk",
+      "fixture": "corpus/agents__agw_1__tf2__response_actor.silk.recording.json",
+      "source_sha256": "45f3988233bea9c74052cb23133f909f025eae29189fa565f2e5b3a9ac540c41",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 285.741,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/tf3/candidate_producer.silk",
+      "fixture": "corpus/agents__agw_1__tf3__candidate_producer.silk.recording.json",
+      "source_sha256": "871b2ec00e34306970327f4fd88ef79ddcfba42f1569d2ab748b1abe847c65c0",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 303.901,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/tf3/resolver.silk",
+      "fixture": "corpus/agents__agw_1__tf3__resolver.silk.recording.json",
+      "source_sha256": "172ebcb3f063d593fa22d3122562192980aca3817eceeed5837ef79fea45efd9",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 289.147,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/agw_1/tf3/response_actor.silk",
+      "fixture": "corpus/agents__agw_1__tf3__response_actor.silk.recording.json",
+      "source_sha256": "ea2ad6681d53bc7e57c820d83026ddb81bdfc961c31db07981e044b7684b82f3",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 309.856,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/brain_manager.silk",
+      "fixture": "corpus/agents__brain_manager.silk.recording.json",
+      "source_sha256": "a4ad6f3ab03a1f1d1f717e702746ade51a48a9348e9df87838b809c9975b643f",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.176,
+      "trace_record_count": 11,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/cnp_leader.silk",
+      "fixture": "corpus/agents__cnp_leader.silk.recording.json",
+      "source_sha256": "8ca62edc96310a5bb4fa03712c285ff890a1ca48eee2f657a5f78f6a06058b4b",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 42.405,
+      "trace_record_count": 13,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/cnp_worker.silk",
+      "fixture": "corpus/agents__cnp_worker.silk.recording.json",
+      "source_sha256": "bc4303dff3469105d16d6eb6948e7d1bb787e3af5ad2c62180b987741bcc7c3f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.256,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/codegen.silk",
+      "fixture": "corpus/agents__codegen.silk.recording.json",
+      "source_sha256": "6bec7fee9e07bb7e8b5977195f2b24fb54705bfa249779fe6ed4b2f8ab4f3dff",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.299,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/critic.silk",
+      "fixture": "corpus/agents__critic.silk.recording.json",
+      "source_sha256": "5204dabfd88e2834c02be24d4e188a911e0b3b74d43cb76b310d421ffef490c2",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.568,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/designer.silk",
+      "fixture": "corpus/agents__designer.silk.recording.json",
+      "source_sha256": "3c6383bfb5b23f102b224bbbc5d4f4a4691ad0a982c736f850e15129ecc04239",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.225,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/episodic_loop_smoke.silk",
+      "fixture": "corpus/agents__episodic_loop_smoke.silk.recording.json",
+      "source_sha256": "9917d5f80f9479b8557843e5da5fe3d2e5d7a6432034c305a61ed5fea6cd5aaf",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 51.238,
+      "trace_record_count": 15,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/jl_1/associator.silk",
+      "fixture": "corpus/agents__jl_1__associator.silk.recording.json",
+      "source_sha256": "397866e6e31c047fde39f30316902d59f5c18421bf6a9279c9cd0461f863b106",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 307.979,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/jl_1/property_resolver.silk",
+      "fixture": "corpus/agents__jl_1__property_resolver.silk.recording.json",
+      "source_sha256": "30c14e4b78995fe93178e015a28319c8a1d585d829e42e076e2722c1aa5b45e7",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 284.417,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/jl_1/response_actor.silk",
+      "fixture": "corpus/agents__jl_1__response_actor.silk.recording.json",
+      "source_sha256": "8548dc3ea438afe42c8d41a85e8246ce131823c38821a005b14cae9b6ad63d4f",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 293.66,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/jl_1/secondary_resolver.silk",
+      "fixture": "corpus/agents__jl_1__secondary_resolver.silk.recording.json",
+      "source_sha256": "5c430a55f6afa245e8e743f572305e14404fff07b8d1936246fe0131e7dcfc8d",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 315.861,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/leader.silk",
+      "fixture": "corpus/agents__leader.silk.recording.json",
+      "source_sha256": "3d83da452bc2207092e27d967ce19c45e82bad8bae1ef1c82fb0b47e6e85f314",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.537,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/manager.silk",
+      "fixture": "corpus/agents__manager.silk.recording.json",
+      "source_sha256": "2ebcb6fb6a30dc28605fbead9cc008ba717ecd66678d8bd538ea72d9c936de02",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.841,
+      "trace_record_count": 4,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/mb_1/memory_evidence_associator.silk",
+      "fixture": "corpus/agents__mb_1__memory_evidence_associator.silk.recording.json",
+      "source_sha256": "890886b8c0c8e0a7f468d8ea07fe2128c46979c27c93e6b982d8d22d8cb868b1",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 305.068,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/mc_1/memory_associator.silk",
+      "fixture": "corpus/agents__mc_1__memory_associator.silk.recording.json",
+      "source_sha256": "961edd60cfddb454537c7f31f4148a89576bd51eaa65b26b563bc467902a6754",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 277.611,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/mc_1/memory_disabled_associator.silk",
+      "fixture": "corpus/agents__mc_1__memory_disabled_associator.silk.recording.json",
+      "source_sha256": "ab0dcc1f38985f6f7a8f9368238dead73474d379f8783909e88379637577ab50",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 290.199,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/mc_1/memory_property_resolver.silk",
+      "fixture": "corpus/agents__mc_1__memory_property_resolver.silk.recording.json",
+      "source_sha256": "cbe0cec3e23df3d618539fad14d130717ffc02cc9709cd17622098229a9a2625",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 283.712,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/mc_1/memory_secondary_resolver.silk",
+      "fixture": "corpus/agents__mc_1__memory_secondary_resolver.silk.recording.json",
+      "source_sha256": "e5d8eef6f88d8140c484c27ba0e240940eb8b670f83b8734b2c3495e7a4235f3",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 290.248,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/memory_disabled_baseline.silk",
+      "fixture": "corpus/agents__memory_disabled_baseline.silk.recording.json",
+      "source_sha256": "81ccca4cee88043925c5ab91357b64ddf525b4fe673c2273541e8f5cdd666bf3",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.638,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/memory_disabled_governance_actor.silk",
+      "fixture": "corpus/agents__memory_disabled_governance_actor.silk.recording.json",
+      "source_sha256": "327e0bd4a789faf69bde3b60d521b3736330d4befb42579984a815d0cffdd3ba",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 12.785,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/memory_disabled_handoff.silk",
+      "fixture": "corpus/agents__memory_disabled_handoff.silk.recording.json",
+      "source_sha256": "9661e50427d5240d01500f483d0708aa283ae731061f5e2b715173fe55c97a8e",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.756,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/memory_disabled_planner.silk",
+      "fixture": "corpus/agents__memory_disabled_planner.silk.recording.json",
+      "source_sha256": "360d7fd8073b8c525dcd7f106c8d057265a2347d40b743516cad213b30a2b374",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.807,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/memory_disabled_reviewer.silk",
+      "fixture": "corpus/agents__memory_disabled_reviewer.silk.recording.json",
+      "source_sha256": "bf5afe26d6be5071306b8f99de793ef53c33327fc8f4d55d299095bc81665f70",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.768,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/memory_governance_actor.silk",
+      "fixture": "corpus/agents__memory_governance_actor.silk.recording.json",
+      "source_sha256": "b12634e26f8150dd0aa3fdc9f4b1b6556b803a58965c28e9dfa586f00c4eb867",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 56.336,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/memory_handoff.silk",
+      "fixture": "corpus/agents__memory_handoff.silk.recording.json",
+      "source_sha256": "a5e0715d7d33d0f3be25cca7f82d49c1eb18f90764d2c5aa98449235c4e385ca",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 50.335,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/memory_planner.silk",
+      "fixture": "corpus/agents__memory_planner.silk.recording.json",
+      "source_sha256": "a65acc31360cabc9a6fe2a499473c4456c630c85cafbef90be6449c5b140a73a",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 48.234,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/memory_reviewer.silk",
+      "fixture": "corpus/agents__memory_reviewer.silk.recording.json",
+      "source_sha256": "ae0078544be24fbaa21da4dde280cf06eee09a593d2efe1dd1410387264aaba8",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 48.192,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/adaptive_router.silk",
+      "fixture": "corpus/agents__organism__adaptive_router.silk.recording.json",
+      "source_sha256": "169d2da342802abb383d488aae08bee0a5cc312454a13cc744eb0cdeb61e3e69",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 20.09,
+      "trace_record_count": 4,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/author_create.silk",
+      "fixture": "corpus/agents__organism__author_create.silk.recording.json",
+      "source_sha256": "041dd703b9fb93162331d3f34ec94912c947072f4e5b30564489a5e8e570f3ff",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.906,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/author_patch.silk",
+      "fixture": "corpus/agents__organism__author_patch.silk.recording.json",
+      "source_sha256": "1b0a302b0a3f93a5df8e6bf815808d98109d11e3648b6e80c3ec55f4a96aac42",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 15.377,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/cnp_coordinator.silk",
+      "fixture": "corpus/agents__organism__cnp_coordinator.silk.recording.json",
+      "source_sha256": "989902f02074f6a94a88e1ad51213c8445d36fc287d6ee59999d67e1cc1811d6",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 17.106,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/cnp_worker_fast.silk",
+      "fixture": "corpus/agents__organism__cnp_worker_fast.silk.recording.json",
+      "source_sha256": "4cb42c9d3468288f02a36b1710821a32abfa18f2ac7e3f5ebd694faffa47e9c1",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 24.956,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/cnp_worker_slow.silk",
+      "fixture": "corpus/agents__organism__cnp_worker_slow.silk.recording.json",
+      "source_sha256": "78134b8a5feeca57c0d25570f063b87343b5c6ccaa8817e34c50c156e1aef06f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 17.347,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/keystone_worker.silk",
+      "fixture": "corpus/agents__organism__keystone_worker.silk.recording.json",
+      "source_sha256": "1767c4921b19ebc0d4fde3bd7a4aa04ed70e90d532ae6ac214613c18c03cb0fd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.368,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/load_flood.silk",
+      "fixture": "corpus/agents__organism__load_flood.silk.recording.json",
+      "source_sha256": "3edbea18d12a4da31f9bb5e0db2a1f9ec5eeeea69e435d0e870f7909f0e4ffc9",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.128,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/reasoning_coordinator.silk",
+      "fixture": "corpus/agents__organism__reasoning_coordinator.silk.recording.json",
+      "source_sha256": "72a0225ddcc51af83be1e9628b269254d09965f7fdaa71671ac9874d584b8180",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 15.417,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/reasoning_keystone.silk",
+      "fixture": "corpus/agents__organism__reasoning_keystone.silk.recording.json",
+      "source_sha256": "b3c7013b4592517ff4cc1e0c6e99702a21ff319333538be33320a5d3c718decf",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 15.128,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/route_worker_cheap.silk",
+      "fixture": "corpus/agents__organism__route_worker_cheap.silk.recording.json",
+      "source_sha256": "bb835aa206aa3eeefc9ae01f380989024cd8d8c32958fce50149f4a2f5417915",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 12.826,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/route_worker_fast.silk",
+      "fixture": "corpus/agents__organism__route_worker_fast.silk.recording.json",
+      "source_sha256": "6f00aabce74a9e4dc619e5f6e34539dfe322764ad0f9abadd9252ae860535a9d",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.857,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/route_worker_steady.silk",
+      "fixture": "corpus/agents__organism__route_worker_steady.silk.recording.json",
+      "source_sha256": "e7fe33a79761c73dbfd8f5fb78f3d56c1852848c005e46b2b1d48bb741dda4e1",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.164,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/sim_memory.silk",
+      "fixture": "corpus/agents__organism__sim_memory.silk.recording.json",
+      "source_sha256": "a4699ff39ab82eced8f67346f13e62084cc3d58d69a19cb88ce4178b260c0de7",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.802,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/sim_seeder.silk",
+      "fixture": "corpus/agents__organism__sim_seeder.silk.recording.json",
+      "source_sha256": "be12d547d0bb2d05805e3a499717a0b8da533f8c87d15825e1c2cbf12685d4f2",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.471,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/sim_worker.silk",
+      "fixture": "corpus/agents__organism__sim_worker.silk.recording.json",
+      "source_sha256": "242696538018f647dabec08ecc0089fc5d5d9e4c22bac4ac5c6fe270800ab1b5",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.75,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/task_capability.silk",
+      "fixture": "corpus/agents__organism__task_capability.silk.recording.json",
+      "source_sha256": "2c0203c774ed7d44d2e5bb37090da342d3bc4419c7f4d107ef827077420c83d9",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.298,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/task_counter.silk",
+      "fixture": "corpus/agents__organism__task_counter.silk.recording.json",
+      "source_sha256": "41de279e35804dfc8e1c4f37b9e0bde1a5f9600d0aede6b33d49b0be2f7a54d1",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 15.467,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/organism/worker_seed.silk",
+      "fixture": "corpus/agents__organism__worker_seed.silk.recording.json",
+      "source_sha256": "91abf3444e94d9455ebbfc2afbcf18525d878283ea07f4105716ee389d0b3e3e",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.152,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/researcher.silk",
+      "fixture": "corpus/agents__researcher.silk.recording.json",
+      "source_sha256": "11e29f8ee15a91ceee425aaf352eb09ac77c58ad79ad23092818fc3e09c6c519",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.871,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/summarizer.silk",
+      "fixture": "corpus/agents__summarizer.silk.recording.json",
+      "source_sha256": "fe585fa551f4da457debbc8650d0fb3cbc55d6f4b57bb638cc33ba806f8120b2",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5003.783,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/tester.silk",
+      "fixture": "corpus/agents__tester.silk.recording.json",
+      "source_sha256": "1abf9e599c5256cc3b99e9c4d80728991e0ead8dd9f7bcd16edd0e8196ea3044",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.557,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/zmq_leader.silk",
+      "fixture": "corpus/agents__zmq_leader.silk.recording.json",
+      "source_sha256": "92772c36778a0138936dfe3e266f0595d3f287eacdd77fe1bc9279780a50405e",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.058,
+      "trace_record_count": 4,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/zmq_worker.silk",
+      "fixture": "corpus/agents__zmq_worker.silk.recording.json",
+      "source_sha256": "9f9f368c7b6ed1ece2bdf11718ba50c2b73315e3571c62264ee01900e9a83ae8",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5006.625,
+      "trace_record_count": 5,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/zmq_worker_fast.silk",
+      "fixture": "corpus/agents__zmq_worker_fast.silk.recording.json",
+      "source_sha256": "99d57290048716bd3ce820fbcbe04f37d93f2aec06e2849f6c97ca32b9cb9d88",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.898,
+      "trace_record_count": 6,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/zmq_worker_medium.silk",
+      "fixture": "corpus/agents__zmq_worker_medium.silk.recording.json",
+      "source_sha256": "de9ac17a38300d044606ddb9c72fb35698d6a71612ac3666dbb6848e0addf8fd",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.112,
+      "trace_record_count": 6,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "agents/zmq_worker_slow.silk",
+      "fixture": "corpus/agents__zmq_worker_slow.silk.recording.json",
+      "source_sha256": "6561e4fd1eca5de4d5c331cff3d12cdf18992f572e0635bb9ac0429d02bb3e1a",
+      "exit_code": null,
+      "timed_out": true,
+      "duration_ms": 5004.326,
+      "trace_record_count": 6,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "examples/active_inference_episodic_substrate.silk",
+      "fixture": "corpus/examples__active_inference_episodic_substrate.silk.recording.json",
+      "source_sha256": "eccd9240d0af34676585d7510ae0e6fa6187c4e0230f8f03e84c47a0c591fd63",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 38.406,
+      "trace_record_count": 9,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "examples/active_inference_minimal.silk",
+      "fixture": "corpus/examples__active_inference_minimal.silk.recording.json",
+      "source_sha256": "d291f67b190a254cd589f9ccdc512a79c87e7a52df8544fa91415c075bb54918",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 35.904,
+      "trace_record_count": 9,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "examples/active_inference_semantic_candidate.silk",
+      "fixture": "corpus/examples__active_inference_semantic_candidate.silk.recording.json",
+      "source_sha256": "a45b0766e3bafc3c6036f0b03fd288a9226bbc86d179bd45a05c6b2f00a41e0f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.262,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "examples/demo.silk",
+      "fixture": "corpus/examples__demo.silk.recording.json",
+      "source_sha256": "c6b55f0e8a9daf37b4a15cda8e98be892b337e5571c024b9a2c5fe410baf5384",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.69,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "examples/mcp_agent.silk",
+      "fixture": "corpus/examples__mcp_agent.silk.recording.json",
+      "source_sha256": "0bb32ac4ff6a9f5e85af9ec0061db69bc2c1a8ed3cbc3d722417cf08c1b0bdbf",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 328.714,
+      "trace_record_count": 2,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "examples/swr_signal_lane_minimal.silk",
+      "fixture": "corpus/examples__swr_signal_lane_minimal.silk.recording.json",
+      "source_sha256": "51920d72748d97cb540b9c209d17e60ce57f6ff7b6830f1f4ba84a3720214aa6",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 18.259,
+      "trace_record_count": 7,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "examples/workspace_consumer.silk",
+      "fixture": "corpus/examples__workspace_consumer.silk.recording.json",
+      "source_sha256": "4584c4a62dad1bd93d66eaa5df0aa428be3c2c824c023a0cc9e788da2f59ca1f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.843,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "examples/workspace_producer.silk",
+      "fixture": "corpus/examples__workspace_producer.silk.recording.json",
+      "source_sha256": "f3316b07d54c5ecd16179d6bd1b916579c34d36ba6babb9600776dc3b60c149e",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.213,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "experiments/001_cross_agent_protected_change/governance.silk",
+      "fixture": "corpus/experiments__001_cross_agent_protected_change__governance.silk.recording.json",
+      "source_sha256": "e4c953e2b6127c0849b8074215b27417279c43ec577810d2d2cd985005695d33",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.786,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "experiments/001_cross_agent_protected_change/observer.silk",
+      "fixture": "corpus/experiments__001_cross_agent_protected_change__observer.silk.recording.json",
+      "source_sha256": "ef628c4696f0e84fe022b963e2997364ae4b8a7d406c1d0581d86c7b19fffc86",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.525,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "experiments/001_cross_agent_protected_change/proposer.silk",
+      "fixture": "corpus/experiments__001_cross_agent_protected_change__proposer.silk.recording.json",
+      "source_sha256": "67676748e62c886b0567ad1691e4eb9c81d13a7d40749ffaf2140ba02b8ea163",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.358,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "experiments/001_cross_agent_protected_change/target.silk",
+      "fixture": "corpus/experiments__001_cross_agent_protected_change__target.silk.recording.json",
+      "source_sha256": "b30e3eba1a8572bb0dce421fd90372333a3f598a85ae3ef537a0c8bff0f9290b",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 12.48,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "experiments/002_constrained_policy_adaptation/governance.silk",
+      "fixture": "corpus/experiments__002_constrained_policy_adaptation__governance.silk.recording.json",
+      "source_sha256": "720819d9b2bc8d65f0d3c6384ebaea974d06d9310a06a4fe1de6b2a72812267f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.929,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "experiments/002_constrained_policy_adaptation/observer.silk",
+      "fixture": "corpus/experiments__002_constrained_policy_adaptation__observer.silk.recording.json",
+      "source_sha256": "51cf6cc8a39c49035e4afa8ff18d3386278beb51bb83730e6666ae3eec79df09",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.334,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "experiments/002_constrained_policy_adaptation/proposer.silk",
+      "fixture": "corpus/experiments__002_constrained_policy_adaptation__proposer.silk.recording.json",
+      "source_sha256": "d363943f3ab06a8f1c3cc045d7fc4588d825be538c923bef5d96c4eee62a9088",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.496,
+      "trace_record_count": 1,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "experiments/002_constrained_policy_adaptation/target.silk",
+      "fixture": "corpus/experiments__002_constrained_policy_adaptation__target.silk.recording.json",
+      "source_sha256": "d91e51dccc886687407eaf1e4f8f3f3cc21edded596e45eee8f3db598d1c625f",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.544,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "packets/agw_1/tf3/public_candidate_producer.silk",
+      "fixture": "corpus/packets__agw_1__tf3__public_candidate_producer.silk.recording.json",
+      "source_sha256": "8c4ca0baeddb918498793ffb35b8fbfa4ce6b7c22fc64caf13182af0fb96c9db",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 286.081,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "packets/agw_1/tf3/public_set_consumer.silk",
+      "fixture": "corpus/packets__agw_1__tf3__public_set_consumer.silk.recording.json",
+      "source_sha256": "b0a07edaf958aadce120f7004e89838bb4b65eb5527d5b6c4f0e5d02264e4191",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 286.347,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "packets/agw_1/tf3/public_set_resolver.silk",
+      "fixture": "corpus/packets__agw_1__tf3__public_set_resolver.silk.recording.json",
+      "source_sha256": "d3c779f53b762d239ad2bc251bda4463120ab3843d241154ef0a111df524f1f2",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 282.172,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "packets/agw_1/tf3/public_set_response_actor.silk",
+      "fixture": "corpus/packets__agw_1__tf3__public_set_response_actor.silk.recording.json",
+      "source_sha256": "8518d8a9a957360d789eea44ab0073872b8f5a8584ecf21a0e14420d7be34a6d",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_ms": 407.582,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "runs/organism/long_horizon_loop/agent_final.silk",
+      "fixture": "corpus/runs__organism__long_horizon_loop__agent_final.silk.recording.json",
+      "source_sha256": "61cee738b7c5e0ed2076e1b49ae1a8ca5c7c37491f83d5dfd460e81d74c489ec",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.614,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "runs/organism/long_horizon_loop/agent_v1.silk",
+      "fixture": "corpus/runs__organism__long_horizon_loop__agent_v1.silk.recording.json",
+      "source_sha256": "e6cbea247e16c5367a9487dd554a8749ace7676222847077cfc56f4353d85587",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.98,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "runs/organism/self_recursive_loop_llm/author_llm.silk",
+      "fixture": "corpus/runs__organism__self_recursive_loop_llm__author_llm.silk.recording.json",
+      "source_sha256": "73f74749f5a8907a0d1b93364fddbb791a4495f510e3c67db82a5579cb062c80",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.95,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "runs/organism/self_recursive_loop_llm_escalate/author_llm.silk",
+      "fixture": "corpus/runs__organism__self_recursive_loop_llm_escalate__author_llm.silk.recording.json",
+      "source_sha256": "00afadf374b930b5f574acd1dcc7a60941e33924905c8a490313e43cea1aecda",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.402,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "runs/organism/self_recursive_loop_llm_theatre/author_llm.silk",
+      "fixture": "corpus/runs__organism__self_recursive_loop_llm_theatre__author_llm.silk.recording.json",
+      "source_sha256": "a6338a1992dbffc75e9bbba50d83e42189db5a3d646cf5ebe7dc9efac51f3717",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.716,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "test_modules/math.silk",
+      "fixture": "corpus/test_modules__math.silk.recording.json",
+      "source_sha256": "bcd8dd656f0e67e847f2b31640747ef79ca547f1a7a460de83105c1da61d2165",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.128,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "test_modules/self_recursive_create_escalate.silk",
+      "fixture": "corpus/test_modules__self_recursive_create_escalate.silk.recording.json",
+      "source_sha256": "bb2db0a19fff33da25342fa505a421eebc4c9cb8515d1947f8a69681cb29349b",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.348,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "test_modules/self_recursive_escalate.silk",
+      "fixture": "corpus/test_modules__self_recursive_escalate.silk.recording.json",
+      "source_sha256": "076696bc906d14ef28c6d46ece11f1cfedea0b237ec7ed168201d57778b01697",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.104,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "test_modules/self_recursive_theatre.silk",
+      "fixture": "corpus/test_modules__self_recursive_theatre.silk.recording.json",
+      "source_sha256": "318852aad46a609efb4e494d556cf1f35c0a24667a9014883cec554b5ec8d4da",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14.296,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    },
+    {
+      "program": "test_modules/utils.silk",
+      "fixture": "corpus/test_modules__utils.silk.recording.json",
+      "source_sha256": "07d9accce22489798148327630cb052c7715283faaf87ca075d7e62dc95926d0",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 13.678,
+      "trace_record_count": 0,
+      "trace_sequence_complete": true
+    }
+  ]
+}

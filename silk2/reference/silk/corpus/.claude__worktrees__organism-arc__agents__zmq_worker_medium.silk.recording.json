@@ -1,0 +1,84 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/organism-arc/agents/zmq_worker_medium.silk",
+  "source_sha256": "de9ac17a38300d044606ddb9c72fb35698d6a71612ac3666dbb6848e0addf8fd",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/organism-arc/agents/zmq_worker_medium.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": null,
+    "timed_out": true,
+    "duration_ms": 5004.078
+  },
+  "stdout": "",
+  "output": "MediumWorker started. Listening...\nMediumWorker initialized",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "print",
+      "args": [
+        "MediumWorker started. Listening..."
+      ],
+      "result": null,
+      "duration": 28042
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "print",
+      "args": [
+        "MediumWorker initialized"
+      ],
+      "result": null,
+      "duration": 1084
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1007479583
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1008301459
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 999570708
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 5,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1003085042
+    }
+  ],
+  "trace_sequence_complete": true
+}

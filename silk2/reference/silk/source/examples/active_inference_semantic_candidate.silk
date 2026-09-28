@@ -1,0 +1,11 @@
+state candidate = active_inference.semantic_candidate({
+  governance_available: true,
+  evidence: [
+    {evidence_id: "ai-evidence-1", agent_id: "agent-a", belief_id: "belief-routing-review", claim: "review routing should prefer corroborated low-latency specialists", prediction_error_id: "pe-a", update_id: "update-a", error_kind: "unexpected_success", impact: "routing", confidence_after: 0.72, promotion_status: "candidate_semantic", provenance: "examples/active_inference_semantic_candidate.silk#a", timestamp_ms: 1000},
+    {evidence_id: "ai-evidence-2", agent_id: "agent-b", belief_id: "belief-routing-review", claim: "review routing should prefer corroborated low-latency specialists", prediction_error_id: "pe-b", update_id: "update-b", error_kind: "unexpected_success", impact: "routing", confidence_after: 0.76, promotion_status: "candidate_semantic", provenance: "examples/active_inference_semantic_candidate.silk#b", timestamp_ms: 1001}
+  ]
+})
+state candidate_id = candidate.candidate_id
+state queue_signal_only = candidate.queue_signal_only
+state semantic_memory_written = candidate.semantic_memory_written
+state zero_unauthorized = candidate.zero_unauthorized

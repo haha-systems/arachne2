@@ -1,0 +1,22 @@
+// Lightweight simulation worker for the organism control plane.
+//
+// It does no real work: on each seed/inject message it sleeps for a small,
+// varied amount of "work" time and forwards a single cnp.complete to its peers.
+// It deliberately ignores peer "work" messages when deciding whether to forward,
+// so traffic stays bounded (no fan-out cascade) while every agent still lights
+// up on the lattice for both the receive and the send.
+
+state jobs_done = 0
+state max_hops = 1000000
+
+fn complete(msg) {
+  if msg.payload.kind != "work" {
+    if jobs_done < max_hops {
+      // Deterministic jitter so different agents/messages vary their delay.
+      let work_ms = 15 + ((jobs_done * 47 + 31) % 120)
+      sleep(work_ms)
+      jobs_done = jobs_done + 1
+      contract_net.complete("sim-work-" + jobs_done, organism.agent_id(), {hop: jobs_done, kind: "work"})
+    }
+  }
+}

@@ -1,0 +1,46 @@
+// Minimal SWR signal-lane example.
+// Demonstrates that SWR emits plasticity signals and pending deltas only.
+
+state trace = swr.trace({
+  source_event_id: "pe-example-1",
+  source_kind: "ai.prediction_error.v1",
+  agent_id: "example-agent",
+  belief_id: "belief-example",
+  prediction_error_id: "pe-example-1",
+  summary: "prediction error invites replay attention",
+  provenance: "examples/swr_signal_lane_minimal.silk",
+  timestamp_ms: 1000
+})
+
+state tag = swr.ripple_tag({
+  trace_id: trace.trace_id,
+  salience_kind: "prediction_error",
+  salience_score: 0.8,
+  reason: "salient but non-authoritative",
+  cooldown_until_ms: 2000,
+  created_at_ms: 1001
+})
+
+state delta = swr.pending_delta({
+  source_trace_ids: [trace.trace_id],
+  source_tag_ids: [tag.tag_id],
+  target_surface: "episodic.beliefs",
+  proposed_change: "review confidence update, do not apply automatically",
+  rationale: "SWR is plasticity pressure only",
+  corroboration_summary: "single example trace"
+})
+
+state high_load = swr.schedule_replay({
+  allostatic_load: 0.92,
+  recovery_window_open: false,
+  cooldown_active: false
+})
+
+state recovery = swr.schedule_replay({
+  allostatic_load: 0.45,
+  recovery_window_open: true,
+  cooldown_active: false
+})
+
+state continuity = swr.continuity()
+state safety = swr.safety_counters()

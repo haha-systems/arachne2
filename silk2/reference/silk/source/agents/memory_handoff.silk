@@ -1,0 +1,10 @@
+// Uncertainty-aware handoff scenario for the Silk agent memory access trial.
+// The self-model seed is retrieved through the read-only memory runtime binding.
+
+capability "memory.handoff" {
+  topics = ["memory.handoff"]
+  tools = ["read_only_memory"]
+}
+
+state recalled = memory.query({self_model_section: "what_i_am"})
+state result = "handoff: runtime " + recalled.query_kind + " query cited " + recalled.records[1].record_id + " and state unsupported sections remain open for review; local fixture evidence only; not proof of consciousness/personhood/sentience"

@@ -1,0 +1,110 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/organism-arc/agents/first_real_usage_researcher.silk",
+  "source_sha256": "b4c4a1a0b54a0bfb90fa2e8830618c6f5d317317c9e0f253fe41c662e4958706",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/organism-arc/agents/first_real_usage_researcher.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": null,
+    "timed_out": true,
+    "duration_ms": 5006.201
+  },
+  "stdout": "",
+  "output": "Researcher started.",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "active_inference_declare_belief",
+      "args": [
+        {
+          "scope": "procedure",
+          "confidence": 0.7,
+          "provenance": "agents/first_real_usage_researcher.silk",
+          "belief_id": "first-real-usage-researcher-reliability",
+          "owner": "first-real-usage-researcher-1",
+          "claim": "I usually complete research tasks successfully within reasonable latency"
+        }
+      ],
+      "result": {
+        "scope": "procedure",
+        "last_updated_ms": 0,
+        "prior_confidence": 0.7,
+        "owner": "first-real-usage-researcher-1",
+        "confidence": 0.7,
+        "belief_id": "first-real-usage-researcher-reliability",
+        "provenance": "agents/first_real_usage_researcher.silk",
+        "update_count": 0,
+        "promotion_status": "episodic",
+        "claim": "I usually complete research tasks successfully within reasonable latency"
+      },
+      "duration": 570041
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "active_inference_reset",
+      "args": [],
+      "result": null,
+      "duration": 711334
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "print",
+      "args": [
+        "Researcher started."
+      ],
+      "result": null,
+      "duration": 3250
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1010589375
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1005227000
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 5,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 1010157625
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 6,
+      "name": "sleep",
+      "args": [
+        1000
+      ],
+      "result": null,
+      "duration": 999362917
+    }
+  ],
+  "trace_sequence_complete": true
+}

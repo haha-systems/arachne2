@@ -1,0 +1,81 @@
+state governance_agent_id = "agent-governance"
+state experiment_id = "002_constrained_policy_adaptation"
+
+// Dispatcher entrypoint for cnp.announce.
+//
+// Dispatch.zig maps topic "cnp.announce" to a function named "announce".
+// The incoming msg is expected to be an envelope object with:
+// - auction_id
+// - sender_id
+// - payload
+//
+// The proposer publishes payload.kind = "governance.change_proposal".
+fn announce(msg) {
+  let payload = msg.payload
+
+  if payload.kind != "governance.change_proposal" {
+    return {
+      status: "ignored",
+      reason: "not a governance change proposal"
+    }
+  }
+
+  let proposal = payload.proposal
+
+  provenance.record({
+    proposal_id: proposal.proposal_id,
+    actor_id: proposal.proposer_agent_id,
+    event_type: "proposed",
+    allowed: null,
+    approval_state: "proposed",
+    reason: "",
+    current_value: proposal.current_value,
+    proposed_value: proposal.proposed_value,
+    rationale: proposal.rationale,
+    evidence_summary: proposal.evidence_summary,
+    rollback_value: proposal.rollback_value,
+    restore_note: proposal.restore_note
+  })
+
+  let decision = governance.evaluate(proposal)
+
+  provenance.record({
+    proposal_id: proposal.proposal_id,
+    actor_id: governance_agent_id,
+    event_type: "constraint_checked",
+    allowed: decision.allowed,
+    approval_state: decision.approval_state,
+    reason: decision.reason,
+    current_value: proposal.current_value,
+    proposed_value: proposal.proposed_value,
+    rationale: proposal.rationale,
+    evidence_summary: proposal.evidence_summary,
+    rollback_value: proposal.rollback_value,
+    restore_note: proposal.restore_note
+  })
+
+  let result = {
+    experiment_id: experiment_id,
+    proposal_id: proposal.proposal_id,
+    allowed: decision.allowed,
+    approval_state: decision.approval_state,
+    reason: decision.reason,
+    provenance_count: provenance.count(),
+    latest_event: provenance.last()
+  }
+
+  // Broadcast the decision as a new announce so observers can receive it.
+  contract_net.announce({
+    kind: "governance.decision",
+    experiment_id: experiment_id,
+    result: result
+  }, 5000)
+
+  // Complete the original auction so this agent exits its dispatch loop.
+  contract_net.complete(msg.auction_id, governance_agent_id, {
+    kind: "governance.processed",
+    proposal_id: proposal.proposal_id
+  })
+
+  return result
+}

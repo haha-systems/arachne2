@@ -1,0 +1,23 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "runs/organism/self_recursive_loop_llm_theatre/author_llm.silk",
+  "source_sha256": "a6338a1992dbffc75e9bbba50d83e42189db5a3d646cf5ebe7dc9efac51f3717",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "runs/organism/self_recursive_loop_llm_theatre/author_llm.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 14.716
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [],
+  "trace_sequence_complete": true
+}

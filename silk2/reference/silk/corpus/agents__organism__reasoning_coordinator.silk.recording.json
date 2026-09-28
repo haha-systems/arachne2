@@ -1,0 +1,46 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "agents/organism/reasoning_coordinator.silk",
+  "source_sha256": "72a0225ddcc51af83be1e9628b269254d09965f7fdaa71671ac9874d584b8180",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "agents/organism/reasoning_coordinator.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 15.417
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "contract_net_announce",
+      "args": [
+        {
+          "task": "self-improve",
+          "round": 1
+        },
+        60000,
+        {
+          "price_weight": 0,
+          "confidence_weight": 1
+        }
+      ],
+      "result": {
+        "auction_id": "auc-0",
+        "status": "created",
+        "deadline_ms": 60000
+      },
+      "duration": 583333
+    }
+  ],
+  "trace_sequence_complete": true
+}

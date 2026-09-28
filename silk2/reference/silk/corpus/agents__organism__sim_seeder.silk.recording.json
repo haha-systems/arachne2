@@ -1,0 +1,41 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "agents/organism/sim_seeder.silk",
+  "source_sha256": "be12d547d0bb2d05805e3a499717a0b8da533f8c87d15825e1c2cbf12685d4f2",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "agents/organism/sim_seeder.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 14.471
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "contract_net_complete",
+      "args": [
+        "sim-boot",
+        "seeder",
+        {
+          "hop": 0,
+          "kind": "seed"
+        }
+      ],
+      "result": {
+        "status": "not_found"
+      },
+      "duration": 11833
+    }
+  ],
+  "trace_sequence_complete": true
+}

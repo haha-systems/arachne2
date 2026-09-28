@@ -1,0 +1,30 @@
+// Simple in-process worker for the contract-net runtime.
+
+capability "worker.cnp" {
+  topics = ["cnp.demo"]
+  tools  = []
+}
+
+state worker_id = "worker-1"
+
+fn register_self() {
+  return contract_net.register_agent(worker_id, {skills: ["demo"]})
+}
+
+fn submit_demo_bid(auction) {
+  // Confidence and price feed into the runtime's weighted selector.
+  return contract_net.submit_bid(auction.auction_id, worker_id, {
+    confidence: 0.82,
+    price: 1.2,
+    notes: "fast-local"
+  })
+}
+
+fn execute_assignment(assignment) {
+  // Pretend to do work and return a result object.
+  return {
+    status: "ok",
+    task: assignment.task,
+    completed_by: worker_id
+  }
+}

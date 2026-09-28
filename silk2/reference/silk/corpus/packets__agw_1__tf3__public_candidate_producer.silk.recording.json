@@ -1,0 +1,23 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "packets/agw_1/tf3/public_candidate_producer.silk",
+  "source_sha256": "8c4ca0baeddb918498793ffb35b8fbfa4ce6b7c22fc64caf13182af0fb96c9db",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "packets/agw_1/tf3/public_candidate_producer.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 1,
+    "timed_out": false,
+    "duration_ms": 286.081
+  },
+  "stdout": "",
+  "output": "\u001b[31merror\u001b[0m: undefined identifier: 'task_input'\n\n\u001b[36mnote\u001b[0m: Variables must be declared before use. Use 'state' or 'let' to define variables.\n\u001b[31merror\u001b[0m: Runtime error: UndefinedVariable\nerror: UndefinedVariable\n/Users/xiy/code/arachne/src/Interpreter.zig:1073:21: 0x1044c06db in evalExpression (silk)\n                    return Error.UndefinedVariable;\n                    ^\n/Users/xiy/code/arachne/src/Interpreter.zig:1089:30: 0x1044c128f in evalExpression (silk)\n                const left = try self.evalExpression(de.left);\n                             ^\n/Users/xiy/code/arachne/src/Interpreter.zig:811:36: 0x1044bb867 in evalStatement (silk)\n                const collection = try self.evalExpression(fs.collection);\n                                   ^\n/Users/xiy/code/arachne/src/Interpreter.zig:628:21: 0x1047ab19f in execute (silk)\n                _ = try self.evalStatement(stmt);\n                    ^\n/Users/xiy/code/arachne/src/main.zig:524:9: 0x10438f6d7 in runFile (silk)\n        return err;\n        ^\n/Users/xiy/code/arachne/src/main.zig:62:13: 0x1043e76f7 in main (silk)\n            try runFile(allocator, args[2], &interpreter);\n            ^",
+  "trace": [],
+  "trace_sequence_complete": true
+}

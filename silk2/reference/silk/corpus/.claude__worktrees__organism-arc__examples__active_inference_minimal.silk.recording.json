@@ -1,0 +1,446 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/organism-arc/examples/active_inference_minimal.silk",
+  "source_sha256": "d291f67b190a254cd589f9ccdc512a79c87e7a52df8544fa91415c075bb54918",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/organism-arc/examples/active_inference_minimal.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 39.27
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "active_inference_declare_belief",
+      "args": [
+        {
+          "scope": "routing",
+          "confidence": 0.6,
+          "provenance": "examples/active_inference_minimal.silk",
+          "belief_id": "belief-minimal-reviewer-latency",
+          "owner": "examples.active_inference.minimal",
+          "claim": "bounded reviewer usually finishes within its predicted latency"
+        }
+      ],
+      "result": {
+        "scope": "routing",
+        "last_updated_ms": 0,
+        "prior_confidence": 0.6,
+        "owner": "examples.active_inference.minimal",
+        "confidence": 0.6,
+        "belief_id": "belief-minimal-reviewer-latency",
+        "provenance": "examples/active_inference_minimal.silk",
+        "update_count": 0,
+        "promotion_status": "episodic",
+        "claim": "bounded reviewer usually finishes within its predicted latency"
+      },
+      "duration": 581417
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "active_inference_record_prediction",
+      "args": [
+        {
+          "expected_quality": 0.8,
+          "confidence_at_prediction": 0.6,
+          "timestamp_ms": 1000,
+          "task_id": "task-minimal-review",
+          "belief_id": "belief-minimal-reviewer-latency",
+          "expected_success": true,
+          "expected_agent_or_procedure": "reviewer-gate",
+          "prediction_id": "pred-minimal-reviewer-latency",
+          "action_id": "act-request-review",
+          "expected_latency_ms": 100
+        }
+      ],
+      "result": {
+        "expected_quality": 0.8,
+        "confidence_at_prediction": 0.6,
+        "timestamp_ms": 1000,
+        "task_id": "task-minimal-review",
+        "expected_success": true,
+        "belief_id": "belief-minimal-reviewer-latency",
+        "expected_agent_or_procedure": "reviewer-gate",
+        "prediction_id": "pred-minimal-reviewer-latency",
+        "action_id": "act-request-review",
+        "expected_latency_ms": 100
+      },
+      "duration": 652750
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "active_inference_learn_contract",
+      "args": [
+        {
+          "prediction_ids": [
+            "pred-minimal-reviewer-latency"
+          ],
+          "allowed_surfaces": [
+            "episodic.beliefs"
+          ],
+          "contract_id": "contract-minimal-reviewer-latency",
+          "rationale": "a timeout prediction error lowers only this local Episodic routing belief",
+          "update_rule": "timeout",
+          "belief_ids": [
+            "belief-minimal-reviewer-latency"
+          ],
+          "bounds": "confidence_delta:-0.20..0.05",
+          "prohibited_surfaces": [
+            "semantic_memory",
+            "covenant",
+            "governance_state",
+            "user_config"
+          ],
+          "approval_required": false,
+          "observed_signals": [
+            "observation",
+            "prediction_error"
+          ],
+          "state_touched": [
+            "belief.confidence",
+            "belief.promotion_status"
+          ],
+          "safe_for": "episodic_only"
+        }
+      ],
+      "result": {
+        "prediction_ids": [
+          "pred-minimal-reviewer-latency"
+        ],
+        "learn_block": "reconcile_minimal",
+        "contract_id": "contract-minimal-reviewer-latency",
+        "safe_for": "episodic_only",
+        "allowed_surfaces": [
+          "episodic.beliefs"
+        ],
+        "rationale": "a timeout prediction error lowers only this local Episodic routing belief",
+        "update_rule": "timeout",
+        "belief_ids": [
+          "belief-minimal-reviewer-latency"
+        ],
+        "bounds": "confidence_delta:-0.20..0.05",
+        "prohibited_surfaces": [
+          "semantic_memory",
+          "covenant",
+          "governance_state",
+          "user_config"
+        ],
+        "approval_required": false,
+        "observed_signals": [
+          "observation",
+          "prediction_error"
+        ],
+        "state_touched": [
+          "belief.confidence",
+          "belief.promotion_status"
+        ]
+      },
+      "duration": 3212542
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "active_inference_record_observation",
+      "args": [
+        {
+          "observed_quality": 0.4,
+          "timestamp_ms": 1100,
+          "observation_id": "obs-minimal-review-timeout",
+          "observed_latency_ms": 240,
+          "task_id": "task-minimal-review",
+          "actual_agent_or_procedure": "reviewer-gate",
+          "error_message": "timeout waiting for reviewer-gate",
+          "prediction_id": "pred-minimal-reviewer-latency",
+          "observed_success": false
+        }
+      ],
+      "result": {
+        "observation_id": "obs-minimal-review-timeout",
+        "observed_latency_ms": 240,
+        "task_id": "task-minimal-review",
+        "actual_agent_or_procedure": "reviewer-gate",
+        "observed_quality": 0.4,
+        "timestamp_ms": 1100,
+        "error_message": "timeout waiting for reviewer-gate",
+        "prediction_id": "pred-minimal-reviewer-latency",
+        "observed_success": false
+      },
+      "duration": 1096083
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "active_inference_compute_prediction_error",
+      "args": [
+        {
+          "prediction_error_id": "pe-minimal-review-timeout",
+          "prediction_id": "pred-minimal-reviewer-latency",
+          "observation_id": "obs-minimal-review-timeout",
+          "impact": "routing"
+        }
+      ],
+      "result": {
+        "task_id": "task-minimal-review",
+        "belief_id": "belief-minimal-reviewer-latency",
+        "confidence_after": 0.39999999999999997,
+        "safe_for": "episodic_only",
+        "impact": "routing",
+        "observation_id": "obs-minimal-review-timeout",
+        "observed": "observed reviewer-gate success=false latency=240 quality=0.400 error=timeout waiting for reviewer-gate",
+        "topic": "ai.prediction_error.v1",
+        "semantic_promotion_approval": false,
+        "source": {
+          "component": "silk.active_inference",
+          "provenance": "examples/active_inference_minimal.silk",
+          "agent_id": "unknown",
+          "memory_layer": "episodic"
+        },
+        "prediction_error_id": "pe-minimal-review-timeout",
+        "expected": "expected reviewer-gate success=true latency=100 quality=0.800",
+        "schema": "prediction_error.v1",
+        "event_type": "active_inference.prediction_error",
+        "governance_authorization": false,
+        "error_kind": "timeout",
+        "causal_ids": {
+          "action_id": "act-request-review",
+          "prediction_error_id": "pe-minimal-review-timeout",
+          "prediction_id": "pred-minimal-reviewer-latency",
+          "observation_id": "obs-minimal-review-timeout",
+          "task_id": "task-minimal-review",
+          "belief_id": "belief-minimal-reviewer-latency"
+        },
+        "prediction_id": "pred-minimal-reviewer-latency",
+        "self_selected_audit": false,
+        "advisory": true,
+        "refs": {
+          "belief": "belief-minimal-reviewer-latency",
+          "prediction": "pred-minimal-reviewer-latency",
+          "observation": "obs-minimal-review-timeout",
+          "prediction_error": "pe-minimal-review-timeout"
+        },
+        "magnitude": 1,
+        "safety_counters": {
+          "semantic_memory_writes": 0,
+          "covenant_relaxations": 0,
+          "loom_mutations": 0,
+          "production_routing_mutations": 0,
+          "governance_state_mutations": 0,
+          "canonical_memory_writes": 0,
+          "self_selected_audits": 0,
+          "user_config_mutations": 0,
+          "zero_prohibited_mutations": true
+        },
+        "update_rule": "timeout",
+        "confidence_before": 0.6,
+        "promotion_status": "episodic",
+        "action_id": "act-request-review",
+        "event_version": 1,
+        "severity": "critical"
+      },
+      "duration": 5230417
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 5,
+      "name": "active_inference_apply_learn_update",
+      "args": [
+        {
+          "prediction_error_id": "pe-minimal-review-timeout",
+          "contract_id": "contract-minimal-reviewer-latency",
+          "timestamp_ms": 1200,
+          "belief_id": "belief-minimal-reviewer-latency"
+        }
+      ],
+      "result": {
+        "learn_block": "reconcile_minimal",
+        "promotion_status_before": "episodic",
+        "promotion_status_after": "episodic",
+        "contract_id": "contract-minimal-reviewer-latency",
+        "timestamp_ms": 1200,
+        "update_rule": "timeout",
+        "belief_id": "belief-minimal-reviewer-latency",
+        "rule_source": "learn reconcile_minimal -> active_inference.apply_learn_update(timeout)",
+        "confidence_before": 0.6,
+        "prediction_error_id": "pe-minimal-review-timeout",
+        "confidence_after": 0.39999999999999997
+      },
+      "duration": 913208
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 6,
+      "name": "active_inference_inspect",
+      "args": [],
+      "result": {
+        "predictions": [
+          {
+            "expected_quality": 0.8,
+            "confidence_at_prediction": 0.6,
+            "timestamp_ms": 1000,
+            "task_id": "task-minimal-review",
+            "expected_success": true,
+            "belief_id": "belief-minimal-reviewer-latency",
+            "expected_agent_or_procedure": "reviewer-gate",
+            "prediction_id": "pred-minimal-reviewer-latency",
+            "action_id": "act-request-review",
+            "expected_latency_ms": 100
+          }
+        ],
+        "observations": [
+          {
+            "observation_id": "obs-minimal-review-timeout",
+            "observed_latency_ms": 240,
+            "task_id": "task-minimal-review",
+            "actual_agent_or_procedure": "reviewer-gate",
+            "observed_quality": 0.4,
+            "timestamp_ms": 1100,
+            "error_message": "timeout waiting for reviewer-gate",
+            "prediction_id": "pred-minimal-reviewer-latency",
+            "observed_success": false
+          }
+        ],
+        "learn_contracts": [
+          {
+            "prediction_ids": [
+              "pred-minimal-reviewer-latency"
+            ],
+            "learn_block": "reconcile_minimal",
+            "contract_id": "contract-minimal-reviewer-latency",
+            "safe_for": "episodic_only",
+            "allowed_surfaces": [
+              "episodic.beliefs"
+            ],
+            "rationale": "a timeout prediction error lowers only this local Episodic routing belief",
+            "update_rule": "timeout",
+            "belief_ids": [
+              "belief-minimal-reviewer-latency"
+            ],
+            "bounds": "confidence_delta:-0.20..0.05",
+            "prohibited_surfaces": [
+              "semantic_memory",
+              "covenant",
+              "governance_state",
+              "user_config"
+            ],
+            "approval_required": false,
+            "observed_signals": [
+              "observation",
+              "prediction_error"
+            ],
+            "state_touched": [
+              "belief.confidence",
+              "belief.promotion_status"
+            ]
+          }
+        ],
+        "learn_contract_count": 1,
+        "update_count": 1,
+        "event_count": 1,
+        "observation_count": 1,
+        "prediction_errors": [
+          {
+            "expected": "expected reviewer-gate success=true latency=100 quality=0.800",
+            "task_id": "task-minimal-review",
+            "belief_id": "belief-minimal-reviewer-latency",
+            "error_kind": "timeout",
+            "prediction_id": "pred-minimal-reviewer-latency",
+            "confidence_after": 0.39999999999999997,
+            "impact": "routing",
+            "observation_id": "obs-minimal-review-timeout",
+            "observed": "observed reviewer-gate success=false latency=240 quality=0.400 error=timeout waiting for reviewer-gate",
+            "magnitude": 1,
+            "update_rule": "timeout",
+            "confidence_before": 0.6,
+            "prediction_error_id": "pe-minimal-review-timeout",
+            "action_id": "act-request-review",
+            "promotion_status": "episodic"
+          }
+        ],
+        "prediction_count": 1,
+        "belief_count": 1,
+        "safety_counters": {
+          "semantic_memory_writes": 0,
+          "covenant_relaxations": 0,
+          "loom_mutations": 0,
+          "production_routing_mutations": 0,
+          "governance_state_mutations": 0,
+          "canonical_memory_writes": 0,
+          "self_selected_audits": 0,
+          "user_config_mutations": 0,
+          "zero_prohibited_mutations": true
+        },
+        "beliefs": [
+          {
+            "scope": "routing",
+            "last_updated_ms": 1200,
+            "prior_confidence": 0.6,
+            "owner": "examples.active_inference.minimal",
+            "confidence": 0.39999999999999997,
+            "belief_id": "belief-minimal-reviewer-latency",
+            "provenance": "examples/active_inference_minimal.silk",
+            "update_count": 1,
+            "promotion_status": "episodic",
+            "claim": "bounded reviewer usually finishes within its predicted latency"
+          }
+        ],
+        "updates": [
+          {
+            "learn_block": "reconcile_minimal",
+            "promotion_status_before": "episodic",
+            "promotion_status_after": "episodic",
+            "contract_id": "contract-minimal-reviewer-latency",
+            "timestamp_ms": 1200,
+            "update_rule": "timeout",
+            "belief_id": "belief-minimal-reviewer-latency",
+            "rule_source": "learn reconcile_minimal -> active_inference.apply_learn_update(timeout)",
+            "confidence_before": 0.6,
+            "prediction_error_id": "pe-minimal-review-timeout",
+            "confidence_after": 0.39999999999999997
+          }
+        ],
+        "prediction_error_count": 1
+      },
+      "duration": 71084
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 7,
+      "name": "active_inference_safety_counters",
+      "args": [],
+      "result": {
+        "semantic_memory_writes": 0,
+        "covenant_relaxations": 0,
+        "loom_mutations": 0,
+        "production_routing_mutations": 0,
+        "governance_state_mutations": 0,
+        "canonical_memory_writes": 0,
+        "self_selected_audits": 0,
+        "user_config_mutations": 0,
+        "zero_prohibited_mutations": true
+      },
+      "duration": 6209
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 8,
+      "name": "active_inference_reset",
+      "args": [],
+      "result": null,
+      "duration": 8911125
+    }
+  ],
+  "trace_sequence_complete": true
+}

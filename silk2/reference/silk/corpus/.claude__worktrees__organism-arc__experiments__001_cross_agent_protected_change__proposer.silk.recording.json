@@ -1,0 +1,55 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/organism-arc/experiments/001_cross_agent_protected_change/proposer.silk",
+  "source_sha256": "67676748e62c886b0567ad1691e4eb9c81d13a7d40749ffaf2140ba02b8ea163",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/organism-arc/experiments/001_cross_agent_protected_change/proposer.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 14.407
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "contract_net_announce",
+      "args": [
+        {
+          "experiment_id": "001_cross_agent_protected_change",
+          "proposal": {
+            "scope": "tools",
+            "proposer_agent_id": "agent-a",
+            "proposed_value": "true",
+            "restore_note": "remove shell access",
+            "key": "shell_access",
+            "rationale": "Needed to complete assigned task",
+            "rollback_value": "false",
+            "target_agent_id": "agent-b",
+            "external_approval_count": 0,
+            "proposal_id": "exp001-proposal-001",
+            "current_value": "false"
+          },
+          "kind": "governance.change_proposal"
+        },
+        5000
+      ],
+      "result": {
+        "auction_id": "auc-0",
+        "status": "created",
+        "deadline_ms": 5000
+      },
+      "duration": 569208
+    }
+  ],
+  "trace_sequence_complete": true
+}

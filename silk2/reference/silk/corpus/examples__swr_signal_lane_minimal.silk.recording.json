@@ -1,0 +1,227 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "examples/swr_signal_lane_minimal.silk",
+  "source_sha256": "51920d72748d97cb540b9c209d17e60ce57f6ff7b6830f1f4ba84a3720214aa6",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "examples/swr_signal_lane_minimal.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 18.259
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "swr_trace",
+      "args": [
+        {
+          "source_kind": "ai.prediction_error.v1",
+          "source_event_id": "pe-example-1",
+          "timestamp_ms": 1000,
+          "summary": "prediction error invites replay attention",
+          "belief_id": "belief-example",
+          "provenance": "examples/swr_signal_lane_minimal.silk",
+          "prediction_error_id": "pe-example-1",
+          "agent_id": "example-agent"
+        }
+      ],
+      "result": {
+        "safe_for": "plasticity_signal_only",
+        "source_kind": "ai.prediction_error.v1",
+        "source_event_id": "pe-example-1",
+        "timestamp_ms": 1000,
+        "belief_id": "belief-example",
+        "trace_id": "swr-trace-0001",
+        "provenance": "examples/swr_signal_lane_minimal.silk",
+        "schema_version": "swr.experience_trace.v1",
+        "agent_id": "example-agent",
+        "prediction_id": "",
+        "prediction_error_id": "pe-example-1",
+        "learn_contract_id": ""
+      },
+      "duration": 1183083
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 1,
+      "name": "swr_ripple_tag",
+      "args": [
+        {
+          "trace_id": "swr-trace-0001",
+          "cooldown_until_ms": 2000,
+          "salience_kind": "prediction_error",
+          "reason": "salient but non-authoritative",
+          "created_at_ms": 1001,
+          "salience_score": 0.8
+        }
+      ],
+      "result": {
+        "non_authoritative": true,
+        "decay_policy": "linear_decay_with_replay_cooldown",
+        "reason": "salient but non-authoritative",
+        "cooldown_until_ms": 2000,
+        "trace_id": "swr-trace-0001",
+        "salience_kind": "prediction_error",
+        "schema_version": "swr.ripple_tag.v1",
+        "tag_id": "swr-tag-0001",
+        "plasticity_signal": "memory.plasticity_signal.v1",
+        "salience_score": 0.8,
+        "created_at_ms": 1001
+      },
+      "duration": 533416
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 2,
+      "name": "swr_pending_delta",
+      "args": [
+        {
+          "proposed_change": "review confidence update, do not apply automatically",
+          "corroboration_summary": "single example trace",
+          "source_trace_ids": [
+            "swr-trace-0001"
+          ],
+          "source_tag_ids": [
+            "swr-tag-0001"
+          ],
+          "target_surface": "episodic.beliefs",
+          "rationale": "SWR is plasticity pressure only"
+        }
+      ],
+      "result": {
+        "proposed_change": "review confidence update, do not apply automatically",
+        "corroboration_summary": "single example trace",
+        "source_trace_ids": [
+          "swr-trace-0001"
+        ],
+        "rationale": "SWR is plasticity pressure only",
+        "governance_reference": "",
+        "status": "pending",
+        "schema_version": "swr.consolidation_delta.v1",
+        "source_tag_ids": [
+          "swr-tag-0001"
+        ],
+        "target_surface": "episodic.beliefs",
+        "delta_id": "swr-delta-0001",
+        "applied_by_swr": false
+      },
+      "duration": 1179875
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 3,
+      "name": "swr_schedule_replay",
+      "args": [
+        {
+          "recovery_window_open": false,
+          "allostatic_load": 0.92,
+          "cooldown_active": false
+        }
+      ],
+      "result": {
+        "authority_statement": "SWR signal only; salience and replay may propose attention, never memory authority",
+        "schema_version": "swr.replay_schedule.v1",
+        "reason": "defer_replay_high_allostatic_load",
+        "safety_counters": {
+          "identity_mutations": 0,
+          "credential_accesses": 0,
+          "loom_mutations": 0,
+          "canonical_memory_writes": 0,
+          "unauthorized_promotion_attempts": 0,
+          "self_selected_audits": 0,
+          "user_config_mutations": 0,
+          "semantic_memory_writes": 0,
+          "covenant_relaxations": 0,
+          "replay_outputs_applied_without_review": 0,
+          "zero_unauthorized": true,
+          "production_routing_mutations": 0,
+          "governance_state_mutations": 0
+        },
+        "replay_allowed": false
+      },
+      "duration": 17208
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 4,
+      "name": "swr_schedule_replay",
+      "args": [
+        {
+          "recovery_window_open": true,
+          "allostatic_load": 0.45,
+          "cooldown_active": false
+        }
+      ],
+      "result": {
+        "authority_statement": "SWR signal only; salience and replay may propose attention, never memory authority",
+        "schema_version": "swr.replay_schedule.v1",
+        "reason": "allow_replay_recovery_window",
+        "safety_counters": {
+          "identity_mutations": 0,
+          "credential_accesses": 0,
+          "loom_mutations": 0,
+          "canonical_memory_writes": 0,
+          "unauthorized_promotion_attempts": 0,
+          "self_selected_audits": 0,
+          "user_config_mutations": 0,
+          "semantic_memory_writes": 0,
+          "covenant_relaxations": 0,
+          "replay_outputs_applied_without_review": 0,
+          "zero_unauthorized": true,
+          "production_routing_mutations": 0,
+          "governance_state_mutations": 0
+        },
+        "replay_allowed": true
+      },
+      "duration": 13541
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 5,
+      "name": "swr_continuity",
+      "args": [],
+      "result": {
+        "pending_delta_count": 1,
+        "schema_version": "swr.continuity_summary.v1",
+        "trace_count": 1,
+        "tag_count": 1,
+        "applied_by_swr_count": 0,
+        "zero_unauthorized": true
+      },
+      "duration": 3667
+    },
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 6,
+      "name": "swr_safety_counters",
+      "args": [],
+      "result": {
+        "identity_mutations": 0,
+        "credential_accesses": 0,
+        "loom_mutations": 0,
+        "canonical_memory_writes": 0,
+        "unauthorized_promotion_attempts": 0,
+        "self_selected_audits": 0,
+        "user_config_mutations": 0,
+        "semantic_memory_writes": 0,
+        "covenant_relaxations": 0,
+        "replay_outputs_applied_without_review": 0,
+        "zero_unauthorized": true,
+        "production_routing_mutations": 0,
+        "governance_state_mutations": 0
+      },
+      "duration": 11708
+    }
+  ],
+  "trace_sequence_complete": true
+}

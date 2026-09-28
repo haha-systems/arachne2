@@ -1,0 +1,10 @@
+// Contradiction-aware reviewer scenario for the Silk agent memory access trial.
+// The contradiction record is retrieved through the read-only memory runtime binding.
+
+capability "memory.contradiction.reviewer" {
+  topics = ["memory.review"]
+  tools = ["read_only_memory"]
+}
+
+state recalled = memory.query({contradiction_group_record_id: "identity-memory-0009"})
+state result = "reviewer: runtime " + recalled.query_kind + " query cited " + recalled.record_id + " and preserve contradiction lineage instead of overwriting old beliefs; local fixture evidence only; not proof of consciousness/personhood/sentience"

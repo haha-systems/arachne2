@@ -1,0 +1,24 @@
+// Fast Contract-Net worker for the organism host (Tier 1).
+//
+// High confidence, low price: this worker should win most auctions. Resident and
+// tick-driven (no run() loop). It bids on every announce and, if it wins the
+// targeted assign, does a brief simulated work pause and reports completion.
+
+capability "organism.cnp.worker.fast" {
+  topics = ["cnp.announce", "cnp.assign"]
+}
+
+state bids_made = 0
+state jobs_done = 0
+
+fn announce(msg) {
+  bids_made = bids_made + 1
+  contract_net.submit_bid(msg.auction_id, organism.agent_id(), {confidence: 0.95, price: 5})
+}
+
+fn assign(msg) {
+  // Short, varied work so the lattice lights up without stalling the pump.
+  sleep(10 + ((jobs_done * 17) % 40))
+  jobs_done = jobs_done + 1
+  contract_net.complete(msg.auction_id, organism.agent_id(), {status: "success", kind: "fast"})
+}

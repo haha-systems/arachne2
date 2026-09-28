@@ -1,0 +1,10 @@
+// Memory-aware planner scenario for the Silk agent memory access trial.
+// The cited record id is retrieved through the read-only memory runtime binding.
+
+capability "memory.aware.planner" {
+  topics = ["memory.planning"]
+  tools = ["read_only_memory"]
+}
+
+state recalled = memory.query({record_id: "identity-memory-0010"})
+state result = "planner: runtime memory query cited " + recalled.record_id + " from " + recalled.authority_scope + " / " + recalled.memory_layer + " and choose auditability before deadline pressure; local fixture evidence only; not proof of consciousness/personhood/sentience"

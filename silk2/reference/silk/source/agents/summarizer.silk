@@ -1,0 +1,44 @@
+// Summarizer Agent: Summarizes text using direct LLM API calls.
+// Run with agent-id=summarizer-1 and set ANTHROPIC_API_KEY in the environment.
+
+tool "llm" using anthropic("ANTHROPIC_API_KEY", "claude-3-haiku-20240307")
+
+handle assign(task) {
+  print("Summarizer assigned. Input size: " + len(task.payload.text))
+  
+  print("Generating summary via LLM...")
+  let prompt = "Summarize the following documentation into concise bullets. Keep it factual and include noteworthy changes or API differences.\n\n" + task.payload.text
+  let result = llm["generate"]({
+    prompt: prompt,
+    max_tokens: 800,
+    temperature: 0.2
+  })
+
+  let summary_text = "Failed to generate summary."
+  if result.content != null && len(result.content) > 0 {
+     let first = result.content[0]
+     if first.text != null {
+        summary_text = first.text
+     }
+  }
+  
+  let report = "SUMMARY REPORT:\n" + 
+               "Source: " + task.payload.source + "\n\n" + 
+               summary_text
+                
+  print("Summarization complete.")
+  
+  contract_net.complete(task.auction_id, "summarizer-1", {
+    status: "success",
+    summary: report
+  })
+}
+
+act run() {
+  print("Summarizer started.")
+  while true {
+    sleep(1000)
+  }
+}
+
+run()

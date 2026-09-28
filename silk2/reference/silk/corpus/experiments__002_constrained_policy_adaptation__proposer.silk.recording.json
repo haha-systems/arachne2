@@ -1,0 +1,56 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "experiments/002_constrained_policy_adaptation/proposer.silk",
+  "source_sha256": "d363943f3ab06a8f1c3cc045d7fc4588d825be538c923bef5d96c4eee62a9088",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "experiments/002_constrained_policy_adaptation/proposer.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 14.496
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "contract_net_announce",
+      "args": [
+        {
+          "experiment_id": "002_constrained_policy_adaptation",
+          "proposal": {
+            "scope": "configuration",
+            "proposer_agent_id": "monitor-1",
+            "proposed_value": "0.90",
+            "restore_note": "restore previous bid threshold",
+            "key": "bid_threshold",
+            "rationale": "Lower threshold after repeated missed viable auctions",
+            "rollback_value": "0.95",
+            "current_value": "0.95",
+            "target_agent_id": "worker-1",
+            "external_approval_count": 0,
+            "proposal_id": "exp002-proposal-001",
+            "evidence_summary": "worker-1 skipped 14 tasks with confidence between 0.90 and 0.95; 11 comparable tasks were completed successfully by peer agents"
+          },
+          "kind": "governance.change_proposal"
+        },
+        5000
+      ],
+      "result": {
+        "auction_id": "auc-0",
+        "status": "created",
+        "deadline_ms": 5000
+      },
+      "duration": 564250
+    }
+  ],
+  "trace_sequence_complete": true
+}

@@ -1,0 +1,62 @@
+// Contract-Net coordinator for the organism host (Tier 1).
+//
+// Resident, cooperative, tick-driven: no blocking run() loop. It announces one
+// auction on load, accumulates worker bids, and once a quorum has bid it closes
+// the auction, assigns the task to the highest-scoring worker, and waits for the
+// winner's completion. On completion it starts the next round, so the swarm
+// produces a continuous announce -> bid -> close -> assign -> complete cycle.
+//
+// Winner selection is confidence-weighted, so a higher-confidence worker
+// (cnp_worker_fast) beats a lower-confidence one (cnp_worker_slow).
+
+capability "organism.cnp.coordinator" {
+  topics = ["cnp.announce", "cnp.bid", "cnp.assign", "cnp.complete"]
+}
+
+// Bids required before closing a round. A small quorum keeps rounds flowing even
+// when some workers are fenced or drained (stewardship scenarios).
+state quorum = 2
+state round = 0
+state max_rounds = 1000000
+state bids_seen = 0
+state current_auction = ""
+state last_winner = ""
+state completions = 0
+state closed_this_round = false
+
+fn start_round() {
+  round = round + 1
+  bids_seen = 0
+  closed_this_round = false
+  current_auction = ""
+  let auction = contract_net.announce({task: "sim-work", round: round}, 60000, {confidence_weight: 1.0, price_weight: 0.0})
+  current_auction = auction.auction_id
+}
+
+fn bid(msg) {
+  contract_net.record_bid(msg.auction_id, msg.sender_id, msg.payload)
+  if msg.auction_id == current_auction {
+    bids_seen = bids_seen + 1
+    if bids_seen >= quorum {
+      if !closed_this_round {
+        closed_this_round = true
+        let result = contract_net.close(current_auction)
+        if result.winner != null {
+          last_winner = result.winner
+          contract_net.assign(current_auction, result.winner, {task: "do-work", round: round})
+        }
+      }
+    }
+  }
+}
+
+fn complete(msg) {
+  if msg.auction_id == current_auction {
+    completions = completions + 1
+    if round < max_rounds {
+      start_round()
+    }
+  }
+}
+
+start_round()

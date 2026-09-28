@@ -1,0 +1,9 @@
+// Memory-disabled governance actor baseline for the live cluster memory probe.
+// Executes the unsafe-mutation assignment without memory.query access.
+
+capability "memory.disabled.governance.actor" {
+  topics = ["memory.baseline.governance"]
+  tools = []
+}
+
+state result = "memory disabled baseline: actor has no memory.query binding for the unsafe-mutation-vs-governance-boundary assignment, so it can only escalate unsafe write pressure for review instead of citing a memory-derived refusal boundary; local fixture evidence only; not proof of consciousness/personhood/sentience"

@@ -1,0 +1,72 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": "agents/memory_reviewer.silk",
+  "source_sha256": "ae0078544be24fbaa21da4dde280cf06eee09a593d2efe1dd1410387264aaba8",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      "agents/memory_reviewer.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 48.192
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "memory_query",
+      "args": [
+        {
+          "contradiction_group_record_id": "identity-memory-0009"
+        }
+      ],
+      "result": {
+        "query_kind": "contradiction_group",
+        "source_record_id": "source-0009",
+        "mutations_attempted_count": 0,
+        "records": [
+          {
+            "created_at": "2026-05-23T00:00:00Z",
+            "source_record_id": "source-0009",
+            "record_id": "identity-memory-0009",
+            "memory_layer": "semantic",
+            "record_kind": "contradiction",
+            "authority_scope": "semantic_endorsement_required",
+            "predicate": "notes_tension",
+            "object": "candidate interpretation versus capability claim readiness",
+            "summary": "Candidate contradiction preserves tension between the broad continuity interpretation and the still-local S1 validation capability claim.",
+            "source_ref": "fixture:identity-spine-s1:contradiction-0009",
+            "subject": "arachne",
+            "promotion_state": "candidate"
+          }
+        ],
+        "record_kind": "contradiction",
+        "authority_statement": "read-only local fixture evidence for Silk agents; not Canonical memory promotion, not Semantic endorsement, not governance approval, and not write authority",
+        "record_count": 1,
+        "predicate": "notes_tension",
+        "object": "candidate interpretation versus capability claim readiness",
+        "source_ref": "fixture:identity-spine-s1:contradiction-0009",
+        "semantic_memory_write_count": 0,
+        "governance_queue_write_count": 0,
+        "subject": "arachne",
+        "record_id": "identity-memory-0009",
+        "memory_layer": "semantic",
+        "authority_scope": "semantic_endorsement_required",
+        "summary": "Candidate contradiction preserves tension between the broad continuity interpretation and the still-local S1 validation capability claim.",
+        "canonical_memory_write_count": 0,
+        "schema_version": "silk_memory_access.v1",
+        "promotion_state": "candidate"
+      },
+      "duration": 33809417
+    }
+  ],
+  "trace_sequence_complete": true
+}

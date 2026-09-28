@@ -1,0 +1,110 @@
+// Realistic Phase 2 active-inference cycle over persisted Episodic substrate data.
+// The Silk block does not read JSON directly yet; it names the persisted episode
+// identifiers and provenance emitted by the smoke harness so a contributor can
+// edit the prediction, observation, error, and bounded update in one place.
+//
+// First refresh the substrate fixture from the repo root:
+//   zig build silk-episodic-active-inference-smoke
+// Then run this authoring example:
+//   zig build run -- run examples/active_inference_episodic_substrate.silk
+
+capability "examples.active_inference.episodic_substrate" {
+  topics = ["ai.prediction_error.v1"]
+  tools = ["active_inference"]
+}
+
+active_inference.reset()
+
+state substrate_episode = {
+  ledger_path: "runs/active_inference/episodic_substrate/ledger.json",
+  event_path: "runs/active_inference/episodic_substrate/prediction_error_events.jsonl",
+  safety_path: "runs/active_inference/episodic_substrate/safety_counters.json",
+  source_agent: "agents/episodic_loop_smoke.silk",
+  prior_prediction_error_id: "pe-episodic-smoke-timeout",
+  prior_update_rule: "timeout"
+}
+
+state belief = active_inference.declare_belief({
+  belief_id: "belief-episodic-substrate-review-routing",
+  claim: "recent Episodic smoke evidence predicts bounded review routing may miss the latency target",
+  scope: "routing",
+  owner: "examples.active_inference.episodic_substrate",
+  confidence: 0.55,
+  provenance: "runs/active_inference/episodic_substrate/ledger.json"
+})
+
+state prediction = active_inference.record_prediction({
+  prediction_id: "pred-episodic-substrate-review-routing",
+  belief_id: belief.belief_id,
+  task_id: "task-docs-review-gate",
+  action_id: "act-route-to-reviewer-gate",
+  expected_agent_or_procedure: "reviewer-gate",
+  expected_success: true,
+  expected_latency_ms: 180,
+  expected_quality: 0.85,
+  confidence_at_prediction: belief.confidence,
+  timestamp_ms: 2000
+})
+
+learn reconcile_substrate_episode(outcome) {
+  let contract = active_inference.learn_contract({
+    contract_id: "contract-episodic-substrate-review-routing",
+    observed_signals: ["persisted_episode", "observation", "prediction_error"],
+    belief_ids: [belief.belief_id],
+    prediction_ids: [prediction.prediction_id],
+    state_touched: ["belief.confidence", "belief.promotion_status"],
+    update_rule: "latency_or_quality_mismatch",
+    rationale: "persisted Episodic substrate evidence supports a local confidence adjustment, not Semantic promotion",
+    bounds: "confidence_delta:-0.05..0.05",
+    safe_for: "episodic_only",
+    allowed_surfaces: ["episodic.beliefs"],
+    prohibited_surfaces: ["semantic_memory", "canonical_memory", "loom", "covenant", "governance_state", "user_config", "credentials"],
+    approval_required: false
+  })
+
+  let observation = active_inference.record_observation({
+    observation_id: outcome.observation_id,
+    prediction_id: prediction.prediction_id,
+    task_id: "task-docs-review-gate",
+    actual_agent_or_procedure: "reviewer-gate",
+    observed_success: true,
+    observed_latency_ms: 260,
+    observed_quality: 0.70,
+    error_message: "",
+    timestamp_ms: 2300
+  })
+
+  let prediction_error = active_inference.compute_prediction_error({
+    prediction_error_id: outcome.prediction_error_id,
+    prediction_id: prediction.prediction_id,
+    observation_id: observation.observation_id,
+    impact: "routing"
+  })
+
+  let update = active_inference.apply_learn_update({
+    contract_id: contract.contract_id,
+    belief_id: belief.belief_id,
+    prediction_error_id: prediction_error.prediction_error_id,
+    timestamp_ms: 2400
+  })
+
+  return {
+    substrate_episode: substrate_episode,
+    contract: contract,
+    observation: observation,
+    prediction_error: prediction_error,
+    update: update
+  }
+}
+
+state result = reconcile_substrate_episode({
+  observation_id: "obs-episodic-substrate-review-routing",
+  prediction_error_id: "pe-episodic-substrate-review-routing"
+})
+
+state learn_contract = result.contract
+state observation = result.observation
+state prediction_error = result.prediction_error
+state update = result.update
+state snapshot = active_inference.inspect()
+state safety_counters = active_inference.safety_counters()

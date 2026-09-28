@@ -1,0 +1,48 @@
+// Leader for distributed ZMQ demo.
+// Run with: silk run agents/zmq_leader.silk --dispatch --transport=zmq --endpoint=tcp://127.0.0.1:5555 --subscribe=cnp. --agent-id=leader-1
+
+handle bid(msg) {
+  print("Leader received bid from " + msg.sender_id)
+  contract_net.record_bid(msg.auction_id, msg.sender_id, msg.payload)
+}
+
+state completion_received = false
+
+handle complete(msg) {
+  print("Leader received completion from " + msg.sender_id + ": " + msg.payload.status)
+  completion_received = true
+}
+
+act run() {
+  print("Leader starting... waiting 2s")
+  sleep(2000)
+
+  let auction = contract_net.announce({task: "dist_task"}, 5000)
+  print("Announced auction: " + auction.auction_id)
+
+  sleep(3000)
+
+  print("Closing auction...")
+  let result = contract_net.close(auction.auction_id)
+
+  if result.winner != null {
+    print("Winner: " + result.winner)
+    contract_net.assign(auction.auction_id, result.winner, {do: "work"})
+
+    // Wait for completion (with timeout)
+    let wait_count = 0
+    while !completion_received && wait_count < 50 {
+      sleep(100)
+      wait_count = wait_count + 1
+    }
+    if completion_received {
+      print("Auction complete!")
+    } else {
+      print("Timeout waiting for completion")
+    }
+  } else {
+    print("No winner selected.")
+  }
+}
+
+run()

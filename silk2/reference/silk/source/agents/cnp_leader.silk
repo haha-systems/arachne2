@@ -1,0 +1,49 @@
+// Leader demonstrating the in-process contract-net runtime with callbacks.
+import "agents/cnp_worker"
+
+capability "leader.cnp" {
+  topics = ["cnp.demo"]
+  tools  = []
+}
+
+state auction_config = {confidence_weight: 0.6, price_weight: 0.4}
+
+fn on_assign(evt) {
+  print("assignment -> " + evt.agent_id)
+}
+
+fn on_complete(evt) {
+  print("completion -> " + evt.result.status)
+}
+
+act run_demo() {
+  contract_net.on_assignment(on_assign)
+  contract_net.on_complete(on_complete)
+
+  // Register worker and announce an auction.
+  let reg = register_self()
+  print("registered: " + reg.status)
+
+  let auction = contract_net.announce({topic: "demo.task"}, 750, auction_config)
+
+  // Worker bids.
+  let bid = submit_demo_bid(auction)
+  print("bid: " + bid.status)
+
+  // Close auction and choose winner.
+  let result = contract_net.close(auction.auction_id)
+  print("winner: " + result.winner)
+
+  if result.winner == null || result.winner == "" {
+    print("no winner selected")
+    return "no winner"
+  }
+
+  // Assign task and mark completion.
+  contract_net.assign(result.auction_id, result.winner, {task: "demo"})
+  let output = execute_assignment({task: "demo"})
+  contract_net.complete(result.auction_id, result.winner, output)
+}
+
+// Execute when run as a script.
+run_demo()

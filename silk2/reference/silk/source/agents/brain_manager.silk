@@ -1,0 +1,161 @@
+// Brain Manager: orchestrates a multi-stage design mission with many auctions.
+// Mission: design a scalable, low-latency distributed cache with eviction and consistency plan.
+// Run with agent-id=brain-manager-1
+
+state research_done = false
+state design_done = false
+state review_done = false
+state code_done = false
+state tests_done = false
+state research_notes = ""
+state synthesis = ""
+state design_doc = ""
+state critique = ""
+state code_stubs = ""
+state test_plan = ""
+
+fn emit_artifact(label, format, content) {
+  print(":::silk:artifact:start label=" + label + " format=" + format)
+  print(content)
+  print(":::silk:artifact:end")
+}
+
+handle complete(msg) {
+  if msg.payload == null {
+    return null
+  }
+  if msg.payload.docs != null && msg.payload.topic != null {
+    research_notes = research_notes + "\n## " + msg.payload.topic + "\n" + msg.payload.docs
+  }
+  if msg.payload.task == "synthesis" {
+    synthesis = msg.payload.text
+  }
+  if msg.payload.task == "design" {
+    design_doc = msg.payload.text
+    design_done = true
+  }
+  if msg.payload.review != null {
+    critique = msg.payload.review
+    review_done = true
+  }
+  if msg.payload.code != null {
+    code_stubs = code_stubs + "\n" + msg.payload.code
+    code_done = true
+  }
+  if msg.payload.plan != null {
+    test_plan = msg.payload.plan
+    tests_done = true
+  }
+
+  if msg.payload.topic != null && msg.payload.status == "success" {
+    research_done = true // we treat completion as all done after loop below collects each
+  }
+}
+
+// Ignore other contract-net events
+handle announce(msg) { return null }
+handle assign(msg) { return null }
+
+act run() {
+  let mission = "Design a scalable, low-latency distributed cache with eviction and consistency plan"
+  let args_list = args()
+  if len(args_list) > 0 {
+    mission = args_list[0]
+  }
+
+  print("Brain Manager starting mission: " + mission)
+  sleep(2000)
+
+  // Stage 1: Research auctions for multiple topics
+  let topics = ["architecture", "consistency", "eviction", "transport", "operations"]
+  for topic in topics {
+    let auc = contract_net.announce({task: "research", topic: topic, mission: mission}, 10000)
+    sleep(1000)
+    contract_net.assign(auc.auction_id, "researcher-1", {
+      query: mission + " - " + topic,
+      auction_id: auc.auction_id,
+      topic: topic
+    })
+  }
+
+  // Wait for research to accumulate
+  sleep(8000)
+
+  // Stage 2: Synthesis
+  let synth_auc = contract_net.announce({task: "synthesis"}, 8000)
+  sleep(1000)
+  contract_net.assign(synth_auc.auction_id, "designer-1", {
+    task: "synthesis",
+    text: "Mission: " + mission + "\n\nNotes:\n" + research_notes,
+    auction_id: synth_auc.auction_id
+  })
+
+  // Stage 3: Design
+  let design_auc = contract_net.announce({task: "design"}, 8000)
+  sleep(1000)
+  contract_net.assign(design_auc.auction_id, "designer-1", {
+    task: "design",
+    text: "Mission: " + mission + "\n\nSynthesis:\n" + synthesis + "\n\nNotes:\n" + research_notes,
+    auction_id: design_auc.auction_id
+  })
+
+  // Stage 4: Critique
+  let review_auc = contract_net.announce({task: "review"}, 8000)
+  sleep(1000)
+  contract_net.assign(review_auc.auction_id, "critic-1", {
+    focus: "architecture, consistency, performance",
+    text: "Design:\n" + design_doc,
+    auction_id: review_auc.auction_id
+  })
+
+  // Stage 5: Codegen stub
+  let code_auc = contract_net.announce({task: "codegen"}, 8000)
+  sleep(1000)
+  contract_net.assign(code_auc.auction_id, "coder-1", {
+    module: "cache service interfaces",
+    text: design_doc,
+    auction_id: code_auc.auction_id
+  })
+
+  // Stage 6: Test plan
+  let test_auc = contract_net.announce({task: "tests"}, 8000)
+  sleep(1000)
+  contract_net.assign(test_auc.auction_id, "tester-1", {
+    scope: "distributed cache",
+    text: design_doc,
+    auction_id: test_auc.auction_id
+  })
+
+  // Wait for completions
+  sleep(8000)
+
+  // Emit artifacts
+  emit_artifact("mission", "markdown", mission)
+  emit_artifact("research-notes", "markdown", research_notes)
+  if synthesis != "" {
+    emit_artifact("synthesis", "markdown", synthesis)
+  }
+  if design_doc != "" {
+    emit_artifact("design", "markdown", design_doc)
+  }
+  if critique != "" {
+    emit_artifact("critique", "markdown", critique)
+  }
+  if code_stubs != "" {
+    emit_artifact("code-stubs", "markdown", code_stubs)
+  }
+  if test_plan != "" {
+    emit_artifact("test-plan", "markdown", test_plan)
+  }
+
+  print(":::silk:artifact:start label=final-report format=markdown")
+  print("# Final Report\n\nMission: " + mission + "\n\n" +
+        "## Synthesis\n" + synthesis + "\n\n" +
+        "## Design\n" + design_doc + "\n\n" +
+        "## Critique\n" + critique + "\n\n" +
+        "## Code Stubs\n" + code_stubs + "\n\n" +
+        "## Test Plan\n" + test_plan)
+  print(":::silk:artifact:end")
+}
+
+run()

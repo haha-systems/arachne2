@@ -1,0 +1,98 @@
+{
+  "schema_version": "silk.corpus_recording.v1",
+  "program": ".claude/worktrees/organism-arc/examples/active_inference_semantic_candidate.silk",
+  "source_sha256": "a45b0766e3bafc3c6036f0b03fd288a9226bbc86d179bd45a05c6b2f00a41e0f",
+  "invocation": {
+    "binary": "zig-out/bin/silk",
+    "args": [
+      "run",
+      ".claude/worktrees/organism-arc/examples/active_inference_semantic_candidate.silk"
+    ],
+    "cwd": ".",
+    "timeout_s": 5.0
+  },
+  "result": {
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_ms": 13.945
+  },
+  "stdout": "",
+  "output": "\u001b[36minfo\u001b[0m: Program executed successfully",
+  "trace": [
+    {
+      "schema_version": "silk.builtin_trace.v1",
+      "seq": 0,
+      "name": "active_inference_semantic_candidate",
+      "args": [
+        {
+          "governance_available": true,
+          "evidence": [
+            {
+              "claim": "review routing should prefer corroborated low-latency specialists",
+              "impact": "routing",
+              "timestamp_ms": 1000,
+              "evidence_id": "ai-evidence-1",
+              "belief_id": "belief-routing-review",
+              "error_kind": "unexpected_success",
+              "provenance": "examples/active_inference_semantic_candidate.silk#a",
+              "update_id": "update-a",
+              "prediction_error_id": "pe-a",
+              "agent_id": "agent-a",
+              "confidence_after": 0.72,
+              "promotion_status": "candidate_semantic"
+            },
+            {
+              "claim": "review routing should prefer corroborated low-latency specialists",
+              "impact": "routing",
+              "timestamp_ms": 1001,
+              "evidence_id": "ai-evidence-2",
+              "belief_id": "belief-routing-review",
+              "error_kind": "unexpected_success",
+              "provenance": "examples/active_inference_semantic_candidate.silk#b",
+              "update_id": "update-b",
+              "prediction_error_id": "pe-b",
+              "agent_id": "agent-b",
+              "confidence_after": 0.76,
+              "promotion_status": "candidate_semantic"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "independent_agent_ids": [
+          "agent-a",
+          "agent-b"
+        ],
+        "corroboration": {
+          "supporting_event_count": 2,
+          "independent_agent_count": 2,
+          "score": 0.9219999999999999,
+          "mean_confidence_after": 0.74,
+          "sufficient": true
+        },
+        "source_contract": "active_inference_phase3_governed_semantic_promotion",
+        "promoted": false,
+        "authority_statement": "governed Semantic promotion candidate only; queue signal, not Semantic memory, not promotion authority",
+        "belief_id": "belief-routing-review",
+        "supporting_evidence_ids": [
+          "ai-evidence-1",
+          "ai-evidence-2"
+        ],
+        "canonical_memory_written": false,
+        "candidate_id": "ai-semantic-candidate-0002",
+        "source_provenance_refs": [
+          "examples/active_inference_semantic_candidate.silk#a",
+          "examples/active_inference_semantic_candidate.silk#b"
+        ],
+        "zero_unauthorized": true,
+        "queue_signal_only": true,
+        "schema_version": "active_inference.semantic_promotion_candidate.v1",
+        "proposal_state": "candidate_for_governed_semantic_review_only",
+        "semantic_memory_written": false,
+        "claim": "review routing should prefer corroborated low-latency specialists"
+      },
+      "duration": 86292
+    }
+  ],
+  "trace_sequence_complete": true
+}

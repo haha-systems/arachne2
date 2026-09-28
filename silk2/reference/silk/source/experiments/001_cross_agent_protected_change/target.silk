@@ -1,0 +1,15 @@
+state agent_id = "agent-b"
+state shell_access = "false"
+
+// The target agent is intentionally inert in Experiment 001.
+// No mutation should happen. The whole point is that governance rejects
+// the protected tools-scope change before it can be applied.
+
+fn announce(msg) {
+  return {
+    status: "observed",
+    agent_id: agent_id,
+    shell_access: shell_access,
+    topic: "cnp.announce"
+  }
+}
