@@ -1,6 +1,6 @@
 # AR-11 — Validate regulatory effects on cognition
 
-**Status:** Backlog  
+**Status:** Ready  
 **Track:** Arachne  
 **Depends on:** AR-10  
 **Source:** PRD §8, Arachne Phase 7
@@ -17,4 +17,3 @@ Create controlled scenarios that vary regulatory state and record changes in att
 
 - At least one regulatory signal causes a repeatable, observable behavioral change.
 - The event history explains the signal and resulting change.
-

@@ -9,6 +9,7 @@ import (
 
 	"github.com/haha-systems/arachne2/internal/agent"
 	"github.com/haha-systems/arachne2/internal/cognition"
+	"github.com/haha-systems/arachne2/internal/regulation"
 	"github.com/haha-systems/arachne2/internal/workspace"
 )
 
@@ -31,8 +32,10 @@ func main() {
 	registerSpecialist(supervisor, events, "planner", "Prepare a small reversible plan.", stimulus.EventID)
 	registerSpecialist(supervisor, events, "critic", "Inspect for likely regressions.", stimulus.EventID)
 	workspaceConfig := workspace.DefaultConfig()
-	workspaceConfig.Capacity = 1
+	workspaceConfig.Capacity = 2
 	proposalWorkspace, err := workspace.New(workspaceConfig, events)
+	fatalIf(err)
+	regulator, err := regulation.New(regulation.DefaultPolicy(), events)
 	fatalIf(err)
 	fatalIf(supervisor.Register("coordinator", agent.Func(func(ctx context.Context, inbox <-chan agent.Message, sender agent.Sender) error {
 		if err := proposalWorkspace.Open(ctx, workspace.Request{
@@ -73,7 +76,18 @@ func main() {
 				proposals = append(proposals, proposal)
 			}
 		}
-		if _, err := proposalWorkspace.Select(ctx, "workspace-1"); err != nil {
+		regulationSnapshot, err := regulator.Evaluate(ctx, regulation.Input{
+			InteractionID: "interaction-1", SessionID: "session-1",
+			SourceEventIDs:   []string{stimulus.EventID},
+			Expected:         json.RawMessage(`{"status":"ready"}`),
+			Observed:         json.RawMessage(`{"status":"degraded"}`),
+			DeclaredSalience: 0.9, ActiveSpecialists: 2, SpecialistCapacity: 2,
+			PendingActions: 2, ActionCapacity: 2, WorkspaceCapacity: 2,
+		})
+		if err != nil {
+			return err
+		}
+		if _, err := proposalWorkspace.SelectWithPolicy(ctx, "workspace-1", regulationSnapshot.WorkspacePolicy); err != nil {
 			return err
 		}
 		report, err := proposalWorkspace.Broadcast(ctx, "workspace-1", "one entry is available; select the higher-confidence candidate", []string{"observer"}, sender)
@@ -110,6 +124,8 @@ func main() {
 	for _, entry := range report.Selection.Entries {
 		fmt.Printf("%s: selected=%t; reason=%s\n", entry.Specialist, entry.Selected, entry.Reason)
 	}
+	fmt.Printf("regulation: state=strained; available workspace capacity=%d; evidence required=%t\n",
+		report.Selection.Capacity, report.Selection.EvidenceRequired)
 	fmt.Printf("broadcast proposals received: %d\n", broadcastCount)
 	allEvents, err := events.Read(ctx, 0, 128)
 	fatalIf(err)

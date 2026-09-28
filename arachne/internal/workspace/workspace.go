@@ -58,13 +58,24 @@ type SelectionEntry struct {
 	Reason     string  `json:"reason"`
 }
 
+// SelectionPolicy carries explicit organism-level adjustments into admission.
+type SelectionPolicy struct {
+	Capacity        int      `json:"capacity"`
+	RequireEvidence bool     `json:"require_evidence"`
+	Reasons         []string `json:"reasons,omitempty"`
+	SignalEventIDs  []string `json:"signal_event_ids,omitempty"`
+}
+
 // Selection records the bounded competition result and its event identity.
 type Selection struct {
-	EventID     string           `json:"event_id"`
-	Capacity    int              `json:"capacity"`
-	Policy      string           `json:"policy"`
-	Entries     []SelectionEntry `json:"entries"`
-	SelectedIDs []string         `json:"selected_ids"`
+	EventID          string           `json:"event_id"`
+	Capacity         int              `json:"capacity"`
+	Policy           string           `json:"policy"`
+	EvidenceRequired bool             `json:"evidence_required"`
+	Entries          []SelectionEntry `json:"entries"`
+	SelectedIDs      []string         `json:"selected_ids"`
+	Reasons          []string         `json:"policy_reasons,omitempty"`
+	SignalEventIDs   []string         `json:"signal_event_ids,omitempty"`
 }
 
 // Delivery captures the result of broadcasting a selection to one agent.
@@ -190,6 +201,11 @@ func (w *Workspace) Submit(ctx context.Context, runID string, proposal agent.Pro
 
 // Select ranks candidates by declared confidence with stable identity tie-breaks.
 func (w *Workspace) Select(ctx context.Context, runID string) (Report, error) {
+	return w.SelectWithPolicy(ctx, runID, SelectionPolicy{Capacity: w.config.Capacity})
+}
+
+// SelectWithPolicy applies bounded regulation adjustments and records their signals.
+func (w *Workspace) SelectWithPolicy(ctx context.Context, runID string, policy SelectionPolicy) (Report, error) {
 	w.mu.Lock()
 	defer w.mu.Unlock()
 	current, exists := w.runs[runID]
@@ -199,9 +215,17 @@ func (w *Workspace) Select(ctx context.Context, runID string) (Report, error) {
 	if current.report.Selection != nil {
 		return cloneReport(current.report), ErrAlreadySelected
 	}
+	if policy.Capacity < 1 || policy.Capacity > w.config.Capacity {
+		return Report{}, errors.New("regulated workspace capacity must be between one and configured capacity")
+	}
 	candidates := make([]agent.Proposal, 0, len(current.report.Proposals))
+	evidenceRejected := make(map[string]struct{})
 	for _, proposal := range current.report.Proposals {
 		if proposal.Status == "candidate" {
+			if policy.RequireEvidence && len(proposal.EvidenceEventIDs) == 0 {
+				evidenceRejected[proposal.ID] = struct{}{}
+				continue
+			}
 			candidates = append(candidates, proposal)
 		}
 	}
@@ -215,28 +239,38 @@ func (w *Workspace) Select(ctx context.Context, runID string) (Report, error) {
 		return candidates[i].ID < candidates[j].ID
 	})
 	selection := &Selection{
-		Capacity:    w.config.Capacity,
-		Policy:      "highest declared confidence; ties by specialist ID then proposal ID",
-		Entries:     make([]SelectionEntry, 0, len(current.report.Proposals)),
-		SelectedIDs: make([]string, 0, min(w.config.Capacity, len(candidates))),
+		Capacity:         policy.Capacity,
+		Policy:           "highest declared confidence; ties by specialist ID then proposal ID",
+		EvidenceRequired: policy.RequireEvidence,
+		Entries:          make([]SelectionEntry, 0, len(current.report.Proposals)),
+		SelectedIDs:      make([]string, 0, min(policy.Capacity, len(candidates))),
+		Reasons:          append([]string(nil), policy.Reasons...),
+		SignalEventIDs:   append([]string(nil), policy.SignalEventIDs...),
 	}
-	selected := make(map[string]struct{}, w.config.Capacity)
+	selected := make(map[string]struct{}, policy.Capacity)
 	for index, proposal := range candidates {
 		entry := SelectionEntry{
 			ProposalID: proposal.ID, Specialist: proposal.SpecialistID,
 			Confidence: proposal.Confidence,
 		}
-		if index < w.config.Capacity {
+		if index < policy.Capacity {
 			entry.Selected = true
 			entry.Reason = "ranked within workspace capacity"
 			selection.SelectedIDs = append(selection.SelectedIDs, proposal.ID)
 			selected[proposal.ID] = struct{}{}
 		} else {
-			entry.Reason = "ranked below admission capacity"
+			entry.Reason = "ranked below regulated admission capacity"
 		}
 		selection.Entries = append(selection.Entries, entry)
 	}
 	for _, proposal := range current.report.Proposals {
+		if _, rejected := evidenceRejected[proposal.ID]; rejected {
+			selection.Entries = append(selection.Entries, SelectionEntry{
+				ProposalID: proposal.ID, Specialist: proposal.SpecialistID,
+				Confidence: proposal.Confidence, Reason: "regulation requires source evidence",
+			})
+			continue
+		}
 		if proposal.Status != "candidate" {
 			selection.Entries = append(selection.Entries, SelectionEntry{
 				ProposalID: proposal.ID, Specialist: proposal.SpecialistID,
@@ -245,6 +279,7 @@ func (w *Workspace) Select(ctx context.Context, runID string) (Report, error) {
 		}
 	}
 	parents := append([]string(nil), current.report.Request.SourceEventIDs...)
+	parents = append(parents, policy.SignalEventIDs...)
 	for _, proposal := range current.report.Proposals {
 		parents = append(parents, proposal.EventID)
 	}
@@ -252,6 +287,8 @@ func (w *Workspace) Select(ctx context.Context, runID string) (Report, error) {
 		"operation": "proposals_selected", "run_id": runID,
 		"interaction_id": current.report.Request.InteractionID,
 		"policy":         selection.Policy, "capacity": selection.Capacity,
+		"evidence_required": selection.EvidenceRequired,
+		"policy_reasons":    selection.Reasons, "signal_event_ids": selection.SignalEventIDs,
 		"entries": selection.Entries, "selected_ids": selection.SelectedIDs,
 	})
 	if err != nil {
@@ -314,7 +351,10 @@ func (w *Workspace) Broadcast(ctx context.Context, runID, reason string, recipie
 	message := map[string]any{
 		"run_id": runID, "interaction_id": request.InteractionID,
 		"selection_event_id": selection.EventID, "selection_policy": selection.Policy,
-		"selection_entries": selection.Entries, "broadcast_reason": reason,
+		"selection_evidence_required": selection.EvidenceRequired,
+		"selection_policy_reasons":    selection.Reasons,
+		"signal_event_ids":            selection.SignalEventIDs,
+		"selection_entries":           selection.Entries, "broadcast_reason": reason,
 		"proposals": selected,
 	}
 	payload, err := json.Marshal(message)
@@ -434,6 +474,8 @@ func cloneProposal(proposal agent.Proposal) agent.Proposal {
 func cloneSelection(selection Selection) *Selection {
 	selection.Entries = append([]SelectionEntry(nil), selection.Entries...)
 	selection.SelectedIDs = append([]string(nil), selection.SelectedIDs...)
+	selection.Reasons = append([]string(nil), selection.Reasons...)
+	selection.SignalEventIDs = append([]string(nil), selection.SignalEventIDs...)
 	return &selection
 }
 

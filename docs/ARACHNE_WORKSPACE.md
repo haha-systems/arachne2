@@ -22,7 +22,9 @@ the reason for every selected, over-capacity, or failed proposal. Confidence is
 a declared ranking input, not verified quality evidence; this simple policy is
 observable and replaceable when a measured workload justifies another rule.
 Salience, regulation, learned ranking, fairness optimization, and governance
-are not part of this workspace policy.
+are not inferred by the workspace. An explicit regulation policy may pass a
+reduced capacity or evidence requirement through `SelectWithPolicy`; those
+signal event IDs and reasons are retained with the selection.
 
 ## Broadcast and inspection
 

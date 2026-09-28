@@ -44,3 +44,5 @@ See the [specialist proposal contract](../docs/ARACHNE_SPECIALISTS.md) and its
 [`specialist-proposals` example](examples/specialist-proposals/main.go) for
 multi-agent candidate work. See the [bounded workspace contract](../docs/ARACHNE_WORKSPACE.md)
 for proposal selection and broadcast.
+The [regulation contract](../docs/ARACHNE_REGULATION.md) explains how explicit
+signals can adjust workspace admission with linked event evidence.
