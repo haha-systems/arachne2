@@ -48,3 +48,7 @@ The [regulation contract](../docs/ARACHNE_REGULATION.md) explains how explicit
 signals can adjust workspace admission with linked event evidence.
 The [regulation experiment](../docs/ARACHNE_REGULATION_EXPERIMENT.md) compares
 five isolated conditions over three repetitions.
+The [governance contract](../docs/ARACHNE_GOVERNANCE.md) documents policy-bound
+eligibility for consequential proposals and the host's authentication and
+enforcement responsibilities; run `go run ./examples/governance` to inspect
+pending, approved, and rejected decisions.

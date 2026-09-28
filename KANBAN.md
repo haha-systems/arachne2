@@ -20,14 +20,13 @@ Move a task by changing its **Status** here and in its task file. Use `Ready` on
 
 ### Ready
 
-| ID                                           | Task                                           | Depends on   |
-| -------------------------------------------- | ---------------------------------------------- | ------------ |
+| ID                                                | Task                                        | Depends on   |
+| ------------------------------------------------- | ------------------------------------------- | ------------ |
+| [AR-12](tasks/AR-12-implement-governed-replay.md) | Implement governed replay and consolidation | AR-07, AR-13 |
 
 ### In Progress
 
-| ID                                              | Task                                          | Depends on |
-| ----------------------------------------------- | --------------------------------------------- | ---------- |
-| [AR-13](tasks/AR-13-implement-governance.md)    | Implement governance for consequential changes | AR-01, AR-05 |
+No tasks are marked In Progress.
 
 ### Review
 
@@ -73,6 +72,7 @@ No tasks are marked Review.
 | [AR-09](tasks/AR-09-implement-bounded-workspace.md)               | Implement bounded workspace coordination                | [Bounded workspace](docs/ARACHNE_WORKSPACE.md)                 |
 | [AR-10](tasks/AR-10-model-regulation-and-prediction-error.md)     | Model regulation and prediction error                   | [Regulation model](docs/ARACHNE_REGULATION.md)                 |
 | [AR-11](tasks/AR-11-validate-regulatory-effects.md)               | Validate regulatory effects on cognition                | [Regulation experiment](docs/ARACHNE_REGULATION_EXPERIMENT.md) |
+| [AR-13](tasks/AR-13-implement-governance.md)                      | Implement governance for consequential changes          | [Governance contract](docs/ARACHNE_GOVERNANCE.md)              |
 | [INT-02](tasks/INT-02-test-legacy-arachne-with-new-silk.md)       | Run the legacy Arachne compatibility experiment         | [Experiment report](docs/LEGACY_ARACHNE_SILK_EXPERIMENT.md)    |
 
 ### Blocked
