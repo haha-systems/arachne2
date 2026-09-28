@@ -52,3 +52,7 @@ The [governance contract](../docs/ARACHNE_GOVERNANCE.md) documents policy-bound
 eligibility for consequential proposals and the host's authentication and
 enforcement responsibilities; run `go run ./examples/governance` to inspect
 pending, approved, and rejected decisions.
+The [governed replay contract](../docs/ARACHNE_GOVERNED_REPLAY.md) describes
+repeatable attention cues over immutable episodes; run
+`go run ./examples/governed-replay` to see replay provenance and a separate
+governance decision.

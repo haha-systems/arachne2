@@ -10,8 +10,6 @@ Move a task by changing its **Status** here and in its task file. Use `Ready` on
 
 | ID                                                               | Task                                                    | Depends on                                                    |
 | ---------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
-| [AR-12](tasks/AR-12-implement-governed-replay.md)                | Implement governed replay and consolidation             | AR-07, AR-13                                                  |
-| [AR-14](tasks/AR-14-implement-developmental-changes.md)          | Implement provenance-bearing development                | AR-07, AR-09, AR-11, AR-13                                    |
 | [AR-15](tasks/AR-15-connect-arachne-to-silk-acquisition.md)      | Connect Arachne development to Silk acquisition         | AR-14, AR-13, SILK-14, SILK-17, SILK-18                       |
 | [AR-16](tasks/AR-16-build-developmental-visualization.md)        | Build developmental visualization and inspection        | AR-14, AR-15                                                  |
 | [AR-17](tasks/AR-17-run-integrated-engineering-experiment.md)    | Run an integrated engineering experiment                | AR-04, AR-05, AR-07, AR-09, AR-11, AR-12, AR-13, AR-14, AR-15 |
@@ -20,9 +18,9 @@ Move a task by changing its **Status** here and in its task file. Use `Ready` on
 
 ### Ready
 
-| ID                                                | Task                                        | Depends on   |
-| ------------------------------------------------- | ------------------------------------------- | ------------ |
-| [AR-12](tasks/AR-12-implement-governed-replay.md) | Implement governed replay and consolidation | AR-07, AR-13 |
+| ID                                                      | Task                                     | Depends on                 |
+| ------------------------------------------------------- | ---------------------------------------- | -------------------------- |
+| [AR-14](tasks/AR-14-implement-developmental-changes.md) | Implement provenance-bearing development | AR-07, AR-09, AR-11, AR-13 |
 
 ### In Progress
 
@@ -73,6 +71,7 @@ No tasks are marked Review.
 | [AR-10](tasks/AR-10-model-regulation-and-prediction-error.md)     | Model regulation and prediction error                   | [Regulation model](docs/ARACHNE_REGULATION.md)                 |
 | [AR-11](tasks/AR-11-validate-regulatory-effects.md)               | Validate regulatory effects on cognition                | [Regulation experiment](docs/ARACHNE_REGULATION_EXPERIMENT.md) |
 | [AR-13](tasks/AR-13-implement-governance.md)                      | Implement governance for consequential changes          | [Governance contract](docs/ARACHNE_GOVERNANCE.md)              |
+| [AR-12](tasks/AR-12-implement-governed-replay.md)                 | Implement governed replay and consolidation             | [Governed replay contract](docs/ARACHNE_GOVERNED_REPLAY.md)    |
 | [INT-02](tasks/INT-02-test-legacy-arachne-with-new-silk.md)       | Run the legacy Arachne compatibility experiment         | [Experiment report](docs/LEGACY_ARACHNE_SILK_EXPERIMENT.md)    |
 
 ### Blocked

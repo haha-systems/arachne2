@@ -1,6 +1,6 @@
 # AR-14 — Implement provenance-bearing development
 
-**Status:** Backlog  
+**Status:** Ready
 **Track:** Arachne  
 **Depends on:** AR-07, AR-09, AR-11, AR-13  
 **Source:** PRD §8, Arachne Phase 10
@@ -17,4 +17,3 @@ Implement selected developmental changes with explicit proposal, approval where 
 
 - Two initially equivalent instances can diverge after different experiences.
 - Every persistent change has provenance and an observable event history.
-
