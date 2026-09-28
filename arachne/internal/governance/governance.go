@@ -237,14 +237,10 @@ func (s *Service) Evaluate(ctx context.Context, proposal Proposal, approvals []A
 
 func (s *Service) record(ctx context.Context, proposal Proposal, decision Decision) (Decision, error) {
 	decision.ID = stableID(decision.ProposalDigest, decision.PolicyDigest, string(decision.Outcome), strings.Join(decision.ApprovalIDs, ","))
-	payload, err := json.Marshal(decision)
-	if err != nil {
-		return Decision{}, fmt.Errorf("encode governance decision: %w", err)
-	}
-	event, err := s.events.Emit(ctx, cognition.Draft{
+	event, err := s.events.EmitJSON(ctx, cognition.Draft{
 		AgentID: proposal.ProposerID, CorrelationID: proposal.InteractionID,
-		ParentEventIDs: decision.SourceEventIDs, Kind: cognition.KindGovernance, Payload: payload,
-	})
+		ParentEventIDs: decision.SourceEventIDs, Kind: cognition.KindGovernance,
+	}, decision)
 	if err != nil {
 		return Decision{}, fmt.Errorf("record governance decision: %w", err)
 	}

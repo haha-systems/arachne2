@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -47,9 +48,6 @@ func (s *Service) RecordEpisode(ctx context.Context, episode Episode) (Episode, 
 	if episode.RecordedAt.IsZero() {
 		episode.RecordedAt = s.now().UTC()
 	}
-	if err := s.store.PutEpisode(ctx, episode); err != nil {
-		return Episode{}, err
-	}
 	payload, err := json.Marshal(map[string]any{
 		"operation": "episode_recorded", "episode_id": episode.ID,
 		"source": episode.Source, "source_event_ids": episode.SourceEventIDs,
@@ -58,11 +56,24 @@ func (s *Service) RecordEpisode(ctx context.Context, episode Episode) (Episode, 
 	if err != nil {
 		return Episode{}, fmt.Errorf("encode episode event: %w", err)
 	}
-	if _, err := s.events.Emit(ctx, cognition.Draft{
+	parentEventIDs := make([]string, 0, len(episode.SourceEventIDs))
+	for _, id := range episode.SourceEventIDs {
+		if id != "" {
+			parentEventIDs = append(parentEventIDs, id)
+		}
+	}
+	sort.Strings(parentEventIDs)
+	parentEventIDs = uniqueStrings(parentEventIDs)
+	event, err := s.events.Emit(ctx, cognition.Draft{
 		AgentID: episode.AgentID, SessionID: episode.SessionID, CorrelationID: episode.CorrelationID,
-		Kind: cognition.KindMemory, Payload: payload,
-	}); err != nil {
-		return cloneEpisode(episode), fmt.Errorf("episode stored as %q but event recording failed: %w", episode.ID, err)
+		ParentEventIDs: parentEventIDs, Kind: cognition.KindMemory, Payload: payload,
+	})
+	if err != nil {
+		return cloneEpisode(episode), fmt.Errorf("record episode event for %q: %w", episode.ID, err)
+	}
+	episode.EventID = event.EventID
+	if err := s.store.PutEpisode(ctx, episode); err != nil {
+		return cloneEpisode(episode), fmt.Errorf("episode event recorded but episode could not be stored: %w", err)
 	}
 	return cloneEpisode(episode), nil
 }

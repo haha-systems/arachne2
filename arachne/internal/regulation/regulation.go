@@ -9,8 +9,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"maps"
 	"math"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/haha-systems/arachne2/internal/cognition"
@@ -42,6 +44,7 @@ type Input struct {
 	SourceEventIDs     []string
 	Expected           json.RawMessage
 	Observed           json.RawMessage
+	ConditionDeltas    map[string]float64
 	DeclaredSalience   float64
 	ActiveSpecialists  int
 	SpecialistCapacity int
@@ -62,26 +65,30 @@ type PredictionError struct {
 
 // Snapshot contains computed signals and their event provenance.
 type Snapshot struct {
-	InteractionID     string                    `json:"interaction_id"`
-	SessionID         string                    `json:"session_id,omitempty"`
-	CreatedAt         time.Time                 `json:"created_at"`
-	PredictionError   float64                   `json:"prediction_error"`
-	Surprise          float64                   `json:"surprise"`
-	Salience          float64                   `json:"salience"`
-	Load              float64                   `json:"load"`
-	ActionPressure    float64                   `json:"action_pressure"`
-	CognitiveState    string                    `json:"cognitive_state"`
-	Prediction        PredictionError           `json:"prediction"`
-	WorkspacePolicy   workspace.SelectionPolicy `json:"workspace_policy"`
-	RegulationEventID string                    `json:"regulation_event_id"`
-	SourceEventIDs    []string                  `json:"source_event_ids,omitempty"`
+	InteractionID       string                    `json:"interaction_id"`
+	SessionID           string                    `json:"session_id,omitempty"`
+	CreatedAt           time.Time                 `json:"created_at"`
+	PredictionError     float64                   `json:"prediction_error"`
+	Surprise            float64                   `json:"surprise"`
+	Salience            float64                   `json:"salience"`
+	Load                float64                   `json:"load"`
+	ActionPressure      float64                   `json:"action_pressure"`
+	CognitiveState      string                    `json:"cognitive_state"`
+	PredictionAvailable bool                      `json:"prediction_available"`
+	Prediction          PredictionError           `json:"prediction,omitempty"`
+	Conditions          map[string]float64        `json:"conditions,omitempty"`
+	WorkspacePolicy     workspace.SelectionPolicy `json:"workspace_policy"`
+	RegulationEventID   string                    `json:"regulation_event_id"`
+	SourceEventIDs      []string                  `json:"source_event_ids,omitempty"`
 }
 
 // Regulator computes signals, policy effects, and linked cognitive events.
 type Regulator struct {
-	policy Policy
-	events *cognition.Spine
-	now    func() time.Time
+	mu         sync.Mutex
+	policy     Policy
+	events     *cognition.Spine
+	now        func() time.Time
+	conditions map[string]float64
 }
 
 // New validates a regulator policy and event sink.
@@ -102,77 +109,125 @@ func New(policy Policy, events *cognition.Spine) (*Regulator, error) {
 	if policy.CapacityReduction < 1 {
 		return nil, errors.New("capacity reduction must be positive")
 	}
-	return &Regulator{policy: policy, events: events, now: time.Now}, nil
+	return &Regulator{policy: policy, events: events, now: time.Now, conditions: make(map[string]float64)}, nil
 }
 
-// Evaluate computes observable signals and emits prediction-error and regulation events.
-func (r *Regulator) Evaluate(ctx context.Context, input Input) (Snapshot, error) {
-	if strings.TrimSpace(input.InteractionID) == "" || len(input.Expected) == 0 || len(input.Observed) == 0 ||
-		!json.Valid(input.Expected) || !json.Valid(input.Observed) {
-		return Snapshot{}, errors.New("interaction ID and valid expected/observed JSON are required")
+func validateInput(input Input) error {
+	if strings.TrimSpace(input.InteractionID) == "" ||
+		(len(input.Expected) == 0) != (len(input.Observed) == 0) ||
+		(len(input.Expected) > 0 && (!json.Valid(input.Expected) || !json.Valid(input.Observed))) ||
+		!validConditionDeltas(input.ConditionDeltas) {
+		return errors.New("interaction ID, paired valid evidence, and finite named condition deltas are required")
 	}
 	if !validRatioInput(input.DeclaredSalience) || input.SpecialistCapacity < 1 ||
 		input.ActiveSpecialists < 0 || input.ActiveSpecialists > input.SpecialistCapacity ||
 		input.ActionCapacity < 1 || input.PendingActions < 0 || input.PendingActions > input.ActionCapacity ||
 		input.WorkspaceCapacity < 1 {
-		return Snapshot{}, errors.New("salience must be normalized and activity counts must fit positive capacities")
+		return errors.New("salience must be normalized and activity counts must fit positive capacities")
+	}
+	return nil
+}
+
+func predictionStats(input Input) (bool, float64, string, error) {
+	if len(input.Expected) == 0 {
+		return false, 0, "unavailable", nil
 	}
 	magnitude, metric, err := predictionMagnitude(input.Expected, input.Observed)
+	return true, magnitude, metric, err
+}
+
+func derivePolicy(policyConfig Policy, input Input, hasPrediction bool, magnitude, load, pressure float64) (workspace.SelectionPolicy, string) {
+	policy := workspace.SelectionPolicy{Capacity: input.WorkspaceCapacity}
+	if load >= policyConfig.HighLoadThreshold {
+		policy.Capacity = reduce(policy.Capacity, policyConfig.CapacityReduction)
+		policy.Reasons = append(policy.Reasons, fmt.Sprintf("load %.3f met threshold %.3f; reduced workspace capacity", load, policyConfig.HighLoadThreshold))
+	}
+	if pressure >= policyConfig.HighPressureThreshold {
+		policy.Capacity = reduce(policy.Capacity, policyConfig.CapacityReduction)
+		policy.Reasons = append(policy.Reasons, fmt.Sprintf("action pressure %.3f met threshold %.3f; reduced workspace capacity", pressure, policyConfig.HighPressureThreshold))
+	}
+	if hasPrediction && magnitude >= policyConfig.HighSurpriseThreshold {
+		policy.RequireEvidence = true
+		policy.Reasons = append(policy.Reasons, fmt.Sprintf("prediction error %.3f met threshold %.3f; required proposal evidence", magnitude, policyConfig.HighSurpriseThreshold))
+	}
+	if input.DeclaredSalience >= policyConfig.HighSalienceThreshold {
+		policy.RequireEvidence = true
+		policy.Reasons = append(policy.Reasons, fmt.Sprintf("declared salience %.3f met threshold %.3f; required proposal evidence", input.DeclaredSalience, policyConfig.HighSalienceThreshold))
+	}
+	state := "steady"
+	if load >= policyConfig.HighLoadThreshold || pressure >= policyConfig.HighPressureThreshold {
+		state = "strained"
+	} else if (hasPrediction && magnitude >= policyConfig.HighSurpriseThreshold) || input.DeclaredSalience >= policyConfig.HighSalienceThreshold {
+		state = "alert"
+	}
+	return policy, state
+}
+
+func (r *Regulator) emitPredictionError(ctx context.Context, input Input, hasPrediction bool, metric string, magnitude float64) (PredictionError, cognition.Event, error) {
+	prediction := PredictionError{
+		Metric: metric, Magnitude: magnitude, SourceEventIDs: append([]string(nil), input.SourceEventIDs...),
+	}
+	if !hasPrediction {
+		return prediction, cognition.Event{}, nil
+	}
+	expectedDigest, err := digest(input.Expected)
+	if err != nil {
+		return PredictionError{}, cognition.Event{}, err
+	}
+	observedDigest, err := digest(input.Observed)
+	if err != nil {
+		return PredictionError{}, cognition.Event{}, err
+	}
+	payload, err := json.Marshal(map[string]any{
+		"interaction_id": input.InteractionID, "metric": metric, "magnitude": magnitude,
+		"expected_digest": expectedDigest, "observed_digest": observedDigest,
+		"source_event_ids": input.SourceEventIDs,
+	})
+	if err != nil {
+		return PredictionError{}, cognition.Event{}, fmt.Errorf("encode prediction-error event: %w", err)
+	}
+	event, err := r.events.Emit(ctx, cognition.Draft{
+		SessionID: input.SessionID, CorrelationID: input.InteractionID,
+		ParentEventIDs: input.SourceEventIDs, Kind: cognition.KindPredictionError, Payload: payload,
+	})
+	if err != nil {
+		return PredictionError{}, cognition.Event{}, fmt.Errorf("record prediction error: %w", err)
+	}
+	prediction.ExpectedDigest = expectedDigest
+	prediction.ObservedDigest = observedDigest
+	prediction.EventID = event.EventID
+	return prediction, event, nil
+}
+
+// Evaluate computes observable signals and emits prediction-error and regulation events.
+func (r *Regulator) Evaluate(ctx context.Context, input Input) (Snapshot, error) {
+	if err := validateInput(input); err != nil {
+		return Snapshot{}, err
+	}
+	hasPrediction, magnitude, metric, err := predictionStats(input)
 	if err != nil {
 		return Snapshot{}, err
 	}
 	createdAt := r.now().UTC()
 	load := float64(input.ActiveSpecialists) / float64(input.SpecialistCapacity)
 	pressure := float64(input.PendingActions) / float64(input.ActionCapacity)
-	policy := workspace.SelectionPolicy{Capacity: input.WorkspaceCapacity}
-	if load >= r.policy.HighLoadThreshold {
-		policy.Capacity = reduce(policy.Capacity, r.policy.CapacityReduction)
-		policy.Reasons = append(policy.Reasons, fmt.Sprintf("load %.3f met threshold %.3f; reduced workspace capacity", load, r.policy.HighLoadThreshold))
-	}
-	if pressure >= r.policy.HighPressureThreshold {
-		policy.Capacity = reduce(policy.Capacity, r.policy.CapacityReduction)
-		policy.Reasons = append(policy.Reasons, fmt.Sprintf("action pressure %.3f met threshold %.3f; reduced workspace capacity", pressure, r.policy.HighPressureThreshold))
-	}
-	if magnitude >= r.policy.HighSurpriseThreshold {
-		policy.RequireEvidence = true
-		policy.Reasons = append(policy.Reasons, fmt.Sprintf("prediction error %.3f met threshold %.3f; required proposal evidence", magnitude, r.policy.HighSurpriseThreshold))
-	}
-	if input.DeclaredSalience >= r.policy.HighSalienceThreshold {
-		policy.RequireEvidence = true
-		policy.Reasons = append(policy.Reasons, fmt.Sprintf("declared salience %.3f met threshold %.3f; required proposal evidence", input.DeclaredSalience, r.policy.HighSalienceThreshold))
-	}
-	state := "steady"
-	if load >= r.policy.HighLoadThreshold || pressure >= r.policy.HighPressureThreshold {
-		state = "strained"
-	} else if magnitude >= r.policy.HighSurpriseThreshold || input.DeclaredSalience >= r.policy.HighSalienceThreshold {
-		state = "alert"
-	}
-	expectedDigest, err := digest(input.Expected)
+	policy, state := derivePolicy(r.policy, input, hasPrediction, magnitude, load, pressure)
+	prediction, predictionEvent, err := r.emitPredictionError(ctx, input, hasPrediction, metric, magnitude)
 	if err != nil {
 		return Snapshot{}, err
 	}
-	observedDigest, err := digest(input.Observed)
-	if err != nil {
-		return Snapshot{}, err
+	if predictionEvent.EventID != "" {
+		policy.SignalEventIDs = []string{predictionEvent.EventID}
 	}
-	predictionPayload, err := json.Marshal(map[string]any{
-		"interaction_id": input.InteractionID, "metric": metric, "magnitude": magnitude,
-		"expected_digest": expectedDigest, "observed_digest": observedDigest,
-		"source_event_ids": input.SourceEventIDs,
-	})
-	if err != nil {
-		return Snapshot{}, fmt.Errorf("encode prediction-error event: %w", err)
+	r.mu.Lock()
+	for name, delta := range input.ConditionDeltas {
+		r.conditions[name] += delta
 	}
-	predictionEvent, err := r.events.Emit(ctx, cognition.Draft{
-		SessionID: input.SessionID, CorrelationID: input.InteractionID,
-		ParentEventIDs: input.SourceEventIDs, Kind: cognition.KindPredictionError, Payload: predictionPayload,
-	})
-	if err != nil {
-		return Snapshot{}, fmt.Errorf("record prediction error: %w", err)
-	}
-	policy.SignalEventIDs = []string{predictionEvent.EventID}
+	conditions := maps.Clone(r.conditions)
+	r.mu.Unlock()
 	payload, err := json.Marshal(map[string]any{
-		"interaction_id": input.InteractionID, "prediction_error": magnitude,
+		"interaction_id": input.InteractionID, "prediction_available": hasPrediction,
+		"prediction_error": magnitude, "condition_deltas": input.ConditionDeltas, "conditions": conditions,
 		"surprise": magnitude, "salience": input.DeclaredSalience,
 		"load": load, "action_pressure": pressure, "cognitive_state": state,
 		"workspace_policy": policy,
@@ -180,7 +235,10 @@ func (r *Regulator) Evaluate(ctx context.Context, input Input) (Snapshot, error)
 	if err != nil {
 		return Snapshot{}, fmt.Errorf("encode regulation event: %w", err)
 	}
-	parents := append(append([]string(nil), input.SourceEventIDs...), predictionEvent.EventID)
+	parents := append([]string(nil), input.SourceEventIDs...)
+	if predictionEvent.EventID != "" {
+		parents = append(parents, predictionEvent.EventID)
+	}
 	regulationEvent, err := r.events.Emit(ctx, cognition.Draft{
 		SessionID: input.SessionID, CorrelationID: input.InteractionID,
 		ParentEventIDs: unique(parents), Kind: cognition.KindRegulation, Payload: payload,
@@ -193,14 +251,28 @@ func (r *Regulator) Evaluate(ctx context.Context, input Input) (Snapshot, error)
 		InteractionID: input.InteractionID, SessionID: input.SessionID, CreatedAt: createdAt,
 		PredictionError: magnitude, Surprise: magnitude, Salience: input.DeclaredSalience,
 		Load: load, ActionPressure: pressure, CognitiveState: state,
-		Prediction: PredictionError{
-			Metric: metric, Magnitude: magnitude, ExpectedDigest: expectedDigest,
-			ObservedDigest: observedDigest, SourceEventIDs: append([]string(nil), input.SourceEventIDs...),
-			EventID: predictionEvent.EventID,
-		},
-		WorkspacePolicy: policy, RegulationEventID: regulationEvent.EventID,
+		PredictionAvailable: hasPrediction,
+		Conditions:          conditions,
+		Prediction:          prediction,
+		WorkspacePolicy:     policy, RegulationEventID: regulationEvent.EventID,
 		SourceEventIDs: append([]string(nil), input.SourceEventIDs...),
 	}, nil
+}
+
+func validConditionDeltas(values map[string]float64) bool {
+	for name, value := range values {
+		if strings.TrimSpace(name) == "" || math.IsNaN(value) || math.IsInf(value, 0) {
+			return false
+		}
+	}
+	return true
+}
+
+// Conditions returns a defensive snapshot of accumulated numeric conditions.
+func (r *Regulator) Conditions() map[string]float64 {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	return maps.Clone(r.conditions)
 }
 
 func predictionMagnitude(expectedRaw, observedRaw json.RawMessage) (float64, string, error) {

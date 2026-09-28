@@ -16,18 +16,21 @@ const SchemaVersion = "arachne.cognitive_event.v1"
 
 // Event kinds are strings so later cognitive subsystems can extend the vocabulary.
 const (
-	KindPerception      = "perception"
-	KindActivation      = "activation"
-	KindProposal        = "proposal"
-	KindSelection       = "selection"
-	KindDecision        = "decision"
-	KindAction          = "action"
+	KindPerception = "perception"
+	KindActivation = "activation"
+	KindProposal   = "proposal"
+	KindSelection  = "selection"
+	KindDecision   = "decision"
+	KindAction     = "action"
+	// KindOutcome records the environment result of an attempted action or explicit no-op.
+	KindOutcome         = "outcome"
 	KindPredictionError = "prediction_error"
 	KindReplay          = "replay"
 	KindRegulation      = "regulation"
 	KindGovernance      = "governance"
 	KindDevelopment     = "development"
 	KindMemory          = "memory"
+	KindLearning        = "learning"
 	KindSilkTrace       = "silk_trace"
 )
 
@@ -203,6 +206,16 @@ func (s *Spine) Emit(ctx context.Context, draft Draft) (Event, error) {
 	}
 	s.sequence = next
 	return event, nil
+}
+
+// EmitJSON encodes a value as an event payload and appends it to the spine.
+func (s *Spine) EmitJSON(ctx context.Context, draft Draft, value any) (Event, error) {
+	payload, err := json.Marshal(value)
+	if err != nil {
+		return Event{}, fmt.Errorf("encode event payload: %w", err)
+	}
+	draft.Payload = payload
+	return s.Emit(ctx, draft)
 }
 
 // Read returns events after a global sequence using the configured store.

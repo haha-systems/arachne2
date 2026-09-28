@@ -11,20 +11,25 @@ Arachne is one long-running cognitive organism. It manages agent lifecycles, cog
 ```mermaid
 flowchart LR
     User[User or application] -->|stimulus / request| A[Arachne daemon]
-    A --> E[Event spine]
-    A --> S[Specialist agents]
-    S --> W[Bounded workspace]
-    W --> G[Selection and governance]
-    G -->|approved procedure request| P[Silk protocol client]
+    A --> O[Persistent organism loop]
+    O --> S[Specialist proposals]
+    S --> W[Bounded workspace selection]
+    W --> C[Deterministic action commitment]
+    C --> G[Governance eligibility gate]
+    G -->|eligible action| X[Policy-free actuator]
+    X -->|outcome| O
+    G -->|pending or rejected| O
+    X -->|approved procedure request| P[Silk protocol client]
+    P -->|procedure result| O
     P <-->|request, result, trace| Silk[Independent Silk runtime]
     Silk -->|granted host call| H[Arachne host capabilities]
-    H --> E
-    E --> M[Attributed memory]
-    E --> R[Regulation and replay signals]
+    H --> EV[Event spine]
+    O --> EV
+    EV --> M[Attributed memory]
+    EV --> R[Regulation and replay signals]
     G --> D[Governed development]
-    D --> E
-    G -->|decision / action result| A
-    A -->|response and event history| User
+    D --> EV
+    O -->|response and event history| User
 ```
 
 This diagram shows conceptual responsibilities, not process topology or a prescribed implementation order. The first integration should use a protocol boundary, such as local IPC or a subprocess protocol. Rust/Go FFI and shared database tables are not the default integration path.
@@ -33,7 +38,7 @@ This diagram shows conceptual responsibilities, not process topology or a prescr
 
 | Subsystem                  | Arachne responsibility                                                                                                                                         | Boundary and invariants                                                                                                                                                                 |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Organism daemon            | Own process lifecycle, configuration, cancellation, and composition of organism services.                                                                      | Starts and stops cleanly. It coordinates services but does not contain specialist reasoning or bypass their interfaces.                                                                 |
+| Organism daemon            | Own process lifecycle, configuration, cancellation, and composition of organism services. The persistent organism runtime owns the perception-to-outcome loop. | Starts and stops cleanly. It coordinates services but does not contain specialist reasoning or bypass their interfaces.                                                                 |
 | Agent lifecycle            | Activate, supervise, and attribute specialist work for an organism session.                                                                                    | Agent input/output is explicit. An agent's Silk procedure runs through the Silk protocol; agent identity does not grant host authority by itself.                                       |
 | Silk client and host       | Create Silk sessions, provide declared Arachne host functions, apply session grants, and ingest Silk traces.                                                   | Uses the same public protocol available to other hosts. Arachne owns host function behavior; Silk owns parsing, evaluation, and its trace semantics.                                    |
 | Cognitive event spine      | Assign event identity/order and connect stimulus, agent, proposal, selection, decision, action, outcome, and trace records.                                    | One event model is the audit and reconstruction path. Subsystems do not keep private, uncorrelated versions of major cognitive events.                                                  |
@@ -49,12 +54,12 @@ This diagram shows conceptual responsibilities, not process topology or a prescr
 
 1. The daemon accepts a stimulus and creates an organism session with explicit input, limits, and host policy.
 2. Perception and relevant memory retrieval emit attributed events. Retrieval records what was available and which evidence was returned.
-3. The coordinator activates a bounded set of specialists. Each returns a proposal with its source events, confidence or uncertainty, and requested work.
-4. The workspace records admitted, rejected, or deferred proposals and the reason for each selection.
-5. A selected proposal may ask Silk to run a procedure through the versioned protocol. Arachne supplies only session-declared host capabilities and grants. Silk returns result, structured trace, or a typed error.
-6. Before a consequential action or lasting change, Arachne governance checks target scope, evidence, approval, and applicable limits. Rejection is recorded before mutation or external dispatch.
-7. The daemon returns the response/action result and records outcome and prediction-error evidence. Memory and regulation consume events through explicit interfaces.
-8. Replay may create candidates. Promotion and development follow the normal governance path and retain provenance.
+3. The persistent Arachne organism loop activates a bounded set of specialists. Each returns a validated, attributed proposal linked to the perception and source events.
+4. A fresh bounded workspace run records proposal admission and selection. Selection only chooses proposals; it does not commit or execute an action.
+5. A deterministic commitment policy considers valid requested actions from selected proposals and records the chosen action, proposal attribution, and rationale. If none qualify, it records a no-op and does not call the actuator.
+6. A separate eligibility gate records its result for the committed action. Consequential adapters translate it into a governance proposal; pending or rejected decisions cannot proceed.
+7. Only an eligible committed action reaches the injected policy-free actuator. Its result or failure is recorded as an outcome linked to the action, gate, commitment, selection, proposal, activation, and perception events.
+8. The loop returns the stage results and event IDs. Memory and regulation consume events through explicit interfaces; replay may create candidates, and promotion and development follow the normal governance path.
 
 The system must be able to reconstruct a completed cycle from structured events, including failures and denied actions. Earlier host calls are not presumed rolled back when a later step fails.
 
