@@ -128,38 +128,68 @@ func TestClientKeepsSilkCallbacksAndTracesSessionScoped(t *testing.T) {
 }
 
 func TestClientRejectsReentrantCallsFromHostCallback(t *testing.T) {
+	for _, test := range []struct {
+		name string
+		ctx  func(context.Context) context.Context
+	}{
+		{name: "supplied callback context", ctx: func(ctx context.Context) context.Context { return ctx }},
+		{name: "unrelated context", ctx: func(context.Context) context.Context { return context.Background() }},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			client := startProtocolClient(t, "", io.Discard)
+			reentrant := make(chan error, 1)
+			_, err := client.CreateSession(context.Background(), SessionConfig{
+				ID: "session-reentrant",
+				HostFunctions: []HostCapability{{
+					Descriptor: HostFunctionDescriptor{Name: "catalog.read", Authority: "catalog.read", Effects: []string{"host_read"}, InputSchema: json.RawMessage(`{"type":"object"}`)},
+					Call: func(ctx context.Context, _ json.RawMessage) (json.RawMessage, error) {
+						_, err := client.LoadProgram(test.ctx(ctx), "session-reentrant", "fn nested() { return 1; }")
+						reentrant <- err
+						return nil, err
+					},
+				}},
+				Grants: []Grant{{Authority: "catalog.read", EffectCeiling: []string{"host_read"}}},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = client.RunProcedure(context.Background(), "session-reentrant", "invoke", nil)
+			if err == nil {
+				t.Fatal("procedure succeeded after its callback rejected re-entry")
+			}
+			select {
+			case callbackErr := <-reentrant:
+				if !errors.Is(callbackErr, ErrReentrantCall) {
+					t.Fatalf("reentrant call error = %v, want ErrReentrantCall", callbackErr)
+				}
+				var typedError ReentrantCallError
+				if !errors.As(callbackErr, &typedError) {
+					t.Fatalf("reentrant call error has type %T, want ReentrantCallError", callbackErr)
+				}
+			case <-time.After(time.Second):
+				t.Fatal("host callback deadlocked while re-entering the client")
+			}
+		})
+	}
+}
+
+func TestClientSerializesCallsOutsideHostCallbacks(t *testing.T) {
 	client := startProtocolClient(t, "", io.Discard)
-	reentrant := make(chan error, 1)
-	_, err := client.CreateSession(context.Background(), SessionConfig{
-		ID: "session-reentrant",
-		HostFunctions: []HostCapability{{
-			Descriptor: HostFunctionDescriptor{Name: "catalog.read", Authority: "catalog.read", Effects: []string{"host_read"}, InputSchema: json.RawMessage(`{"type":"object"}`)},
-			Call: func(ctx context.Context, _ json.RawMessage) (json.RawMessage, error) {
-				_, err := client.LoadProgram(ctx, "session-reentrant", "fn nested() { return 1; }")
-				reentrant <- err
-				return nil, err
-			},
-		}},
-		Grants: []Grant{{Authority: "catalog.read", EffectCeiling: []string{"host_read"}}},
-	})
-	if err != nil {
-		t.Fatal(err)
+	const callCount = 8
+	start := make(chan struct{})
+	errorsByCall := make(chan error, callCount)
+	for range callCount {
+		go func() {
+			<-start
+			_, err := client.LoadProgram(context.Background(), "session-serialized", "fn loaded() { return 1; }")
+			errorsByCall <- err
+		}()
 	}
-	_, err = client.RunProcedure(context.Background(), "session-reentrant", "invoke", nil)
-	if err == nil {
-		t.Fatal("procedure succeeded after its callback rejected re-entry")
-	}
-	select {
-	case callbackErr := <-reentrant:
-		if !errors.Is(callbackErr, ErrReentrantCall) {
-			t.Fatalf("reentrant call error = %v, want ErrReentrantCall", callbackErr)
+	close(start)
+	for range callCount {
+		if err := <-errorsByCall; err != nil {
+			t.Fatalf("serialized call failed: %v", err)
 		}
-		var typedError ReentrantCallError
-		if !errors.As(callbackErr, &typedError) {
-			t.Fatalf("reentrant call error has type %T, want ReentrantCallError", callbackErr)
-		}
-	case <-time.After(time.Second):
-		t.Fatal("host callback deadlocked while re-entering the client")
 	}
 }
 
