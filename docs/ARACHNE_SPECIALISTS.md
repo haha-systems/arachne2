@@ -29,5 +29,7 @@ go run ./examples/specialist-proposals
 ```
 
 It activates a planner and a critic for one interaction, collects both
-proposals, and reports the shared event count without executing either
-requested action.
+proposals, admits one by the declared confidence rule, broadcasts that result
+to an observer, and reports the shared event count without executing either
+requested action. See [the bounded workspace contract](ARACHNE_WORKSPACE.md)
+for the admission and broadcast rules.

@@ -9,6 +9,7 @@ import (
 
 	"github.com/haha-systems/arachne2/internal/agent"
 	"github.com/haha-systems/arachne2/internal/cognition"
+	"github.com/haha-systems/arachne2/internal/workspace"
 )
 
 func main() {
@@ -23,12 +24,23 @@ func main() {
 	})
 	fatalIf(err)
 
-	coordinator := make(chan []agent.Proposal, 1)
+	coordinator := make(chan workspace.Report, 1)
+	broadcasts := make(chan int, 1)
 	supervisor, err := agent.NewSupervisor(8)
 	fatalIf(err)
 	registerSpecialist(supervisor, events, "planner", "Prepare a small reversible plan.", stimulus.EventID)
 	registerSpecialist(supervisor, events, "critic", "Inspect for likely regressions.", stimulus.EventID)
+	workspaceConfig := workspace.DefaultConfig()
+	workspaceConfig.Capacity = 1
+	proposalWorkspace, err := workspace.New(workspaceConfig, events)
+	fatalIf(err)
 	fatalIf(supervisor.Register("coordinator", agent.Func(func(ctx context.Context, inbox <-chan agent.Message, sender agent.Sender) error {
+		if err := proposalWorkspace.Open(ctx, workspace.Request{
+			ID: "workspace-1", InteractionID: "interaction-1", SessionID: "session-1",
+			SourceEventIDs: []string{stimulus.EventID},
+		}); err != nil {
+			return err
+		}
 		activation, err := json.Marshal(agent.Activation{
 			InteractionID: "interaction-1", SessionID: "session-1",
 			Input:          json.RawMessage(`{"task":"review a change","risk":"medium"}`),
@@ -55,20 +67,50 @@ func main() {
 				if err := json.Unmarshal(message.Payload, &proposal); err != nil {
 					return err
 				}
+				if err := proposalWorkspace.Submit(ctx, "workspace-1", proposal); err != nil {
+					return err
+				}
 				proposals = append(proposals, proposal)
 			}
 		}
-		coordinator <- proposals
+		if _, err := proposalWorkspace.Select(ctx, "workspace-1"); err != nil {
+			return err
+		}
+		report, err := proposalWorkspace.Broadcast(ctx, "workspace-1", "one entry is available; select the higher-confidence candidate", []string{"observer"}, sender)
+		if err != nil {
+			return err
+		}
+		coordinator <- report
 		return nil
 	})))
+	fatalIf(supervisor.Register("observer", agent.Func(func(ctx context.Context, inbox <-chan agent.Message, _ agent.Sender) error {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case message := <-inbox:
+			if message.Kind != workspace.BroadcastMessage {
+				return fmt.Errorf("unexpected observer message %q", message.Kind)
+			}
+			var broadcast struct {
+				Proposals []agent.Proposal `json:"proposals"`
+			}
+			if err := json.Unmarshal(message.Payload, &broadcast); err != nil {
+				return err
+			}
+			broadcasts <- len(broadcast.Proposals)
+			return nil
+		}
+	})))
 	fatalIf(supervisor.Start(ctx))
-	proposals := <-coordinator
+	report := <-coordinator
+	broadcastCount := <-broadcasts
 	stopCtx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
 	fatalIf(supervisor.Stop(stopCtx))
-	for _, proposal := range proposals {
-		fmt.Printf("%s (%s): %s; requested actions: %d\n", proposal.SpecialistID, proposal.Status, proposal.Summary, len(proposal.RequestedActions))
+	for _, entry := range report.Selection.Entries {
+		fmt.Printf("%s: selected=%t; reason=%s\n", entry.Specialist, entry.Selected, entry.Reason)
 	}
+	fmt.Printf("broadcast proposals received: %d\n", broadcastCount)
 	allEvents, err := events.Read(ctx, 0, 128)
 	fatalIf(err)
 	fmt.Printf("shared cognitive events: %d\n", len(allEvents))

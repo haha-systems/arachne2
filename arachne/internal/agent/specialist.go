@@ -39,6 +39,7 @@ type RequestedAction struct {
 // Proposal is an attributed candidate interpretation or action request.
 type Proposal struct {
 	ID               string            `json:"id"`
+	EventID          string            `json:"event_id,omitempty"`
 	InteractionID    string            `json:"interaction_id"`
 	SpecialistID     string            `json:"specialist_id"`
 	CorrelationID    string            `json:"correlation_id"`
@@ -167,11 +168,17 @@ func (a *SpecialistAgent) recordAndSend(ctx context.Context, message Message, se
 	if len(payload) > maxProposalBytes {
 		return fmt.Errorf("proposal exceeds %d bytes", maxProposalBytes)
 	}
-	if _, err := a.events.Emit(ctx, cognition.Draft{
+	proposalEvent, err := a.events.Emit(ctx, cognition.Draft{
 		AgentID: a.id, SessionID: activation.SessionID, CorrelationID: message.CorrelationID,
 		ParentEventIDs: []string{parentID}, Kind: cognition.KindProposal, Payload: payload,
-	}); err != nil {
+	})
+	if err != nil {
 		return fmt.Errorf("record specialist proposal: %w", err)
+	}
+	proposal.EventID = proposalEvent.EventID
+	payload, err = json.Marshal(proposal)
+	if err != nil {
+		return fmt.Errorf("encode attributed proposal: %w", err)
 	}
 	if err := sender.Send(ctx, message.From, SpecialistProposalMessage, payload); err != nil {
 		return fmt.Errorf("send proposal to %q: %w", message.From, err)

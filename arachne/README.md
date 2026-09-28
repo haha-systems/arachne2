@@ -42,4 +42,5 @@ stdio client and register `SilkProcedureAgent` with the supervisor. See the
 [`silk-roundtrip` example](examples/silk-roundtrip/main.go).
 See the [specialist proposal contract](../docs/ARACHNE_SPECIALISTS.md) and its
 [`specialist-proposals` example](examples/specialist-proposals/main.go) for
-multi-agent candidate work.
+multi-agent candidate work. See the [bounded workspace contract](../docs/ARACHNE_WORKSPACE.md)
+for proposal selection and broadcast.
