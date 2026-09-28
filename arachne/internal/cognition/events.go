@@ -104,7 +104,7 @@ func (s *MemoryStore) Append(ctx context.Context, event Event) error {
 	}
 	event.Payload = append(json.RawMessage(nil), event.Payload...)
 	event.ParentEventIDs = append([]string(nil), event.ParentEventIDs...)
-	event.Silk = cloneSilkTraceRef(event.Silk)
+	event.Silk = CloneSilkTraceRef(event.Silk)
 	s.events = append(s.events, event)
 	return nil
 }
@@ -127,7 +127,7 @@ func (s *MemoryStore) Read(ctx context.Context, after uint64, limit int) ([]Even
 		copyEvent := event
 		copyEvent.Payload = append(json.RawMessage(nil), event.Payload...)
 		copyEvent.ParentEventIDs = append([]string(nil), event.ParentEventIDs...)
-		copyEvent.Silk = cloneSilkTraceRef(event.Silk)
+		copyEvent.Silk = CloneSilkTraceRef(event.Silk)
 		result = append(result, copyEvent)
 		if len(result) == limit {
 			break
@@ -136,7 +136,8 @@ func (s *MemoryStore) Read(ctx context.Context, after uint64, limit int) ([]Even
 	return result, nil
 }
 
-func cloneSilkTraceRef(ref *SilkTraceRef) *SilkTraceRef {
+// CloneSilkTraceRef returns an independent copy of a Silk trace reference.
+func CloneSilkTraceRef(ref *SilkTraceRef) *SilkTraceRef {
 	if ref == nil {
 		return nil
 	}

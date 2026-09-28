@@ -59,3 +59,14 @@ governance decision.
 The [development contract](../docs/ARACHNE_DEVELOPMENT.md) describes
 governed routing-profile updates with event-backed recovery; run
 `go run ./examples/development` to observe two instances diverge and recover.
+The [Silk acquisition contract](../docs/ARACHNE_SILK_ACQUISITION.md) describes
+the SRP 1.1 prepare, governance, retention, and reuse path; run
+`go run ./examples/silk-acquisition ../silk2/target/debug/silk` after building
+the Silk CLI.
+The [developmental inspection contract](../docs/ARACHNE_INSPECTION.md) describes
+read-only provenance reports and cross-instance divergence; run
+`go run ./examples/developmental-inspection` to inspect two independently
+stored organism histories.
+The [integrated experiment](../docs/ARACHNE_INTEGRATED_EXPERIMENT.md) runs a
+bounded engineering task across Arachne and Silk and captures successful and
+failed outcomes as event-linked JSON reports.
