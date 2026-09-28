@@ -31,6 +31,10 @@ capacity, evidence requirement, reasons, and signal IDs alongside every
 selected and rejected proposal. Its selection event becomes a parent of the
 subsequent broadcast decision event.
 
+The [controlled effect experiment](ARACHNE_REGULATION_EXPERIMENT.md) varies
+load, action pressure, surprise, and salience separately and records the
+resulting workspace selection events.
+
 This makes the signal-to-behavior path inspectable without embedding regulation
 inside Silk. It changes proposal admission policy only; it does not change Silk
 host grants, authorize actions, promote memories, or approve consequential

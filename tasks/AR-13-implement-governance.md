@@ -1,6 +1,6 @@
 # AR-13 — Implement governance for consequential changes
 
-**Status:** Ready  
+**Status:** In Progress  
 **Track:** Arachne  
 **Depends on:** AR-01, AR-05  
 **Source:** PRD §8, Arachne Phase 9

@@ -46,3 +46,5 @@ multi-agent candidate work. See the [bounded workspace contract](../docs/ARACHNE
 for proposal selection and broadcast.
 The [regulation contract](../docs/ARACHNE_REGULATION.md) explains how explicit
 signals can adjust workspace admission with linked event evidence.
+The [regulation experiment](../docs/ARACHNE_REGULATION_EXPERIMENT.md) compares
+five isolated conditions over three repetitions.
