@@ -82,3 +82,52 @@ type SemanticQuery struct {
 	Terms      []string
 	Limit      int
 }
+
+// ConsolidationStatus records whether a derived memory is currently available.
+type ConsolidationStatus string
+
+const (
+	// ConsolidationActive means the derived patterns can participate in retrieval.
+	ConsolidationActive ConsolidationStatus = "active"
+	// ConsolidationRevoked means the patterns are hidden from ordinary retrieval.
+	ConsolidationRevoked ConsolidationStatus = "revoked"
+)
+
+// ConsolidatedPattern is an exact recurring observation with links to its evidence.
+type ConsolidatedPattern struct {
+	ID               string          `json:"id"`
+	RunID            string          `json:"run_id"`
+	OrganismID       string          `json:"organism_id"`
+	RuleID           string          `json:"rule_id"`
+	Fingerprint      string          `json:"fingerprint"`
+	Kind             string          `json:"kind"`
+	CanonicalContent json.RawMessage `json:"canonical_content"`
+	SourceEpisodeIDs []string        `json:"source_episode_ids"`
+	SourceEventIDs   []string        `json:"source_event_ids,omitempty"`
+	Tags             []string        `json:"tags,omitempty"`
+	FirstObservedAt  time.Time       `json:"first_observed_at"`
+	LastObservedAt   time.Time       `json:"last_observed_at"`
+	Support          int             `json:"support"`
+	CreatedAt        time.Time       `json:"created_at"`
+}
+
+// ConsolidationRun explains which rule and evidence produced derived patterns.
+type ConsolidationRun struct {
+	ID               string              `json:"id"`
+	OrganismID       string              `json:"organism_id"`
+	RuleID           string              `json:"rule_id"`
+	MinimumSupport   int                 `json:"minimum_support"`
+	CreatedAt        time.Time           `json:"created_at"`
+	SourceEpisodeIDs []string            `json:"source_episode_ids"`
+	PatternIDs       []string            `json:"pattern_ids"`
+	Status           ConsolidationStatus `json:"status"`
+	RevokedAt        *time.Time          `json:"revoked_at,omitempty"`
+	RevokedBy        string              `json:"revoked_by,omitempty"`
+	RevokeReason     string              `json:"revoke_reason,omitempty"`
+}
+
+// ConsolidationPolicy configures a deterministic exact-repeat consolidation pass.
+type ConsolidationPolicy struct {
+	MinimumSupport int
+	EpisodeQuery   EpisodeQuery
+}

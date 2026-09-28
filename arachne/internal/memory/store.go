@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 )
 
 var (
@@ -26,13 +27,19 @@ type Store interface {
 	PutSemantic(context.Context, SemanticRecord) error
 	GetSemantic(context.Context, string) (SemanticRecord, error)
 	QuerySemantics(context.Context, SemanticQuery) ([]SemanticRecord, error)
+	ApplyConsolidation(context.Context, ConsolidationRun, []ConsolidatedPattern) error
+	GetConsolidation(context.Context, string) (ConsolidationRun, error)
+	ConsolidatedForRun(context.Context, string) ([]ConsolidatedPattern, error)
+	RevokeConsolidation(context.Context, string, string, string, time.Time) (ConsolidationRun, error)
 }
 
 type database struct {
-	SchemaVersion string                    `json:"schema_version"`
-	OrganismID    string                    `json:"organism_id"`
-	Episodes      map[string]Episode        `json:"episodes"`
-	Semantics     map[string]SemanticRecord `json:"semantics"`
+	SchemaVersion string                         `json:"schema_version"`
+	OrganismID    string                         `json:"organism_id"`
+	Episodes      map[string]Episode             `json:"episodes"`
+	Semantics     map[string]SemanticRecord      `json:"semantics"`
+	Runs          map[string]ConsolidationRun    `json:"consolidation_runs"`
+	Patterns      map[string]ConsolidatedPattern `json:"consolidated_patterns"`
 }
 
 // InMemory is a concurrency-safe store for one organism's attributed memories.
@@ -52,6 +59,8 @@ func NewMemoryStore(organismID string) (*InMemory, error) {
 		OrganismID:    organismID,
 		Episodes:      make(map[string]Episode),
 		Semantics:     make(map[string]SemanticRecord),
+		Runs:          make(map[string]ConsolidationRun),
+		Patterns:      make(map[string]ConsolidatedPattern),
 	}), nil
 }
 
@@ -201,6 +210,111 @@ func (s *InMemory) QuerySemantics(ctx context.Context, query SemanticQuery) ([]S
 	return result, nil
 }
 
+// ApplyConsolidation atomically stores one run and all of its derived patterns.
+func (s *InMemory) ApplyConsolidation(ctx context.Context, run ConsolidationRun, patterns []ConsolidatedPattern) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if err := validateConsolidation(s.database.OrganismID, run, patterns); err != nil {
+		return err
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if _, exists := s.database.Runs[run.ID]; exists {
+		return ErrDuplicateID
+	}
+	next := cloneDatabase(s.database)
+	next.Runs[run.ID] = cloneRun(run)
+	for _, pattern := range patterns {
+		if _, exists := next.Patterns[pattern.ID]; exists {
+			return ErrDuplicateID
+		}
+		next.Patterns[pattern.ID] = clonePattern(pattern)
+	}
+	if err := s.commit(next); err != nil {
+		return err
+	}
+	return nil
+}
+
+// GetConsolidation returns the run record that explains one derived memory pass.
+func (s *InMemory) GetConsolidation(ctx context.Context, id string) (ConsolidationRun, error) {
+	if err := ctx.Err(); err != nil {
+		return ConsolidationRun{}, err
+	}
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	run, exists := s.database.Runs[id]
+	if !exists {
+		return ConsolidationRun{}, ErrNotFound
+	}
+	return cloneRun(run), nil
+}
+
+// ConsolidatedForRun returns the derived patterns attached to one run.
+func (s *InMemory) ConsolidatedForRun(ctx context.Context, runID string) ([]ConsolidatedPattern, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	if _, exists := s.database.Runs[runID]; !exists {
+		return nil, ErrNotFound
+	}
+	result := make([]ConsolidatedPattern, 0)
+	for _, pattern := range s.database.Patterns {
+		if pattern.RunID == runID {
+			result = append(result, clonePattern(pattern))
+		}
+	}
+	sort.Slice(result, func(i, j int) bool { return result[i].ID < result[j].ID })
+	return result, nil
+}
+
+// RevokeConsolidation hides a run's patterns while retaining its audit record.
+func (s *InMemory) RevokeConsolidation(ctx context.Context, id, actor, reason string, at time.Time) (ConsolidationRun, error) {
+	if err := ctx.Err(); err != nil {
+		return ConsolidationRun{}, err
+	}
+	if strings.TrimSpace(actor) == "" || strings.TrimSpace(reason) == "" || at.IsZero() {
+		return ConsolidationRun{}, errors.New("consolidation revocation requires actor, reason, and time")
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	run, exists := s.database.Runs[id]
+	if !exists {
+		return ConsolidationRun{}, ErrNotFound
+	}
+	if run.Status != ConsolidationActive {
+		return ConsolidationRun{}, errors.New("consolidation run is already revoked")
+	}
+	next := cloneDatabase(s.database)
+	run = next.Runs[id]
+	run.Status = ConsolidationRevoked
+	run.RevokedAt = &at
+	run.RevokedBy = actor
+	run.RevokeReason = reason
+	next.Runs[id] = run
+	if err := s.commit(next); err != nil {
+		return ConsolidationRun{}, err
+	}
+	return cloneRun(run), nil
+}
+
+func (s *InMemory) commit(next database) error {
+	if s.persist != nil {
+		renamed, err := s.persist(next)
+		if err != nil {
+			if renamed {
+				s.database = next
+			}
+			return err
+		}
+	}
+	s.database = next
+	return nil
+}
+
 func validateEpisode(organismID string, episode Episode) error {
 	if strings.TrimSpace(episode.ID) == "" || episode.OrganismID != organismID {
 		return errors.New("episode ID and matching organism ID are required")
@@ -235,6 +349,45 @@ func validateSemantic(organismID string, record SemanticRecord) error {
 	}
 	if len(record.Context) > 0 && !json.Valid(record.Context) {
 		return errors.New("semantic context must be valid JSON")
+	}
+	return nil
+}
+
+func validateConsolidation(organismID string, run ConsolidationRun, patterns []ConsolidatedPattern) error {
+	if strings.TrimSpace(run.ID) == "" || run.OrganismID != organismID || strings.TrimSpace(run.RuleID) == "" {
+		return errors.New("consolidation ID, matching organism ID, and rule ID are required")
+	}
+	if run.MinimumSupport < 2 || run.CreatedAt.IsZero() || (run.Status != ConsolidationActive && run.Status != ConsolidationRevoked) {
+		return errors.New("consolidation requires support of at least two, a creation time, and a valid status")
+	}
+	if run.Status == ConsolidationRevoked && (run.RevokedAt == nil || strings.TrimSpace(run.RevokedBy) == "" || strings.TrimSpace(run.RevokeReason) == "") {
+		return errors.New("revoked consolidation requires actor, reason, and time")
+	}
+	patternIDs := make(map[string]struct{}, len(patterns))
+	for _, pattern := range patterns {
+		if strings.TrimSpace(pattern.ID) == "" || pattern.RunID != run.ID || pattern.OrganismID != organismID || pattern.RuleID != run.RuleID {
+			return errors.New("consolidated pattern attribution does not match its run")
+		}
+		if strings.TrimSpace(pattern.Fingerprint) == "" || strings.TrimSpace(pattern.Kind) == "" ||
+			len(pattern.CanonicalContent) == 0 || !json.Valid(pattern.CanonicalContent) ||
+			pattern.Support < run.MinimumSupport || pattern.Support != len(pattern.SourceEpisodeIDs) ||
+			pattern.FirstObservedAt.IsZero() || pattern.LastObservedAt.Before(pattern.FirstObservedAt) || pattern.CreatedAt.IsZero() {
+			return fmt.Errorf("consolidated pattern %q has invalid content or evidence support", pattern.ID)
+		}
+		patternIDs[pattern.ID] = struct{}{}
+	}
+	if len(patternIDs) != len(run.PatternIDs) {
+		return errors.New("consolidation run pattern links do not match its outputs")
+	}
+	for _, patternID := range run.PatternIDs {
+		if _, exists := patternIDs[patternID]; !exists {
+			return fmt.Errorf("consolidation run references missing pattern %q", patternID)
+		}
+	}
+	for _, episodeID := range run.SourceEpisodeIDs {
+		if strings.TrimSpace(episodeID) == "" {
+			return errors.New("consolidation source episode IDs must not be empty")
+		}
 	}
 	return nil
 }
@@ -294,12 +447,20 @@ func cloneDatabase(db database) database {
 		OrganismID:    db.OrganismID,
 		Episodes:      make(map[string]Episode, len(db.Episodes)),
 		Semantics:     make(map[string]SemanticRecord, len(db.Semantics)),
+		Runs:          make(map[string]ConsolidationRun, len(db.Runs)),
+		Patterns:      make(map[string]ConsolidatedPattern, len(db.Patterns)),
 	}
 	for id, episode := range db.Episodes {
 		clone.Episodes[id] = cloneEpisode(episode)
 	}
 	for id, record := range db.Semantics {
 		clone.Semantics[id] = cloneSemantic(record)
+	}
+	for id, run := range db.Runs {
+		clone.Runs[id] = cloneRun(run)
+	}
+	for id, pattern := range db.Patterns {
+		clone.Patterns[id] = clonePattern(pattern)
 	}
 	return clone
 }
@@ -317,4 +478,22 @@ func cloneSemantic(record SemanticRecord) SemanticRecord {
 	record.Contradicts = append([]string(nil), record.Contradicts...)
 	record.Context = append(json.RawMessage(nil), record.Context...)
 	return record
+}
+
+func cloneRun(run ConsolidationRun) ConsolidationRun {
+	run.SourceEpisodeIDs = append([]string(nil), run.SourceEpisodeIDs...)
+	run.PatternIDs = append([]string(nil), run.PatternIDs...)
+	if run.RevokedAt != nil {
+		revokedAt := *run.RevokedAt
+		run.RevokedAt = &revokedAt
+	}
+	return run
+}
+
+func clonePattern(pattern ConsolidatedPattern) ConsolidatedPattern {
+	pattern.CanonicalContent = append(json.RawMessage(nil), pattern.CanonicalContent...)
+	pattern.SourceEpisodeIDs = append([]string(nil), pattern.SourceEpisodeIDs...)
+	pattern.SourceEventIDs = append([]string(nil), pattern.SourceEventIDs...)
+	pattern.Tags = append([]string(nil), pattern.Tags...)
+	return pattern
 }

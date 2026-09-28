@@ -1,6 +1,6 @@
 # AR-08 — Implement specialist agents and proposals
 
-**Status:** Ready  
+**Status:** In Progress  
 **Track:** Arachne  
 **Depends on:** AR-05  
 **Source:** PRD §8, Arachne Phase 6

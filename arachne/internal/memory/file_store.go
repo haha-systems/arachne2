@@ -67,6 +67,12 @@ func loadDatabase(path, organismID string) (database, error) {
 	if closeErr != nil {
 		return database{}, fmt.Errorf("close memory file: %w", closeErr)
 	}
+	if db.Runs == nil {
+		db.Runs = make(map[string]ConsolidationRun)
+	}
+	if db.Patterns == nil {
+		db.Patterns = make(map[string]ConsolidatedPattern)
+	}
 	if err := validateDatabase(db, organismID); err != nil {
 		return database{}, err
 	}
@@ -114,6 +120,40 @@ func validateDatabase(db database, organismID string) error {
 		}
 		if err := validateSemantic(organismID, record); err != nil {
 			return fmt.Errorf("invalid persisted semantic record: %w", err)
+		}
+	}
+	for id, run := range db.Runs {
+		if id != run.ID {
+			return fmt.Errorf("persisted consolidation key %q does not match run ID %q", id, run.ID)
+		}
+		for _, episodeID := range run.SourceEpisodeIDs {
+			if _, exists := db.Episodes[episodeID]; !exists {
+				return fmt.Errorf("consolidation run %q references missing episode %q", id, episodeID)
+			}
+		}
+		patterns := make([]ConsolidatedPattern, 0, len(run.PatternIDs))
+		for _, patternID := range run.PatternIDs {
+			pattern, exists := db.Patterns[patternID]
+			if !exists {
+				return fmt.Errorf("consolidation run %q references missing pattern %q", id, patternID)
+			}
+			patterns = append(patterns, pattern)
+		}
+		if err := validateConsolidation(organismID, run, patterns); err != nil {
+			return fmt.Errorf("invalid persisted consolidation %q: %w", id, err)
+		}
+	}
+	for id, pattern := range db.Patterns {
+		if id != pattern.ID {
+			return fmt.Errorf("persisted pattern key %q does not match pattern ID %q", id, pattern.ID)
+		}
+		if _, exists := db.Runs[pattern.RunID]; !exists {
+			return fmt.Errorf("persisted pattern %q has missing run %q", id, pattern.RunID)
+		}
+		for _, episodeID := range pattern.SourceEpisodeIDs {
+			if _, exists := db.Episodes[episodeID]; !exists {
+				return fmt.Errorf("consolidated pattern %q references missing episode %q", id, episodeID)
+			}
 		}
 	}
 	return nil

@@ -25,14 +25,13 @@ Move a task by changing its **Status** here and in its task file. Use `Ready` on
 
 | ID                                                     | Task                                           | Depends on   |
 | ------------------------------------------------------ | ---------------------------------------------- | ------------ |
-| [AR-08](tasks/AR-08-implement-specialist-proposals.md) | Implement specialist agents and proposals      | AR-05        |
 | [AR-13](tasks/AR-13-implement-governance.md)           | Implement governance for consequential changes | AR-01, AR-05 |
 
 ### In Progress
 
-| ID                                               | Task                     | Depends on |
-| ------------------------------------------------ | ------------------------ | ---------- |
-| [AR-07](tasks/AR-07-add-memory-consolidation.md) | Add memory consolidation | AR-06      |
+| ID                                                | Task                                     | Depends on |
+| ------------------------------------------------- | ---------------------------------------- | ---------- |
+| [AR-08](tasks/AR-08-implement-specialist-proposals.md) | Implement specialist agents and proposals | AR-05 |
 
 ### Review
 
@@ -40,40 +39,41 @@ No tasks are marked Review.
 
 ### Done
 
-| ID                                                                | Task                                                    | Evidence                                                    |
-| ----------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------- |
-| [REF-02](tasks/REF-02-inventory-research-assets.md)               | Inventory subsystems and research assets                | [Reference inventory](docs/REFERENCE_INVENTORY.md)          |
-| [REF-01](tasks/REF-01-stabilize-zig-reference.md)                 | Stabilize the Zig reference system                      | [Reference freeze](docs/REFERENCE_FREEZE.md)                |
-| [SILK-01](tasks/SILK-01-write-rust-foundation-spec.md)            | Specify Silk Rust Phase 0/1                             | [Foundation specification](docs/SILK_RUST_FOUNDATION.md)    |
-| [SILK-03](tasks/SILK-03-define-core-language-semantics.md)        | Define core language semantics                          | [Language semantics](docs/SILK_LANGUAGE_SEMANTICS.md)       |
-| [SILK-05](tasks/SILK-05-define-host-capability-contract.md)       | Define the host capability contract                     | [Host protocol contract](docs/SILK_HOST_PROTOCOL.md)        |
-| [SILK-02](tasks/SILK-02-create-independent-rust-project.md)       | Create the independent Rust project                     | [Rust workspace](silk2/README.md)                           |
-| [REF-03](tasks/REF-03-build-golden-silk-corpus.md)                | Build a golden Silk corpus                              | [Versioned corpus](silk2/reference/silk/README.md)          |
-| [REF-04](tasks/REF-04-classify-compatibility-and-experiments.md)  | Classify compatibility and experiments                  | [Compatibility decisions](docs/COMPATIBILITY_DECISIONS.md)  |
-| [AR-01](tasks/AR-01-write-arachne-2-architecture-spec.md)         | Specify the smallest coherent Arachne 2                 | [Architecture specification](docs/ARACHNE2_ARCHITECTURE.md) |
-| [SILK-04](tasks/SILK-04-inventory-and-classify-syntax.md)         | Inventory and classify legacy syntax                    | [Syntax compatibility](docs/SILK_SYNTAX_COMPATIBILITY.md)   |
-| [AR-02](tasks/AR-02-build-go-runtime-skeleton.md)                 | Build the Go runtime skeleton                           | [Go runtime](arachne/README.md)                             |
-| [INT-01](tasks/INT-01-define-silk-arachne-boundary.md)            | Define the Silk and Arachne boundary                    | [Integration boundary](docs/SILK_ARACHNE_BOUNDARY.md)       |
-| [INT-03](tasks/INT-03-establish-independent-release-strategy.md)  | Establish independent repository and release identities | [Release strategy](docs/RELEASE_STRATEGY.md)                |
-| [AR-03](tasks/AR-03-implement-agent-lifecycle-and-transport.md)   | Implement agent lifecycle and event transport           | [Agent runtime](docs/ARACHNE_AGENT_RUNTIME.md)              |
-| [SILK-06](tasks/SILK-06-model-effects-and-authority.md)           | Model effects, grants, and authority checks             | [Effects authority](docs/SILK_EFFECTS_AUTHORITY.md)         |
-| [SILK-07](tasks/SILK-07-design-semantic-ir.md)                    | Design the semantic IR                                  | [Semantic IR](docs/SILK_SEMANTIC_IR.md)                     |
-| [SILK-08](tasks/SILK-08-lower-source-to-ir.md)                    | Lower source programs into semantic IR                  | [Parser and lowering](docs/SILK_PARSER_LOWERING.md)         |
-| [SILK-09](tasks/SILK-09-implement-ir-evaluator.md)                | Implement the IR evaluator                              | [IR evaluator](docs/SILK_EVALUATOR.md)                      |
-| [SILK-11](tasks/SILK-11-emit-structured-traces.md)                | Emit structured execution traces                        | [IR evaluator](docs/SILK_EVALUATOR.md)                      |
-| [SILK-10](tasks/SILK-10-compare-legacy-behavior.md)               | Compare behavior with the Zig reference                 | [Compatibility status](docs/SILK_COMPATIBILITY_STATUS.md)   |
-| [SILK-13](tasks/SILK-13-define-procedure-identity-and-lineage.md) | Define procedural identity and lineage                  | [Identity and lineage](docs/SILK_PROCEDURE_IDENTITY.md)     |
-| [SILK-12](tasks/SILK-12-build-semantic-inspection.md)             | Build semantic program inspection                       | [Semantic inspection](docs/SILK_INSPECTION.md)              |
-| [SILK-14](tasks/SILK-14-implement-procedure-registry.md)          | Implement the procedure registry                        | [Procedure registry](docs/SILK_PROCEDURE_REGISTRY.md)       |
-| [SILK-15](tasks/SILK-15-add-semantic-retrieval.md)                | Add semantic capability retrieval                       | [Semantic retrieval](docs/SILK_SEMANTIC_RETRIEVAL.md)       |
-| [SILK-16](tasks/SILK-16-compose-and-validate-procedures.md)       | Compose and validate procedures                         | [Procedure composition](docs/SILK_COMPOSITION.md)           |
-| [SILK-17](tasks/SILK-17-add-procedural-synthesis-pipeline.md)     | Add the procedural synthesis pipeline                   | [Synthesis pipeline](docs/SILK_SYNTHESIS.md)                |
-| [SILK-18](tasks/SILK-18-model-procedure-retention-states.md)      | Model procedure retention states                        | [Retention lifecycle](docs/SILK_RETENTION.md)               |
-| [SILK-19](tasks/SILK-19-demonstrate-standalone-silk.md)           | Demonstrate standalone Silk                             | [Standalone demonstration](docs/SILK_STANDALONE_DEMO.md)    |
-| [AR-04](tasks/AR-04-integrate-silk-client.md)                     | Integrate Arachne with the public Silk runtime          | [Integration contract](docs/ARACHNE_SILK_INTEGRATION.md)    |
-| [AR-05](tasks/AR-05-implement-cognitive-event-spine.md)           | Implement the cognitive event spine                     | [Cognitive event model](docs/ARACHNE_COGNITIVE_EVENTS.md)   |
-| [AR-06](tasks/AR-06-implement-attributed-memory.md)               | Implement attributed organism memory                    | [Attributed memory](docs/ARACHNE_ATTRIBUTED_MEMORY.md)      |
-| [INT-02](tasks/INT-02-test-legacy-arachne-with-new-silk.md)       | Run the legacy Arachne compatibility experiment         | [Experiment report](docs/LEGACY_ARACHNE_SILK_EXPERIMENT.md) |
+| ID                                                                | Task                                                    | Evidence                                                     |
+| ----------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------ |
+| [REF-02](tasks/REF-02-inventory-research-assets.md)               | Inventory subsystems and research assets                | [Reference inventory](docs/REFERENCE_INVENTORY.md)           |
+| [REF-01](tasks/REF-01-stabilize-zig-reference.md)                 | Stabilize the Zig reference system                      | [Reference freeze](docs/REFERENCE_FREEZE.md)                 |
+| [SILK-01](tasks/SILK-01-write-rust-foundation-spec.md)            | Specify Silk Rust Phase 0/1                             | [Foundation specification](docs/SILK_RUST_FOUNDATION.md)     |
+| [SILK-03](tasks/SILK-03-define-core-language-semantics.md)        | Define core language semantics                          | [Language semantics](docs/SILK_LANGUAGE_SEMANTICS.md)        |
+| [SILK-05](tasks/SILK-05-define-host-capability-contract.md)       | Define the host capability contract                     | [Host protocol contract](docs/SILK_HOST_PROTOCOL.md)         |
+| [SILK-02](tasks/SILK-02-create-independent-rust-project.md)       | Create the independent Rust project                     | [Rust workspace](silk2/README.md)                            |
+| [REF-03](tasks/REF-03-build-golden-silk-corpus.md)                | Build a golden Silk corpus                              | [Versioned corpus](silk2/reference/silk/README.md)           |
+| [REF-04](tasks/REF-04-classify-compatibility-and-experiments.md)  | Classify compatibility and experiments                  | [Compatibility decisions](docs/COMPATIBILITY_DECISIONS.md)   |
+| [AR-01](tasks/AR-01-write-arachne-2-architecture-spec.md)         | Specify the smallest coherent Arachne 2                 | [Architecture specification](docs/ARACHNE2_ARCHITECTURE.md)  |
+| [SILK-04](tasks/SILK-04-inventory-and-classify-syntax.md)         | Inventory and classify legacy syntax                    | [Syntax compatibility](docs/SILK_SYNTAX_COMPATIBILITY.md)    |
+| [AR-02](tasks/AR-02-build-go-runtime-skeleton.md)                 | Build the Go runtime skeleton                           | [Go runtime](arachne/README.md)                              |
+| [INT-01](tasks/INT-01-define-silk-arachne-boundary.md)            | Define the Silk and Arachne boundary                    | [Integration boundary](docs/SILK_ARACHNE_BOUNDARY.md)        |
+| [INT-03](tasks/INT-03-establish-independent-release-strategy.md)  | Establish independent repository and release identities | [Release strategy](docs/RELEASE_STRATEGY.md)                 |
+| [AR-03](tasks/AR-03-implement-agent-lifecycle-and-transport.md)   | Implement agent lifecycle and event transport           | [Agent runtime](docs/ARACHNE_AGENT_RUNTIME.md)               |
+| [SILK-06](tasks/SILK-06-model-effects-and-authority.md)           | Model effects, grants, and authority checks             | [Effects authority](docs/SILK_EFFECTS_AUTHORITY.md)          |
+| [SILK-07](tasks/SILK-07-design-semantic-ir.md)                    | Design the semantic IR                                  | [Semantic IR](docs/SILK_SEMANTIC_IR.md)                      |
+| [SILK-08](tasks/SILK-08-lower-source-to-ir.md)                    | Lower source programs into semantic IR                  | [Parser and lowering](docs/SILK_PARSER_LOWERING.md)          |
+| [SILK-09](tasks/SILK-09-implement-ir-evaluator.md)                | Implement the IR evaluator                              | [IR evaluator](docs/SILK_EVALUATOR.md)                       |
+| [SILK-11](tasks/SILK-11-emit-structured-traces.md)                | Emit structured execution traces                        | [IR evaluator](docs/SILK_EVALUATOR.md)                       |
+| [SILK-10](tasks/SILK-10-compare-legacy-behavior.md)               | Compare behavior with the Zig reference                 | [Compatibility status](docs/SILK_COMPATIBILITY_STATUS.md)    |
+| [SILK-13](tasks/SILK-13-define-procedure-identity-and-lineage.md) | Define procedural identity and lineage                  | [Identity and lineage](docs/SILK_PROCEDURE_IDENTITY.md)      |
+| [SILK-12](tasks/SILK-12-build-semantic-inspection.md)             | Build semantic program inspection                       | [Semantic inspection](docs/SILK_INSPECTION.md)               |
+| [SILK-14](tasks/SILK-14-implement-procedure-registry.md)          | Implement the procedure registry                        | [Procedure registry](docs/SILK_PROCEDURE_REGISTRY.md)        |
+| [SILK-15](tasks/SILK-15-add-semantic-retrieval.md)                | Add semantic capability retrieval                       | [Semantic retrieval](docs/SILK_SEMANTIC_RETRIEVAL.md)        |
+| [SILK-16](tasks/SILK-16-compose-and-validate-procedures.md)       | Compose and validate procedures                         | [Procedure composition](docs/SILK_COMPOSITION.md)            |
+| [SILK-17](tasks/SILK-17-add-procedural-synthesis-pipeline.md)     | Add the procedural synthesis pipeline                   | [Synthesis pipeline](docs/SILK_SYNTHESIS.md)                 |
+| [SILK-18](tasks/SILK-18-model-procedure-retention-states.md)      | Model procedure retention states                        | [Retention lifecycle](docs/SILK_RETENTION.md)                |
+| [SILK-19](tasks/SILK-19-demonstrate-standalone-silk.md)           | Demonstrate standalone Silk                             | [Standalone demonstration](docs/SILK_STANDALONE_DEMO.md)     |
+| [AR-04](tasks/AR-04-integrate-silk-client.md)                     | Integrate Arachne with the public Silk runtime          | [Integration contract](docs/ARACHNE_SILK_INTEGRATION.md)     |
+| [AR-05](tasks/AR-05-implement-cognitive-event-spine.md)           | Implement the cognitive event spine                     | [Cognitive event model](docs/ARACHNE_COGNITIVE_EVENTS.md)    |
+| [AR-06](tasks/AR-06-implement-attributed-memory.md)               | Implement attributed organism memory                    | [Attributed memory](docs/ARACHNE_ATTRIBUTED_MEMORY.md)       |
+| [AR-07](tasks/AR-07-add-memory-consolidation.md)                  | Add memory consolidation                                | [Memory consolidation](docs/ARACHNE_MEMORY_CONSOLIDATION.md) |
+| [INT-02](tasks/INT-02-test-legacy-arachne-with-new-silk.md)       | Run the legacy Arachne compatibility experiment         | [Experiment report](docs/LEGACY_ARACHNE_SILK_EXPERIMENT.md)  |
 
 ### Blocked
 

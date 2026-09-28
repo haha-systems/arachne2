@@ -48,3 +48,6 @@ intended for the initial organism workload, not large-scale archival search.
 Memory payloads may contain sensitive information; the file is created with
 owner-only permissions, and operators remain responsible for path, backup, and
 host filesystem security.
+
+For the exact-repeat transformation and revocation path, see the
+[consolidation contract](ARACHNE_MEMORY_CONSOLIDATION.md).
