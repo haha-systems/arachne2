@@ -70,14 +70,16 @@ type retainedProcedure struct {
 }
 
 type runState struct {
-	events           *cognition.Spine
-	memory           *memory.Service
-	governor         *governance.Service
-	policyDigest     string
-	engine           *development.Engine
-	client           *silk.Client
-	sessionID        string
-	forceTaskFailure bool
+	events            *cognition.Spine
+	memory            *memory.Service
+	governor          *governance.Service
+	policyDigest      string
+	engine            *development.Engine
+	client            *silk.Client
+	sessionID         string
+	forceTaskFailure  bool
+	subsystems        map[string]bool
+	developmentUpdate func(context.Context, runState, agent.Proposal, string, string) (development.Change, error)
 }
 
 type coordinationResult struct {
@@ -113,12 +115,20 @@ type experimentOutcome struct {
 }
 
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "experiment" {
+		if err := runExperimentCLI(os.Args[2:]); err != nil {
+			fmt.Fprintf(os.Stderr, "experiment: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
 	if len(os.Args) < 2 || len(os.Args) > 3 || len(os.Args) == 3 && os.Args[2] != "--fail-task" {
 		fmt.Fprintln(os.Stderr, "usage: integrated-engineering <path-to-silk-binary> [--fail-task]")
 		os.Exit(2)
 	}
 	ctx := context.Background()
-	state := newRunState(ctx, os.Args[1], len(os.Args) == 3)
+	state, err := newRunState(ctx, os.Args[1], len(os.Args) == 3)
+	fatalIf(err)
 	defer func() { fatalIf(state.client.Close()) }()
 	report, err := runExperiment(ctx, state)
 	fatalIf(err)
@@ -127,15 +137,23 @@ func main() {
 	fatalIf(encoder.Encode(report))
 }
 
-func newRunState(ctx context.Context, silkPath string, forceTaskFailure bool) runState {
+func newRunState(ctx context.Context, silkPath string, forceTaskFailure bool) (runState, error) {
 	eventStore, err := cognition.NewMemoryStore(2048)
-	fatalIf(err)
+	if err != nil {
+		return runState{}, err
+	}
 	events, err := cognition.NewSpine(organismID, eventStore)
-	fatalIf(err)
+	if err != nil {
+		return runState{}, err
+	}
 	memoryStore, err := memory.NewMemoryStore(organismID)
-	fatalIf(err)
+	if err != nil {
+		return runState{}, err
+	}
 	memories, err := memory.NewService(organismID, memoryStore, events)
-	fatalIf(err)
+	if err != nil {
+		return runState{}, err
+	}
 	policy := governance.Policy{
 		ID: "integrated-engineering-policy", Version: "1", Approvers: []string{"operator"},
 		Rules: map[governance.ActionClass]governance.Rule{
@@ -144,23 +162,36 @@ func newRunState(ctx context.Context, silkPath string, forceTaskFailure bool) ru
 		},
 	}
 	governor, err := governance.New(policy, events)
-	fatalIf(err)
+	if err != nil {
+		return runState{}, err
+	}
 	policyDigest, err := governance.PolicyDigest(policy)
-	fatalIf(err)
+	if err != nil {
+		return runState{}, err
+	}
 	engine, err := development.NewEngine(ctx, organismID, map[string]float64{"engineering:estimate": 0.5}, governor, events)
-	fatalIf(err)
+	if err != nil {
+		return runState{}, err
+	}
 	client, err := silk.Start(ctx, silk.Command{Path: silkPath, Args: []string{"serve"}, Err: os.Stderr})
-	fatalIf(err)
+	if err != nil {
+		return runState{}, err
+	}
 	session, err := client.CreateSession(ctx, silk.SessionConfig{
 		ID: "integrated-engineering-session", Grants: []silk.Grant{},
 		Limits: silk.Limits{Fuel: 10000, CallDepth: 16, TimeoutMS: 5000},
 	})
-	fatalIf(err)
+	if err != nil {
+		_ = client.Close()
+		return runState{}, err
+	}
 	return runState{
 		events: events, memory: memories, governor: governor,
 		policyDigest: policyDigest, engine: engine, client: client, sessionID: session.ID,
-		forceTaskFailure: forceTaskFailure,
-	}
+		forceTaskFailure:  forceTaskFailure,
+		subsystems:        map[string]bool{"developmental_learning": true, "inspection": true, "memory_replay": true},
+		developmentUpdate: developRouting,
+	}, nil
 }
 
 func runExperiment(ctx context.Context, state runState) (experimentReport, error) {
@@ -189,15 +220,13 @@ func runExperiment(ctx context.Context, state runState) (experimentReport, error
 		taskFailure = &failure
 	} else {
 		procedure = &acquired
-		developed, developmentErr := developRouting(ctx, state, setup.Selected, acquired.ActionEventID, setup.Replay.EventID)
-		if developmentErr != nil {
-			failure, recordErr := recordTaskFailure(ctx, state.events, "governed developmental update", developmentErr, []string{acquired.ActionEventID})
+		change, err = state.runDevelopmentalLearning(ctx, setup.Selected, acquired.ActionEventID, setup.Replay.EventID)
+		if err != nil {
+			failure, recordErr := recordTaskFailure(ctx, state.events, "governed developmental update", err, []string{acquired.ActionEventID})
 			if recordErr != nil {
 				return experimentReport{}, recordErr
 			}
 			taskFailure = &failure
-		} else {
-			change = &developed
 		}
 	}
 	return assembleReport(ctx, state, setup, experimentOutcome{
@@ -228,22 +257,11 @@ func prepareExperiment(ctx context.Context, state runState) (experimentSetup, er
 		return experimentSetup{}, fmt.Errorf("expected one repeated procedural pattern, received %d", len(patterns))
 	}
 	pattern := patterns[0]
-	inspector, err := inspection.New(state.events)
+	inspector, initial, err := state.inspectInitial(ctx)
 	if err != nil {
 		return experimentSetup{}, err
 	}
-	initial, err := inspector.Inspect(ctx, organismID)
-	if err != nil {
-		return experimentSetup{}, err
-	}
-	replay, err := state.memory.ScheduleReplay(ctx, memory.ReplayPlan{
-		InteractionID: "estimate-current", RequestedBy: "coordinator",
-		ScheduledAt: time.Now().UTC(), EpisodeIDs: episodes,
-	})
-	if err != nil {
-		return experimentSetup{}, err
-	}
-	replayRun, err := state.memory.RunReplay(ctx, replay)
+	replayRun, err := state.replay(ctx, episodes)
 	if err != nil {
 		return experimentSetup{}, err
 	}
@@ -263,13 +281,18 @@ func prepareExperiment(ctx context.Context, state runState) (experimentSetup, er
 }
 
 func assembleReport(ctx context.Context, state runState, setup experimentSetup, outcome experimentOutcome) (experimentReport, error) {
-	history, err := setup.Inspector.Inspect(ctx, organismID)
-	if err != nil {
-		return experimentReport{}, err
-	}
-	evolution, err := inspection.ChangesSince(setup.Initial, history)
-	if err != nil {
-		return experimentReport{}, err
+	var history inspection.Report
+	var evolution inspection.Evolution
+	if setup.Inspector != nil {
+		var err error
+		history, err = setup.Inspector.Inspect(ctx, organismID)
+		if err != nil {
+			return experimentReport{}, err
+		}
+		evolution, err = inspection.ChangesSince(setup.Initial, history)
+		if err != nil {
+			return experimentReport{}, err
+		}
 	}
 	events, err := readEvents(ctx, state.events)
 	if err != nil {
@@ -283,6 +306,64 @@ func assembleReport(ctx context.Context, state runState, setup experimentSetup, 
 		Consolidation: setup.PatternRun, Replay: setup.Replay, FailedPath: outcome.FailedPath, AcquiredProcedure: outcome.Procedure,
 		Development: outcome.Development, Evolution: evolution, InspectedHistory: history, Events: events,
 	}, nil
+}
+
+func (state runState) enabled(subsystem string) bool {
+	enabled, configured := state.subsystems[subsystem]
+	return !configured || enabled
+}
+
+func (state runState) inspectInitial(ctx context.Context) (*inspection.Inspector, inspection.Report, error) {
+	if !state.enabled("inspection") {
+		return nil, inspection.Report{}, nil
+	}
+	inspector, err := inspection.New(state.events)
+	if err != nil {
+		return nil, inspection.Report{}, err
+	}
+	report, err := inspector.Inspect(ctx, organismID)
+	if err != nil {
+		return nil, inspection.Report{}, err
+	}
+	return inspector, report, nil
+}
+
+func (state runState) replay(ctx context.Context, episodeIDs []string) (memory.ReplayRun, error) {
+	if !state.enabled("memory_replay") {
+		return memory.ReplayRun{}, nil
+	}
+	plan, err := state.memory.ScheduleReplay(ctx, memory.ReplayPlan{
+		InteractionID: "estimate-current", RequestedBy: "coordinator",
+		ScheduledAt: time.Now().UTC(), EpisodeIDs: episodeIDs,
+	})
+	if err != nil {
+		return memory.ReplayRun{}, err
+	}
+	return state.memory.RunReplay(ctx, plan)
+}
+
+func filterEventIDs(ids ...string) []string {
+	filtered := make([]string, 0, len(ids))
+	for _, id := range ids {
+		if id != "" {
+			filtered = append(filtered, id)
+		}
+	}
+	return filtered
+}
+
+func (state runState) runDevelopmentalLearning(ctx context.Context, selected agent.Proposal, actionEventID, replayEventID string) (*development.Change, error) {
+	if !state.enabled("developmental_learning") {
+		return nil, nil
+	}
+	if state.developmentUpdate == nil {
+		return nil, fmt.Errorf("developmental learning is enabled but no update implementation is configured")
+	}
+	change, err := state.developmentUpdate(ctx, state, selected, actionEventID, replayEventID)
+	if err != nil {
+		return nil, err
+	}
+	return &change, nil
 }
 
 func taskOutcome(failure *failedPath) string {
@@ -512,7 +593,7 @@ func prepareAndRetain(ctx context.Context, state runState, pattern memory.Consol
 		Action:    "retain validated estimate summation procedure",
 		Payload:   json.RawMessage(fmt.Sprintf(`{"pattern_id":%q,"revision_digest":%q,"entry_procedure":%q}`, pattern.ID, identity.RevisionDigest, prepared.EntryProcedure)),
 		CreatedAt: time.Now().UTC(), SourceEventIDs: pattern.SourceEventIDs,
-		EvidenceEventIDs: append(append([]string(nil), pattern.SourceEventIDs...), replay.EventID, selected.EventID),
+		EvidenceEventIDs: filterEventIDs(append(append([]string(nil), pattern.SourceEventIDs...), replay.EventID, selected.EventID)...),
 	}
 	decision, err := approve(ctx, state, proposal, "approve retained sum procedure")
 	if err != nil {
@@ -594,7 +675,7 @@ func developRouting(ctx context.Context, state runState, selected agent.Proposal
 	proposal, err := state.engine.PrepareRoutingProposal(development.RoutingRequest{
 		ID: "learn-estimate-route", InteractionID: "estimate-current", ProposerID: selected.SpecialistID,
 		Key: "engineering:estimate", Value: 0.9, CreatedAt: time.Now().UTC(),
-		SourceEventIDs: []string{selected.EventID, replayEventID}, EvidenceEventIDs: []string{actionEventID},
+		SourceEventIDs: filterEventIDs(selected.EventID, replayEventID), EvidenceEventIDs: filterEventIDs(actionEventID),
 	})
 	if err != nil {
 		return development.Change{}, err
@@ -697,7 +778,7 @@ func recordTaskFailure(ctx context.Context, events *cognition.Spine, stage strin
 		return failedPath{}, err
 	}
 	event, err := events.Emit(ctx, cognition.Draft{
-		CorrelationID: "estimate-current", ParentEventIDs: parents,
+		CorrelationID: "estimate-current", ParentEventIDs: filterEventIDs(parents...),
 		Kind: cognition.KindDevelopment, Payload: encoded,
 	})
 	if err != nil {

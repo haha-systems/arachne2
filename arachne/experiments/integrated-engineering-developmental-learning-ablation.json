@@ -1,0 +1,24 @@
+{
+  "name": "integrated-engineering-developmental-learning-ablation-smoke",
+  "task": "integrated-engineering",
+  "trials": 2,
+  "seed": 4100,
+  "profiles": [
+    {
+      "name": "full",
+      "subsystems": {
+        "developmental_learning": true,
+        "inspection": true,
+        "memory_replay": true
+      }
+    },
+    {
+      "name": "without-developmental-learning",
+      "subsystems": {
+        "developmental_learning": false,
+        "inspection": true,
+        "memory_replay": true
+      }
+    }
+  ]
+}

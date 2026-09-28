@@ -1,0 +1,43 @@
+{
+  "experiment": {
+    "name": "workspace-ablation",
+    "task": "xor-evidence-reconstruction",
+    "trials": 20,
+    "seed": 1001,
+    "profiles": [
+      {
+        "name": "workspace_enabled",
+        "subsystems": {
+          "shared_workspace": true
+        }
+      },
+      {
+        "name": "workspace_disabled",
+        "subsystems": {
+          "shared_workspace": false
+        }
+      }
+    ]
+  },
+  "controls": {
+    "model_provider": "deterministic_synthetic",
+    "model": "none",
+    "tools": [],
+    "step_budget": 1,
+    "time_limit_ms": 1000,
+    "memory": "disabled",
+    "replay": "disabled",
+    "learning": "disabled",
+    "active_inference": "disabled",
+    "governance": "not_used_synthetic_task",
+    "initial_state": "fresh_event_store_and_supervisor_per_trial",
+    "workspace_capacity": 4,
+    "agents": [
+      "evidence-0",
+      "evidence-1",
+      "evidence-2",
+      "evidence-3",
+      "evidence-decoy"
+    ]
+  }
+}

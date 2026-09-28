@@ -1,0 +1,16 @@
+{
+  "name": "integrated-engineering-minimal-baseline",
+  "task": "integrated-engineering",
+  "trials": 1,
+  "seed": 4100,
+  "profiles": [
+    {
+      "name": "minimal",
+      "subsystems": {
+        "developmental_learning": false,
+        "inspection": false,
+        "memory_replay": false
+      }
+    }
+  ]
+}
