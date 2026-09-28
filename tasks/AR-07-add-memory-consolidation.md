@@ -1,6 +1,6 @@
 # AR-07 — Add memory consolidation
 
-**Status:** Backlog  
+**Status:** In Progress  
 **Track:** Arachne  
 **Depends on:** AR-06  
 **Source:** PRD §8, Arachne Phase 5
@@ -17,4 +17,3 @@ Define consolidation triggers and transformations, preserve links to source epis
 
 - Consolidated knowledge can be traced to its supporting experiences.
 - Later retrieval can show how consolidation changed the available memory.
-

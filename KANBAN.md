@@ -10,7 +10,6 @@ Move a task by changing its **Status** here and in its task file. Use `Ready` on
 
 | ID                                                               | Task                                                    | Depends on                                                    |
 | ---------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
-| [AR-07](tasks/AR-07-add-memory-consolidation.md)                 | Add memory consolidation                                | AR-06                                                         |
 | [AR-09](tasks/AR-09-implement-bounded-workspace.md)              | Implement bounded workspace coordination                | AR-08                                                         |
 | [AR-10](tasks/AR-10-model-regulation-and-prediction-error.md)    | Model regulation and prediction error                   | AR-05, AR-09                                                  |
 | [AR-11](tasks/AR-11-validate-regulatory-effects.md)              | Validate regulatory effects on cognition                | AR-10                                                         |
@@ -26,13 +25,14 @@ Move a task by changing its **Status** here and in its task file. Use `Ready` on
 
 | ID                                                     | Task                                           | Depends on   |
 | ------------------------------------------------------ | ---------------------------------------------- | ------------ |
-| [AR-06](tasks/AR-06-implement-attributed-memory.md)    | Implement attributed organism memory           | AR-05        |
 | [AR-08](tasks/AR-08-implement-specialist-proposals.md) | Implement specialist agents and proposals      | AR-05        |
 | [AR-13](tasks/AR-13-implement-governance.md)           | Implement governance for consequential changes | AR-01, AR-05 |
 
 ### In Progress
 
-No tasks are marked In Progress.
+| ID                                               | Task                     | Depends on |
+| ------------------------------------------------ | ------------------------ | ---------- |
+| [AR-07](tasks/AR-07-add-memory-consolidation.md) | Add memory consolidation | AR-06      |
 
 ### Review
 
@@ -72,6 +72,7 @@ No tasks are marked Review.
 | [SILK-19](tasks/SILK-19-demonstrate-standalone-silk.md)           | Demonstrate standalone Silk                             | [Standalone demonstration](docs/SILK_STANDALONE_DEMO.md)    |
 | [AR-04](tasks/AR-04-integrate-silk-client.md)                     | Integrate Arachne with the public Silk runtime          | [Integration contract](docs/ARACHNE_SILK_INTEGRATION.md)    |
 | [AR-05](tasks/AR-05-implement-cognitive-event-spine.md)           | Implement the cognitive event spine                     | [Cognitive event model](docs/ARACHNE_COGNITIVE_EVENTS.md)   |
+| [AR-06](tasks/AR-06-implement-attributed-memory.md)               | Implement attributed organism memory                    | [Attributed memory](docs/ARACHNE_ATTRIBUTED_MEMORY.md)      |
 | [INT-02](tasks/INT-02-test-legacy-arachne-with-new-silk.md)       | Run the legacy Arachne compatibility experiment         | [Experiment report](docs/LEGACY_ARACHNE_SILK_EXPERIMENT.md) |
 
 ### Blocked

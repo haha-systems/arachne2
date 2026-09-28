@@ -13,6 +13,7 @@ type Config struct {
 	LogLevel        string
 	MailboxCapacity int
 	EventCapacity   int
+	MemoryPath      string
 	ShutdownTimeout time.Duration
 }
 

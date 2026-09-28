@@ -2,10 +2,12 @@ package daemon
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 
 	"github.com/haha-systems/arachne2/internal/agent"
 	"github.com/haha-systems/arachne2/internal/cognition"
+	"github.com/haha-systems/arachne2/internal/memory"
 )
 
 // Daemon owns the cancellable lifecycle of one Arachne organism process.
@@ -14,6 +16,7 @@ type Daemon struct {
 	logger *slog.Logger
 	agents *agent.Supervisor
 	events *cognition.Spine
+	memory *memory.Service
 }
 
 // New validates configuration and creates a daemon using the supplied logger.
@@ -36,12 +39,30 @@ func New(config Config, logger *slog.Logger) (*Daemon, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Daemon{config: config, logger: logger, agents: agents, events: events}, nil
+	var memoryStore memory.Store
+	if config.MemoryPath == "" {
+		memoryStore, err = memory.NewMemoryStore(config.OrganismID)
+	} else {
+		memoryStore, err = memory.OpenFileStore(config.MemoryPath, config.OrganismID)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("initialize organism memory: %w", err)
+	}
+	memoryService, err := memory.NewService(config.OrganismID, memoryStore, events)
+	if err != nil {
+		return nil, err
+	}
+	return &Daemon{config: config, logger: logger, agents: agents, events: events, memory: memoryService}, nil
 }
 
 // Events exposes the daemon's shared cognitive event spine to its bound agents and host.
 func (d *Daemon) Events() *cognition.Spine {
 	return d.events
+}
+
+// Memory exposes explicit attributed episode and semantic candidate operations.
+func (d *Daemon) Memory() *memory.Service {
+	return d.memory
 }
 
 // RegisterAgent adds an agent before Run starts the supervised workers.

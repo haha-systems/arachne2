@@ -31,6 +31,7 @@ func run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	flags.StringVar(&config.OrganismID, "organism-id", config.OrganismID, "organism identifier")
 	flags.StringVar(&config.LogLevel, "log-level", config.LogLevel, "debug, info, warn, or error")
 	flags.IntVar(&config.MailboxCapacity, "mailbox-capacity", config.MailboxCapacity, "messages buffered per agent")
+	flags.StringVar(&config.MemoryPath, "memory-file", config.MemoryPath, "persist organism memory in this file")
 	flags.DurationVar(&config.ShutdownTimeout, "shutdown-timeout", config.ShutdownTimeout, "maximum time to wait for agents to stop")
 	if err := flags.Parse(args); err != nil {
 		return 2

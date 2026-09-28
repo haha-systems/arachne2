@@ -18,7 +18,7 @@ the Silk `trace_id`, trace sequence, call correlation IDs, procedure, and trace
 event kind in its `silk` link. The agent response continues to carry the value,
 output, trace, and any runtime error.
 
-Other kinds are reserved in the shared vocabulary for proposals, selections,
+Other kinds in the shared vocabulary include memory, proposals, selections,
 decisions, prediction errors, replay, regulation, governance, and development.
 They can use the same `Spine.Emit` path as those subsystems arrive; the event
 store does not require a private tracing implementation for each subsystem.

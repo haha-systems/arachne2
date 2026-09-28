@@ -27,6 +27,7 @@ const (
 	KindRegulation      = "regulation"
 	KindGovernance      = "governance"
 	KindDevelopment     = "development"
+	KindMemory          = "memory"
 	KindSilkTrace       = "silk_trace"
 )
 

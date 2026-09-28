@@ -23,6 +23,10 @@ or `error`. `--mailbox-capacity` sets the bounded per-agent queue size;
 `--shutdown-timeout` sets the maximum graceful wait. Invalid configuration and
 command arguments exit with status 2.
 
+`--memory-file PATH` persists episodic and candidate semantic memory in an
+organism-scoped JSON snapshot. Without it, memory is process-local. See the
+[attributed memory contract](../docs/ARACHNE_ATTRIBUTED_MEMORY.md).
+
 ## Checks
 
 ```sh
