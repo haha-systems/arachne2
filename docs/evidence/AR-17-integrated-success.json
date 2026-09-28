@@ -1,0 +1,3613 @@
+{
+  "organism_id": "integrated-engineering-organism",
+  "task": "estimate total replacement cost in credits",
+  "task_outcome": "completed_with_captured_failure_path",
+  "initial_routing": {
+    "engineering:estimate": 0.5
+  },
+  "final_routing": {
+    "engineering:estimate": 0.9
+  },
+  "selected_proposal": {
+    "id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+    "event_id": "integrated-engineering-organism:event:15",
+    "interaction_id": "estimate-current",
+    "specialist_id": "planner",
+    "correlation_id": "message-1",
+    "status": "candidate",
+    "summary": "sum the measured costs after checking units",
+    "confidence": 0.85,
+    "evidence_event_ids": [
+      "integrated-engineering-organism:event:1"
+    ],
+    "requested_actions": [
+      {
+        "kind": "estimate_review",
+        "payload": {
+          "executable": false
+        }
+      }
+    ],
+    "created_at": "2026-09-28T07:52:41.481944Z"
+  },
+  "workspace": {
+    "request": {
+      "id": "estimate-workspace",
+      "interaction_id": "estimate-current",
+      "session_id": "integrated-engineering-session",
+      "source_event_ids": [
+        "integrated-engineering-organism:event:1"
+      ]
+    },
+    "proposals": [
+      {
+        "id": "ca2505616f62005d4beb502a64a28198",
+        "event_id": "integrated-engineering-organism:event:14",
+        "interaction_id": "estimate-current",
+        "specialist_id": "critic",
+        "correlation_id": "message-2",
+        "status": "candidate",
+        "summary": "verify both measurements use credits",
+        "confidence": 0.65,
+        "evidence_event_ids": [
+          "integrated-engineering-organism:event:1"
+        ],
+        "requested_actions": [
+          {
+            "kind": "estimate_review",
+            "payload": {
+              "executable": false
+            }
+          }
+        ],
+        "created_at": "2026-09-28T07:52:41.48191Z"
+      },
+      {
+        "id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+        "event_id": "integrated-engineering-organism:event:15",
+        "interaction_id": "estimate-current",
+        "specialist_id": "planner",
+        "correlation_id": "message-1",
+        "status": "candidate",
+        "summary": "sum the measured costs after checking units",
+        "confidence": 0.85,
+        "evidence_event_ids": [
+          "integrated-engineering-organism:event:1"
+        ],
+        "requested_actions": [
+          {
+            "kind": "estimate_review",
+            "payload": {
+              "executable": false
+            }
+          }
+        ],
+        "created_at": "2026-09-28T07:52:41.481944Z"
+      }
+    ],
+    "selection": {
+      "event_id": "integrated-engineering-organism:event:20",
+      "capacity": 1,
+      "policy": "highest declared confidence; ties by specialist ID then proposal ID",
+      "evidence_required": true,
+      "entries": [
+        {
+          "proposal_id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+          "specialist_id": "planner",
+          "confidence": 0.85,
+          "selected": true,
+          "reason": "ranked within workspace capacity"
+        },
+        {
+          "proposal_id": "ca2505616f62005d4beb502a64a28198",
+          "specialist_id": "critic",
+          "confidence": 0.65,
+          "selected": false,
+          "reason": "ranked below regulated admission capacity"
+        }
+      ],
+      "selected_ids": [
+        "b4a44304ca4ab0505d4db8abaed8a7c1"
+      ],
+      "policy_reasons": [
+        "load 1.000 met threshold 0.750; reduced workspace capacity",
+        "action pressure 1.000 met threshold 0.750; reduced workspace capacity",
+        "prediction error 1.000 met threshold 0.500; required proposal evidence",
+        "declared salience 0.900 met threshold 0.750; required proposal evidence"
+      ],
+      "signal_event_ids": [
+        "integrated-engineering-organism:event:18",
+        "integrated-engineering-organism:event:19"
+      ]
+    }
+  },
+  "regulation": {
+    "interaction_id": "estimate-current",
+    "session_id": "integrated-engineering-session",
+    "created_at": "2026-09-28T07:52:41.481982Z",
+    "prediction_error": 1,
+    "surprise": 1,
+    "salience": 0.9,
+    "load": 1,
+    "action_pressure": 1,
+    "cognitive_state": "strained",
+    "prediction": {
+      "metric": "canonical_json_mismatch",
+      "magnitude": 1,
+      "expected_digest": "a945db272d19c2b4ad7c6947be8189800ac4fa34c1a663bb2ee423a98894f68e",
+      "observed_digest": "9d1aabfed7965b5cc94dfaf948b77796fe163da9ba92ce4e3d5574c8427aeeb0",
+      "source_event_ids": [
+        "integrated-engineering-organism:event:1"
+      ],
+      "event_id": "integrated-engineering-organism:event:18"
+    },
+    "workspace_policy": {
+      "capacity": 1,
+      "require_evidence": true,
+      "reasons": [
+        "load 1.000 met threshold 0.750; reduced workspace capacity",
+        "action pressure 1.000 met threshold 0.750; reduced workspace capacity",
+        "prediction error 1.000 met threshold 0.500; required proposal evidence",
+        "declared salience 0.900 met threshold 0.750; required proposal evidence"
+      ],
+      "signal_event_ids": [
+        "integrated-engineering-organism:event:18",
+        "integrated-engineering-organism:event:19"
+      ]
+    },
+    "regulation_event_id": "integrated-engineering-organism:event:19",
+    "source_event_ids": [
+      "integrated-engineering-organism:event:1"
+    ]
+  },
+  "consolidation": {
+    "id": "5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+    "organism_id": "integrated-engineering-organism",
+    "rule_id": "episode.exact_repeat.v1",
+    "minimum_support": 2,
+    "created_at": "2026-09-28T07:52:41.481597Z",
+    "source_episode_ids": [
+      "prior-estimate-a",
+      "prior-estimate-b"
+    ],
+    "pattern_ids": [
+      "35761a758fa2ec5a0349c66b0b866c506a829c3b2376467934af3d8f24a70b76"
+    ],
+    "status": "active"
+  },
+  "replay": {
+    "id": "5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+    "plan_id": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+    "plan_digest": "1603c7395f089b6b891e2a4dc4b5f46253de3d346b62292cdfcb59eeab2ca05d",
+    "schedule_event_id": "integrated-engineering-organism:event:7",
+    "completed_at": "2026-09-28T07:52:41.481762Z",
+    "input_episode_ids": [
+      "prior-estimate-a",
+      "prior-estimate-b"
+    ],
+    "cues": [
+      {
+        "episode_id": "prior-estimate-a",
+        "kind": "successful-sum",
+        "occurred_at": "2026-09-28T07:52:41.481545Z",
+        "content_digest": "a390ad1f9f75ef9274ab315f47db0bfe8464607ef5a06952253df7801ea0d826",
+        "source_event_ids": [
+          "integrated-engineering-organism:event:2"
+        ]
+      },
+      {
+        "episode_id": "prior-estimate-b",
+        "kind": "successful-sum",
+        "occurred_at": "2026-09-28T07:52:41.481566Z",
+        "content_digest": "a390ad1f9f75ef9274ab315f47db0bfe8464607ef5a06952253df7801ea0d826",
+        "source_event_ids": [
+          "integrated-engineering-organism:event:4"
+        ]
+      }
+    ],
+    "event_id": "integrated-engineering-organism:event:8"
+  },
+  "failed_path": {
+    "stage": "Silk candidate preparation",
+    "reason": "Silk protocol error -32030: candidate preparation failed",
+    "event_id": "integrated-engineering-organism:event:21"
+  },
+  "acquired_procedure": {
+    "procedure_id": "estimate.sum",
+    "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+    "entry_procedure": "proc:main",
+    "output": 17.0,
+    "action_event_id": "integrated-engineering-organism:event:28",
+    "retention_event_id": "integrated-engineering-organism:event:25"
+  },
+  "development": {
+    "id": "integrated-engineering-organism:learn-estimate-route:1",
+    "organism_id": "integrated-engineering-organism",
+    "proposal_id": "learn-estimate-route",
+    "revision": 1,
+    "key": "engineering:estimate",
+    "previous": 0.5,
+    "value": 0.9,
+    "governance_decision_id": "8a096fd96abce3bbeffc0bf0cbac111ead331c429e288277cc02602a20beb012",
+    "governance_event_id": "integrated-engineering-organism:event:30",
+    "source_event_ids": [
+      "integrated-engineering-organism:event:15",
+      "integrated-engineering-organism:event:8"
+    ],
+    "evidence_event_ids": [
+      "integrated-engineering-organism:event:28"
+    ],
+    "applied_at": "2026-09-28T07:52:41.48378Z",
+    "event_id": "integrated-engineering-organism:event:31"
+  },
+  "evolution": {
+    "initial": {
+      "organism_id": "integrated-engineering-organism",
+      "through_sequence": 6,
+      "activities": [
+        {
+          "event_id": "integrated-engineering-organism:event:3",
+          "sequence": 3,
+          "occurred_at": "2026-09-28T07:52:41.481565Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "memory",
+          "operation": "episode_recorded",
+          "subject": "prior-estimate-a",
+          "summary": "memory: episode recorded — prior-estimate-a",
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:2"
+          ],
+          "payload": {
+            "episode_id": "prior-estimate-a",
+            "kind": "successful-sum",
+            "operation": "episode_recorded",
+            "source": {
+              "kind": "completed-estimate",
+              "id": "prior-estimate-a"
+            },
+            "source_event_ids": [
+              "integrated-engineering-organism:event:2"
+            ]
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:5",
+          "sequence": 5,
+          "occurred_at": "2026-09-28T07:52:41.481569Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "memory",
+          "operation": "episode_recorded",
+          "subject": "prior-estimate-b",
+          "summary": "memory: episode recorded — prior-estimate-b",
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:4"
+          ],
+          "payload": {
+            "episode_id": "prior-estimate-b",
+            "kind": "successful-sum",
+            "operation": "episode_recorded",
+            "source": {
+              "kind": "completed-estimate",
+              "id": "prior-estimate-b"
+            },
+            "source_event_ids": [
+              "integrated-engineering-organism:event:4"
+            ]
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:6",
+          "sequence": 6,
+          "occurred_at": "2026-09-28T07:52:41.481609Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "memory",
+          "operation": "consolidation_applied",
+          "subject": "5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+          "summary": "memory: consolidation applied — 5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5"
+          ],
+          "payload": {
+            "minimum_support": 2,
+            "operation": "consolidation_applied",
+            "pattern_ids": [
+              "35761a758fa2ec5a0349c66b0b866c506a829c3b2376467934af3d8f24a70b76"
+            ],
+            "rule_id": "episode.exact_repeat.v1",
+            "run_id": "5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+            "source_episode_ids": [
+              "prior-estimate-a",
+              "prior-estimate-b"
+            ]
+          }
+        }
+      ]
+    },
+    "current": {
+      "organism_id": "integrated-engineering-organism",
+      "through_sequence": 31,
+      "activities": [
+        {
+          "event_id": "integrated-engineering-organism:event:3",
+          "sequence": 3,
+          "occurred_at": "2026-09-28T07:52:41.481565Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "memory",
+          "operation": "episode_recorded",
+          "subject": "prior-estimate-a",
+          "summary": "memory: episode recorded — prior-estimate-a",
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:2"
+          ],
+          "payload": {
+            "episode_id": "prior-estimate-a",
+            "kind": "successful-sum",
+            "operation": "episode_recorded",
+            "source": {
+              "kind": "completed-estimate",
+              "id": "prior-estimate-a"
+            },
+            "source_event_ids": [
+              "integrated-engineering-organism:event:2"
+            ]
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:5",
+          "sequence": 5,
+          "occurred_at": "2026-09-28T07:52:41.481569Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "memory",
+          "operation": "episode_recorded",
+          "subject": "prior-estimate-b",
+          "summary": "memory: episode recorded — prior-estimate-b",
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:4"
+          ],
+          "payload": {
+            "episode_id": "prior-estimate-b",
+            "kind": "successful-sum",
+            "operation": "episode_recorded",
+            "source": {
+              "kind": "completed-estimate",
+              "id": "prior-estimate-b"
+            },
+            "source_event_ids": [
+              "integrated-engineering-organism:event:4"
+            ]
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:6",
+          "sequence": 6,
+          "occurred_at": "2026-09-28T07:52:41.481609Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "memory",
+          "operation": "consolidation_applied",
+          "subject": "5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+          "summary": "memory: consolidation applied — 5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5"
+          ],
+          "payload": {
+            "minimum_support": 2,
+            "operation": "consolidation_applied",
+            "pattern_ids": [
+              "35761a758fa2ec5a0349c66b0b866c506a829c3b2376467934af3d8f24a70b76"
+            ],
+            "rule_id": "episode.exact_repeat.v1",
+            "run_id": "5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+            "source_episode_ids": [
+              "prior-estimate-a",
+              "prior-estimate-b"
+            ]
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:7",
+          "sequence": 7,
+          "occurred_at": "2026-09-28T07:52:41.481754Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "memory",
+          "operation": "replay_scheduled",
+          "subject": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+          "summary": "memory: replay scheduled — 83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5"
+          ],
+          "payload": {
+            "episode_ids": [
+              "prior-estimate-a",
+              "prior-estimate-b"
+            ],
+            "interaction_id": "estimate-current",
+            "operation": "replay_scheduled",
+            "plan_digest": "1603c7395f089b6b891e2a4dc4b5f46253de3d346b62292cdfcb59eeab2ca05d",
+            "plan_id": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+            "requested_by": "coordinator",
+            "scheduled_at": "2026-09-28T07:52:41.481713Z",
+            "source_event_ids": null
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:8",
+          "sequence": 8,
+          "occurred_at": "2026-09-28T07:52:41.481779Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "memory",
+          "operation": "replay_completed",
+          "subject": "5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+          "summary": "memory: replay completed — 5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:7"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5",
+            "integrated-engineering-organism:event:7"
+          ],
+          "payload": {
+            "completed_at": "2026-09-28T07:52:41.481762Z",
+            "cues": [
+              {
+                "episode_id": "prior-estimate-a",
+                "kind": "successful-sum",
+                "occurred_at": "2026-09-28T07:52:41.481545Z",
+                "content_digest": "a390ad1f9f75ef9274ab315f47db0bfe8464607ef5a06952253df7801ea0d826",
+                "source_event_ids": [
+                  "integrated-engineering-organism:event:2"
+                ]
+              },
+              {
+                "episode_id": "prior-estimate-b",
+                "kind": "successful-sum",
+                "occurred_at": "2026-09-28T07:52:41.481566Z",
+                "content_digest": "a390ad1f9f75ef9274ab315f47db0bfe8464607ef5a06952253df7801ea0d826",
+                "source_event_ids": [
+                  "integrated-engineering-organism:event:4"
+                ]
+              }
+            ],
+            "input_episode_ids": [
+              "prior-estimate-a",
+              "prior-estimate-b"
+            ],
+            "operation": "replay_completed",
+            "plan_digest": "1603c7395f089b6b891e2a4dc4b5f46253de3d346b62292cdfcb59eeab2ca05d",
+            "plan_id": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+            "run_id": "5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+            "schedule_event_id": "integrated-engineering-organism:event:7"
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:14",
+          "sequence": 14,
+          "occurred_at": "2026-09-28T07:52:41.481954Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "specialist",
+          "operation": "specialist_proposal",
+          "subject": "critic",
+          "summary": "specialist: specialist proposal — critic",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:11"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:10",
+            "integrated-engineering-organism:event:11"
+          ],
+          "payload": {
+            "id": "ca2505616f62005d4beb502a64a28198",
+            "interaction_id": "estimate-current",
+            "specialist_id": "critic",
+            "correlation_id": "message-2",
+            "status": "candidate",
+            "summary": "verify both measurements use credits",
+            "confidence": 0.65,
+            "evidence_event_ids": [
+              "integrated-engineering-organism:event:1"
+            ],
+            "requested_actions": [
+              {
+                "kind": "estimate_review",
+                "payload": {
+                  "executable": false
+                }
+              }
+            ],
+            "created_at": "2026-09-28T07:52:41.48191Z"
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:15",
+          "sequence": 15,
+          "occurred_at": "2026-09-28T07:52:41.481956Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "specialist",
+          "operation": "specialist_proposal",
+          "subject": "planner",
+          "summary": "specialist: specialist proposal — planner",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:13"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:12",
+            "integrated-engineering-organism:event:13"
+          ],
+          "payload": {
+            "id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+            "interaction_id": "estimate-current",
+            "specialist_id": "planner",
+            "correlation_id": "message-1",
+            "status": "candidate",
+            "summary": "sum the measured costs after checking units",
+            "confidence": 0.85,
+            "evidence_event_ids": [
+              "integrated-engineering-organism:event:1"
+            ],
+            "requested_actions": [
+              {
+                "kind": "estimate_review",
+                "payload": {
+                  "executable": false
+                }
+              }
+            ],
+            "created_at": "2026-09-28T07:52:41.481944Z"
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:16",
+          "sequence": 16,
+          "occurred_at": "2026-09-28T07:52:41.48197Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "specialist",
+          "operation": "proposal_received",
+          "subject": "critic",
+          "summary": "specialist: proposal received — critic",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:14"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:10",
+            "integrated-engineering-organism:event:11",
+            "integrated-engineering-organism:event:14"
+          ],
+          "payload": {
+            "operation": "proposal_received",
+            "proposal_event_id": "integrated-engineering-organism:event:14",
+            "proposal_id": "ca2505616f62005d4beb502a64a28198",
+            "run_id": "estimate-workspace",
+            "specialist_id": "critic",
+            "status": "candidate"
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:17",
+          "sequence": 17,
+          "occurred_at": "2026-09-28T07:52:41.481977Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "specialist",
+          "operation": "proposal_received",
+          "subject": "planner",
+          "summary": "specialist: proposal received — planner",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:15"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:12",
+            "integrated-engineering-organism:event:13",
+            "integrated-engineering-organism:event:15"
+          ],
+          "payload": {
+            "operation": "proposal_received",
+            "proposal_event_id": "integrated-engineering-organism:event:15",
+            "proposal_id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+            "run_id": "estimate-workspace",
+            "specialist_id": "planner",
+            "status": "candidate"
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:19",
+          "sequence": 19,
+          "occurred_at": "2026-09-28T07:52:41.482024Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "regulation",
+          "operation": "regulation_evaluated",
+          "subject": "strained",
+          "summary": "regulation: regulation evaluated — strained",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:18"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:18"
+          ],
+          "payload": {
+            "action_pressure": 1,
+            "cognitive_state": "strained",
+            "interaction_id": "estimate-current",
+            "load": 1,
+            "prediction_error": 1,
+            "salience": 0.9,
+            "surprise": 1,
+            "workspace_policy": {
+              "capacity": 1,
+              "require_evidence": true,
+              "reasons": [
+                "load 1.000 met threshold 0.750; reduced workspace capacity",
+                "action pressure 1.000 met threshold 0.750; reduced workspace capacity",
+                "prediction error 1.000 met threshold 0.500; required proposal evidence",
+                "declared salience 0.900 met threshold 0.750; required proposal evidence"
+              ],
+              "signal_event_ids": [
+                "integrated-engineering-organism:event:18"
+              ]
+            }
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:21",
+          "sequence": 21,
+          "occurred_at": "2026-09-28T07:52:41.482247Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "procedure",
+          "operation": "silk_candidate_rejected",
+          "summary": "procedure: silk candidate rejected",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:4"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5",
+            "integrated-engineering-organism:event:6"
+          ],
+          "payload": {
+            "operation": "silk_candidate_rejected",
+            "pattern_id": "35761a758fa2ec5a0349c66b0b866c506a829c3b2376467934af3d8f24a70b76",
+            "reason": "Silk protocol error -32030: candidate preparation failed"
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:23",
+          "sequence": 23,
+          "occurred_at": "2026-09-28T07:52:41.48297Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "governance",
+          "operation": "governance_decision",
+          "subject": "silk:procedure:estimate.sum@sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+          "summary": "governance: governance decision — silk:procedure:estimate.sum@sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50 [approved]",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:8"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:12",
+            "integrated-engineering-organism:event:13",
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5",
+            "integrated-engineering-organism:event:7",
+            "integrated-engineering-organism:event:8"
+          ],
+          "governance_event_ids": [
+            "integrated-engineering-organism:event:23"
+          ],
+          "payload": {
+            "id": "01240049460856c591729e858c79acc2eb46b1ad52f4e4e50ed6ef61ba60e59a",
+            "proposal_id": "retain-estimate-sum",
+            "proposal_digest": "1ba111c5d2947e7d4b024ee60126fdbbb27805cc4f931f2bfd4f4c927e1f8996",
+            "policy_id": "integrated-engineering-policy",
+            "policy_version": "1",
+            "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+            "action_class": "procedure_retention",
+            "target": "silk:procedure:estimate.sum@sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+            "action": "retain validated estimate summation procedure",
+            "payload_digest": "5e8fa9fb68aa4b6fb5e52a1f450e574da28f92ff1b11d53ab9a84f1f792e5022",
+            "minimum_approvals": 1,
+            "require_evidence": true,
+            "allowed_targets": [
+              "*"
+            ],
+            "outcome": "approved",
+            "reasons": [
+              "target, evidence, and approval requirements satisfied"
+            ],
+            "approvals": [
+              {
+                "id": "operator-retain-estimate-sum",
+                "approver_id": "operator",
+                "decision": "approve",
+                "reason": "approve retained sum procedure",
+                "proposal_digest": "1ba111c5d2947e7d4b024ee60126fdbbb27805cc4f931f2bfd4f4c927e1f8996",
+                "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+                "decided_at": "2026-09-28T07:52:41.482913Z",
+                "source_event_id": "integrated-engineering-organism:event:22"
+              }
+            ],
+            "approval_ids": [
+              "operator-retain-estimate-sum"
+            ],
+            "approver_ids": [
+              "operator"
+            ],
+            "source_event_ids": [
+              "integrated-engineering-organism:event:15",
+              "integrated-engineering-organism:event:2",
+              "integrated-engineering-organism:event:22",
+              "integrated-engineering-organism:event:4",
+              "integrated-engineering-organism:event:8"
+            ],
+            "created_at": "2026-09-28T07:52:41.482927Z",
+            "event_id": ""
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:24",
+          "sequence": 24,
+          "occurred_at": "2026-09-28T07:52:41.483344Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "procedure",
+          "operation": "silk_registry_admitted",
+          "subject": "estimate.sum",
+          "summary": "procedure: silk registry admitted — estimate.sum",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:23"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:12",
+            "integrated-engineering-organism:event:13",
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:23",
+            "integrated-engineering-organism:event:25",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5",
+            "integrated-engineering-organism:event:7",
+            "integrated-engineering-organism:event:8"
+          ],
+          "governance_event_ids": [
+            "integrated-engineering-organism:event:23"
+          ],
+          "payload": {
+            "operation": "silk_registry_admitted",
+            "result": {
+              "admission": "inserted",
+              "procedure_id": "estimate.sum",
+              "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+              "entry_procedure": "proc:main",
+              "retention_state": "candidate"
+            }
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:25",
+          "sequence": 25,
+          "occurred_at": "2026-09-28T07:52:41.483417Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "procedure",
+          "operation": "silk_registry_retained",
+          "subject": "estimate.sum",
+          "summary": "procedure: silk registry retained — estimate.sum",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:24"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:12",
+            "integrated-engineering-organism:event:13",
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:23",
+            "integrated-engineering-organism:event:24",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5",
+            "integrated-engineering-organism:event:7",
+            "integrated-engineering-organism:event:8"
+          ],
+          "governance_event_ids": [
+            "integrated-engineering-organism:event:23"
+          ],
+          "payload": {
+            "operation": "silk_registry_retained",
+            "result": {
+              "governance_decision_id": "01240049460856c591729e858c79acc2eb46b1ad52f4e4e50ed6ef61ba60e59a",
+              "procedure_id": "estimate.sum",
+              "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50"
+            }
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:26",
+          "sequence": 26,
+          "occurred_at": "2026-09-28T07:52:41.483713Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "procedure",
+          "operation": "procedure_trace",
+          "subject": "main",
+          "summary": "procedure: procedure trace — main",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:25"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:12",
+            "integrated-engineering-organism:event:13",
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:23",
+            "integrated-engineering-organism:event:24",
+            "integrated-engineering-organism:event:25",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5",
+            "integrated-engineering-organism:event:7",
+            "integrated-engineering-organism:event:8"
+          ],
+          "governance_event_ids": [
+            "integrated-engineering-organism:event:23"
+          ],
+          "payload": {
+            "block": null,
+            "correlation_id": "call-0",
+            "data": {
+              "arguments": [
+                12.5,
+                4.5
+              ]
+            },
+            "event": "procedure_enter",
+            "instruction": null,
+            "parent_correlation_id": null,
+            "procedure": "main",
+            "sequence": 0,
+            "trace_id": "run-1"
+          },
+          "silk": {
+            "trace_id": "run-1",
+            "sequence": 0,
+            "correlation_id": "call-0",
+            "procedure": "main"
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:27",
+          "sequence": 27,
+          "occurred_at": "2026-09-28T07:52:41.483717Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "procedure",
+          "operation": "procedure_trace",
+          "subject": "main",
+          "summary": "procedure: procedure trace — main",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:25",
+            "integrated-engineering-organism:event:26"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:12",
+            "integrated-engineering-organism:event:13",
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:23",
+            "integrated-engineering-organism:event:24",
+            "integrated-engineering-organism:event:25",
+            "integrated-engineering-organism:event:26",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5",
+            "integrated-engineering-organism:event:7",
+            "integrated-engineering-organism:event:8"
+          ],
+          "governance_event_ids": [
+            "integrated-engineering-organism:event:23"
+          ],
+          "payload": {
+            "block": "b0",
+            "correlation_id": "call-0",
+            "data": {
+              "status": "returned",
+              "value": 17.0
+            },
+            "event": "procedure_exit",
+            "instruction": null,
+            "parent_correlation_id": null,
+            "procedure": "main",
+            "sequence": 1,
+            "trace_id": "run-1"
+          },
+          "silk": {
+            "trace_id": "run-1",
+            "sequence": 1,
+            "correlation_id": "call-0",
+            "procedure": "main"
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:28",
+          "sequence": 28,
+          "occurred_at": "2026-09-28T07:52:41.483723Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "procedure",
+          "operation": "procedure_reused",
+          "subject": "estimate.sum",
+          "summary": "procedure: procedure reused — estimate.sum",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:25",
+            "integrated-engineering-organism:event:26",
+            "integrated-engineering-organism:event:27"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:12",
+            "integrated-engineering-organism:event:13",
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:23",
+            "integrated-engineering-organism:event:24",
+            "integrated-engineering-organism:event:25",
+            "integrated-engineering-organism:event:26",
+            "integrated-engineering-organism:event:27",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5",
+            "integrated-engineering-organism:event:7",
+            "integrated-engineering-organism:event:8"
+          ],
+          "governance_event_ids": [
+            "integrated-engineering-organism:event:23"
+          ],
+          "payload": {
+            "procedure_id": "estimate.sum",
+            "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+            "output": 17.0
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:30",
+          "sequence": 30,
+          "occurred_at": "2026-09-28T07:52:41.483777Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "governance",
+          "operation": "governance_decision",
+          "subject": "organism:integrated-engineering-organism:routing:engineering:estimate",
+          "summary": "governance: governance decision — organism:integrated-engineering-organism:routing:engineering:estimate [approved]",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:28",
+            "integrated-engineering-organism:event:29",
+            "integrated-engineering-organism:event:8"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:12",
+            "integrated-engineering-organism:event:13",
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:23",
+            "integrated-engineering-organism:event:24",
+            "integrated-engineering-organism:event:25",
+            "integrated-engineering-organism:event:26",
+            "integrated-engineering-organism:event:27",
+            "integrated-engineering-organism:event:28",
+            "integrated-engineering-organism:event:29",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5",
+            "integrated-engineering-organism:event:7",
+            "integrated-engineering-organism:event:8"
+          ],
+          "governance_event_ids": [
+            "integrated-engineering-organism:event:23",
+            "integrated-engineering-organism:event:30"
+          ],
+          "payload": {
+            "id": "8a096fd96abce3bbeffc0bf0cbac111ead331c429e288277cc02602a20beb012",
+            "proposal_id": "learn-estimate-route",
+            "proposal_digest": "8dccbc74eb49d0938a54a561bc4edb24c20238338e343f13b47f3ef27dc9f280",
+            "policy_id": "integrated-engineering-policy",
+            "policy_version": "1",
+            "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+            "action_class": "high_impact",
+            "target": "organism:integrated-engineering-organism:routing:engineering:estimate",
+            "action": "change routing weight",
+            "payload_digest": "f856f401637ae2b5ae85c64d19b3e7136f8d3a083fb04ea26b45d4fbfbb8ea38",
+            "minimum_approvals": 1,
+            "require_evidence": true,
+            "allowed_targets": [
+              "*"
+            ],
+            "outcome": "approved",
+            "reasons": [
+              "target, evidence, and approval requirements satisfied"
+            ],
+            "approvals": [
+              {
+                "id": "operator-learn-estimate-route",
+                "approver_id": "operator",
+                "decision": "approve",
+                "reason": "approve experience-backed route update",
+                "proposal_digest": "8dccbc74eb49d0938a54a561bc4edb24c20238338e343f13b47f3ef27dc9f280",
+                "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+                "decided_at": "2026-09-28T07:52:41.48375Z",
+                "source_event_id": "integrated-engineering-organism:event:29"
+              }
+            ],
+            "approval_ids": [
+              "operator-learn-estimate-route"
+            ],
+            "approver_ids": [
+              "operator"
+            ],
+            "source_event_ids": [
+              "integrated-engineering-organism:event:15",
+              "integrated-engineering-organism:event:28",
+              "integrated-engineering-organism:event:29",
+              "integrated-engineering-organism:event:8"
+            ],
+            "created_at": "2026-09-28T07:52:41.483767Z",
+            "event_id": ""
+          }
+        },
+        {
+          "event_id": "integrated-engineering-organism:event:31",
+          "sequence": 31,
+          "occurred_at": "2026-09-28T07:52:41.4838Z",
+          "organism_id": "integrated-engineering-organism",
+          "category": "development",
+          "operation": "routing_change_applied",
+          "subject": "engineering:estimate",
+          "summary": "development: routing change applied — engineering:estimate (0.5 → 0.9)",
+          "parent_event_ids": [
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:28",
+            "integrated-engineering-organism:event:30",
+            "integrated-engineering-organism:event:8"
+          ],
+          "provenance_event_ids": [
+            "integrated-engineering-organism:event:1",
+            "integrated-engineering-organism:event:12",
+            "integrated-engineering-organism:event:13",
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:23",
+            "integrated-engineering-organism:event:24",
+            "integrated-engineering-organism:event:25",
+            "integrated-engineering-organism:event:26",
+            "integrated-engineering-organism:event:27",
+            "integrated-engineering-organism:event:28",
+            "integrated-engineering-organism:event:29",
+            "integrated-engineering-organism:event:3",
+            "integrated-engineering-organism:event:30",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:5",
+            "integrated-engineering-organism:event:7",
+            "integrated-engineering-organism:event:8"
+          ],
+          "governance_event_ids": [
+            "integrated-engineering-organism:event:23",
+            "integrated-engineering-organism:event:30"
+          ],
+          "payload": {
+            "change": {
+              "id": "integrated-engineering-organism:learn-estimate-route:1",
+              "organism_id": "integrated-engineering-organism",
+              "proposal_id": "learn-estimate-route",
+              "revision": 1,
+              "key": "engineering:estimate",
+              "previous": 0.5,
+              "value": 0.9,
+              "governance_decision_id": "8a096fd96abce3bbeffc0bf0cbac111ead331c429e288277cc02602a20beb012",
+              "governance_event_id": "integrated-engineering-organism:event:30",
+              "source_event_ids": [
+                "integrated-engineering-organism:event:15",
+                "integrated-engineering-organism:event:8"
+              ],
+              "evidence_event_ids": [
+                "integrated-engineering-organism:event:28"
+              ],
+              "applied_at": "2026-09-28T07:52:41.48378Z"
+            },
+            "operation": "routing_change_applied",
+            "schema_version": "arachne.development.v1"
+          }
+        }
+      ]
+    },
+    "changes_since_initial": [
+      {
+        "event_id": "integrated-engineering-organism:event:7",
+        "sequence": 7,
+        "occurred_at": "2026-09-28T07:52:41.481754Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "memory",
+        "operation": "replay_scheduled",
+        "subject": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+        "summary": "memory: replay scheduled — 83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5"
+        ],
+        "payload": {
+          "episode_ids": [
+            "prior-estimate-a",
+            "prior-estimate-b"
+          ],
+          "interaction_id": "estimate-current",
+          "operation": "replay_scheduled",
+          "plan_digest": "1603c7395f089b6b891e2a4dc4b5f46253de3d346b62292cdfcb59eeab2ca05d",
+          "plan_id": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+          "requested_by": "coordinator",
+          "scheduled_at": "2026-09-28T07:52:41.481713Z",
+          "source_event_ids": null
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:8",
+        "sequence": 8,
+        "occurred_at": "2026-09-28T07:52:41.481779Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "memory",
+        "operation": "replay_completed",
+        "subject": "5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+        "summary": "memory: replay completed — 5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:7"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7"
+        ],
+        "payload": {
+          "completed_at": "2026-09-28T07:52:41.481762Z",
+          "cues": [
+            {
+              "episode_id": "prior-estimate-a",
+              "kind": "successful-sum",
+              "occurred_at": "2026-09-28T07:52:41.481545Z",
+              "content_digest": "a390ad1f9f75ef9274ab315f47db0bfe8464607ef5a06952253df7801ea0d826",
+              "source_event_ids": [
+                "integrated-engineering-organism:event:2"
+              ]
+            },
+            {
+              "episode_id": "prior-estimate-b",
+              "kind": "successful-sum",
+              "occurred_at": "2026-09-28T07:52:41.481566Z",
+              "content_digest": "a390ad1f9f75ef9274ab315f47db0bfe8464607ef5a06952253df7801ea0d826",
+              "source_event_ids": [
+                "integrated-engineering-organism:event:4"
+              ]
+            }
+          ],
+          "input_episode_ids": [
+            "prior-estimate-a",
+            "prior-estimate-b"
+          ],
+          "operation": "replay_completed",
+          "plan_digest": "1603c7395f089b6b891e2a4dc4b5f46253de3d346b62292cdfcb59eeab2ca05d",
+          "plan_id": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+          "run_id": "5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+          "schedule_event_id": "integrated-engineering-organism:event:7"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:14",
+        "sequence": 14,
+        "occurred_at": "2026-09-28T07:52:41.481954Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "specialist",
+        "operation": "specialist_proposal",
+        "subject": "critic",
+        "summary": "specialist: specialist proposal — critic",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:11"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:10",
+          "integrated-engineering-organism:event:11"
+        ],
+        "payload": {
+          "id": "ca2505616f62005d4beb502a64a28198",
+          "interaction_id": "estimate-current",
+          "specialist_id": "critic",
+          "correlation_id": "message-2",
+          "status": "candidate",
+          "summary": "verify both measurements use credits",
+          "confidence": 0.65,
+          "evidence_event_ids": [
+            "integrated-engineering-organism:event:1"
+          ],
+          "requested_actions": [
+            {
+              "kind": "estimate_review",
+              "payload": {
+                "executable": false
+              }
+            }
+          ],
+          "created_at": "2026-09-28T07:52:41.48191Z"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:15",
+        "sequence": 15,
+        "occurred_at": "2026-09-28T07:52:41.481956Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "specialist",
+        "operation": "specialist_proposal",
+        "subject": "planner",
+        "summary": "specialist: specialist proposal — planner",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:13"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13"
+        ],
+        "payload": {
+          "id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+          "interaction_id": "estimate-current",
+          "specialist_id": "planner",
+          "correlation_id": "message-1",
+          "status": "candidate",
+          "summary": "sum the measured costs after checking units",
+          "confidence": 0.85,
+          "evidence_event_ids": [
+            "integrated-engineering-organism:event:1"
+          ],
+          "requested_actions": [
+            {
+              "kind": "estimate_review",
+              "payload": {
+                "executable": false
+              }
+            }
+          ],
+          "created_at": "2026-09-28T07:52:41.481944Z"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:16",
+        "sequence": 16,
+        "occurred_at": "2026-09-28T07:52:41.48197Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "specialist",
+        "operation": "proposal_received",
+        "subject": "critic",
+        "summary": "specialist: proposal received — critic",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:14"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:10",
+          "integrated-engineering-organism:event:11",
+          "integrated-engineering-organism:event:14"
+        ],
+        "payload": {
+          "operation": "proposal_received",
+          "proposal_event_id": "integrated-engineering-organism:event:14",
+          "proposal_id": "ca2505616f62005d4beb502a64a28198",
+          "run_id": "estimate-workspace",
+          "specialist_id": "critic",
+          "status": "candidate"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:17",
+        "sequence": 17,
+        "occurred_at": "2026-09-28T07:52:41.481977Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "specialist",
+        "operation": "proposal_received",
+        "subject": "planner",
+        "summary": "specialist: proposal received — planner",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:15"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15"
+        ],
+        "payload": {
+          "operation": "proposal_received",
+          "proposal_event_id": "integrated-engineering-organism:event:15",
+          "proposal_id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+          "run_id": "estimate-workspace",
+          "specialist_id": "planner",
+          "status": "candidate"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:19",
+        "sequence": 19,
+        "occurred_at": "2026-09-28T07:52:41.482024Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "regulation",
+        "operation": "regulation_evaluated",
+        "subject": "strained",
+        "summary": "regulation: regulation evaluated — strained",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:18"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:18"
+        ],
+        "payload": {
+          "action_pressure": 1,
+          "cognitive_state": "strained",
+          "interaction_id": "estimate-current",
+          "load": 1,
+          "prediction_error": 1,
+          "salience": 0.9,
+          "surprise": 1,
+          "workspace_policy": {
+            "capacity": 1,
+            "require_evidence": true,
+            "reasons": [
+              "load 1.000 met threshold 0.750; reduced workspace capacity",
+              "action pressure 1.000 met threshold 0.750; reduced workspace capacity",
+              "prediction error 1.000 met threshold 0.500; required proposal evidence",
+              "declared salience 0.900 met threshold 0.750; required proposal evidence"
+            ],
+            "signal_event_ids": [
+              "integrated-engineering-organism:event:18"
+            ]
+          }
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:21",
+        "sequence": 21,
+        "occurred_at": "2026-09-28T07:52:41.482247Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "silk_candidate_rejected",
+        "summary": "procedure: silk candidate rejected",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:4"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:6"
+        ],
+        "payload": {
+          "operation": "silk_candidate_rejected",
+          "pattern_id": "35761a758fa2ec5a0349c66b0b866c506a829c3b2376467934af3d8f24a70b76",
+          "reason": "Silk protocol error -32030: candidate preparation failed"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:23",
+        "sequence": 23,
+        "occurred_at": "2026-09-28T07:52:41.48297Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "governance",
+        "operation": "governance_decision",
+        "subject": "silk:procedure:estimate.sum@sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+        "summary": "governance: governance decision — silk:procedure:estimate.sum@sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50 [approved]",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:8"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "id": "01240049460856c591729e858c79acc2eb46b1ad52f4e4e50ed6ef61ba60e59a",
+          "proposal_id": "retain-estimate-sum",
+          "proposal_digest": "1ba111c5d2947e7d4b024ee60126fdbbb27805cc4f931f2bfd4f4c927e1f8996",
+          "policy_id": "integrated-engineering-policy",
+          "policy_version": "1",
+          "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+          "action_class": "procedure_retention",
+          "target": "silk:procedure:estimate.sum@sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+          "action": "retain validated estimate summation procedure",
+          "payload_digest": "5e8fa9fb68aa4b6fb5e52a1f450e574da28f92ff1b11d53ab9a84f1f792e5022",
+          "minimum_approvals": 1,
+          "require_evidence": true,
+          "allowed_targets": [
+            "*"
+          ],
+          "outcome": "approved",
+          "reasons": [
+            "target, evidence, and approval requirements satisfied"
+          ],
+          "approvals": [
+            {
+              "id": "operator-retain-estimate-sum",
+              "approver_id": "operator",
+              "decision": "approve",
+              "reason": "approve retained sum procedure",
+              "proposal_digest": "1ba111c5d2947e7d4b024ee60126fdbbb27805cc4f931f2bfd4f4c927e1f8996",
+              "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+              "decided_at": "2026-09-28T07:52:41.482913Z",
+              "source_event_id": "integrated-engineering-organism:event:22"
+            }
+          ],
+          "approval_ids": [
+            "operator-retain-estimate-sum"
+          ],
+          "approver_ids": [
+            "operator"
+          ],
+          "source_event_ids": [
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:8"
+          ],
+          "created_at": "2026-09-28T07:52:41.482927Z",
+          "event_id": ""
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:24",
+        "sequence": 24,
+        "occurred_at": "2026-09-28T07:52:41.483344Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "silk_registry_admitted",
+        "subject": "estimate.sum",
+        "summary": "procedure: silk registry admitted — estimate.sum",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "operation": "silk_registry_admitted",
+          "result": {
+            "admission": "inserted",
+            "procedure_id": "estimate.sum",
+            "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+            "entry_procedure": "proc:main",
+            "retention_state": "candidate"
+          }
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:25",
+        "sequence": 25,
+        "occurred_at": "2026-09-28T07:52:41.483417Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "silk_registry_retained",
+        "subject": "estimate.sum",
+        "summary": "procedure: silk registry retained — estimate.sum",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:24"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "operation": "silk_registry_retained",
+          "result": {
+            "governance_decision_id": "01240049460856c591729e858c79acc2eb46b1ad52f4e4e50ed6ef61ba60e59a",
+            "procedure_id": "estimate.sum",
+            "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50"
+          }
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:26",
+        "sequence": 26,
+        "occurred_at": "2026-09-28T07:52:41.483713Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "procedure_trace",
+        "subject": "main",
+        "summary": "procedure: procedure trace — main",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:25"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "block": null,
+          "correlation_id": "call-0",
+          "data": {
+            "arguments": [
+              12.5,
+              4.5
+            ]
+          },
+          "event": "procedure_enter",
+          "instruction": null,
+          "parent_correlation_id": null,
+          "procedure": "main",
+          "sequence": 0,
+          "trace_id": "run-1"
+        },
+        "silk": {
+          "trace_id": "run-1",
+          "sequence": 0,
+          "correlation_id": "call-0",
+          "procedure": "main"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:27",
+        "sequence": 27,
+        "occurred_at": "2026-09-28T07:52:41.483717Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "procedure_trace",
+        "subject": "main",
+        "summary": "procedure: procedure trace — main",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "block": "b0",
+          "correlation_id": "call-0",
+          "data": {
+            "status": "returned",
+            "value": 17.0
+          },
+          "event": "procedure_exit",
+          "instruction": null,
+          "parent_correlation_id": null,
+          "procedure": "main",
+          "sequence": 1,
+          "trace_id": "run-1"
+        },
+        "silk": {
+          "trace_id": "run-1",
+          "sequence": 1,
+          "correlation_id": "call-0",
+          "procedure": "main"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:28",
+        "sequence": 28,
+        "occurred_at": "2026-09-28T07:52:41.483723Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "procedure_reused",
+        "subject": "estimate.sum",
+        "summary": "procedure: procedure reused — estimate.sum",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26",
+          "integrated-engineering-organism:event:27"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26",
+          "integrated-engineering-organism:event:27",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "procedure_id": "estimate.sum",
+          "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+          "output": 17.0
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:30",
+        "sequence": 30,
+        "occurred_at": "2026-09-28T07:52:41.483777Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "governance",
+        "operation": "governance_decision",
+        "subject": "organism:integrated-engineering-organism:routing:engineering:estimate",
+        "summary": "governance: governance decision — organism:integrated-engineering-organism:routing:engineering:estimate [approved]",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:28",
+          "integrated-engineering-organism:event:29",
+          "integrated-engineering-organism:event:8"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26",
+          "integrated-engineering-organism:event:27",
+          "integrated-engineering-organism:event:28",
+          "integrated-engineering-organism:event:29",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:30"
+        ],
+        "payload": {
+          "id": "8a096fd96abce3bbeffc0bf0cbac111ead331c429e288277cc02602a20beb012",
+          "proposal_id": "learn-estimate-route",
+          "proposal_digest": "8dccbc74eb49d0938a54a561bc4edb24c20238338e343f13b47f3ef27dc9f280",
+          "policy_id": "integrated-engineering-policy",
+          "policy_version": "1",
+          "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+          "action_class": "high_impact",
+          "target": "organism:integrated-engineering-organism:routing:engineering:estimate",
+          "action": "change routing weight",
+          "payload_digest": "f856f401637ae2b5ae85c64d19b3e7136f8d3a083fb04ea26b45d4fbfbb8ea38",
+          "minimum_approvals": 1,
+          "require_evidence": true,
+          "allowed_targets": [
+            "*"
+          ],
+          "outcome": "approved",
+          "reasons": [
+            "target, evidence, and approval requirements satisfied"
+          ],
+          "approvals": [
+            {
+              "id": "operator-learn-estimate-route",
+              "approver_id": "operator",
+              "decision": "approve",
+              "reason": "approve experience-backed route update",
+              "proposal_digest": "8dccbc74eb49d0938a54a561bc4edb24c20238338e343f13b47f3ef27dc9f280",
+              "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+              "decided_at": "2026-09-28T07:52:41.48375Z",
+              "source_event_id": "integrated-engineering-organism:event:29"
+            }
+          ],
+          "approval_ids": [
+            "operator-learn-estimate-route"
+          ],
+          "approver_ids": [
+            "operator"
+          ],
+          "source_event_ids": [
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:28",
+            "integrated-engineering-organism:event:29",
+            "integrated-engineering-organism:event:8"
+          ],
+          "created_at": "2026-09-28T07:52:41.483767Z",
+          "event_id": ""
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:31",
+        "sequence": 31,
+        "occurred_at": "2026-09-28T07:52:41.4838Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "development",
+        "operation": "routing_change_applied",
+        "subject": "engineering:estimate",
+        "summary": "development: routing change applied — engineering:estimate (0.5 → 0.9)",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:28",
+          "integrated-engineering-organism:event:30",
+          "integrated-engineering-organism:event:8"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26",
+          "integrated-engineering-organism:event:27",
+          "integrated-engineering-organism:event:28",
+          "integrated-engineering-organism:event:29",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:30",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:30"
+        ],
+        "payload": {
+          "change": {
+            "id": "integrated-engineering-organism:learn-estimate-route:1",
+            "organism_id": "integrated-engineering-organism",
+            "proposal_id": "learn-estimate-route",
+            "revision": 1,
+            "key": "engineering:estimate",
+            "previous": 0.5,
+            "value": 0.9,
+            "governance_decision_id": "8a096fd96abce3bbeffc0bf0cbac111ead331c429e288277cc02602a20beb012",
+            "governance_event_id": "integrated-engineering-organism:event:30",
+            "source_event_ids": [
+              "integrated-engineering-organism:event:15",
+              "integrated-engineering-organism:event:8"
+            ],
+            "evidence_event_ids": [
+              "integrated-engineering-organism:event:28"
+            ],
+            "applied_at": "2026-09-28T07:52:41.48378Z"
+          },
+          "operation": "routing_change_applied",
+          "schema_version": "arachne.development.v1"
+        }
+      }
+    ]
+  },
+  "inspected_history": {
+    "organism_id": "integrated-engineering-organism",
+    "through_sequence": 31,
+    "activities": [
+      {
+        "event_id": "integrated-engineering-organism:event:3",
+        "sequence": 3,
+        "occurred_at": "2026-09-28T07:52:41.481565Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "memory",
+        "operation": "episode_recorded",
+        "subject": "prior-estimate-a",
+        "summary": "memory: episode recorded — prior-estimate-a",
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:2"
+        ],
+        "payload": {
+          "episode_id": "prior-estimate-a",
+          "kind": "successful-sum",
+          "operation": "episode_recorded",
+          "source": {
+            "kind": "completed-estimate",
+            "id": "prior-estimate-a"
+          },
+          "source_event_ids": [
+            "integrated-engineering-organism:event:2"
+          ]
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:5",
+        "sequence": 5,
+        "occurred_at": "2026-09-28T07:52:41.481569Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "memory",
+        "operation": "episode_recorded",
+        "subject": "prior-estimate-b",
+        "summary": "memory: episode recorded — prior-estimate-b",
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:4"
+        ],
+        "payload": {
+          "episode_id": "prior-estimate-b",
+          "kind": "successful-sum",
+          "operation": "episode_recorded",
+          "source": {
+            "kind": "completed-estimate",
+            "id": "prior-estimate-b"
+          },
+          "source_event_ids": [
+            "integrated-engineering-organism:event:4"
+          ]
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:6",
+        "sequence": 6,
+        "occurred_at": "2026-09-28T07:52:41.481609Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "memory",
+        "operation": "consolidation_applied",
+        "subject": "5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+        "summary": "memory: consolidation applied — 5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5"
+        ],
+        "payload": {
+          "minimum_support": 2,
+          "operation": "consolidation_applied",
+          "pattern_ids": [
+            "35761a758fa2ec5a0349c66b0b866c506a829c3b2376467934af3d8f24a70b76"
+          ],
+          "rule_id": "episode.exact_repeat.v1",
+          "run_id": "5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+          "source_episode_ids": [
+            "prior-estimate-a",
+            "prior-estimate-b"
+          ]
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:7",
+        "sequence": 7,
+        "occurred_at": "2026-09-28T07:52:41.481754Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "memory",
+        "operation": "replay_scheduled",
+        "subject": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+        "summary": "memory: replay scheduled — 83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5"
+        ],
+        "payload": {
+          "episode_ids": [
+            "prior-estimate-a",
+            "prior-estimate-b"
+          ],
+          "interaction_id": "estimate-current",
+          "operation": "replay_scheduled",
+          "plan_digest": "1603c7395f089b6b891e2a4dc4b5f46253de3d346b62292cdfcb59eeab2ca05d",
+          "plan_id": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+          "requested_by": "coordinator",
+          "scheduled_at": "2026-09-28T07:52:41.481713Z",
+          "source_event_ids": null
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:8",
+        "sequence": 8,
+        "occurred_at": "2026-09-28T07:52:41.481779Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "memory",
+        "operation": "replay_completed",
+        "subject": "5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+        "summary": "memory: replay completed — 5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:7"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7"
+        ],
+        "payload": {
+          "completed_at": "2026-09-28T07:52:41.481762Z",
+          "cues": [
+            {
+              "episode_id": "prior-estimate-a",
+              "kind": "successful-sum",
+              "occurred_at": "2026-09-28T07:52:41.481545Z",
+              "content_digest": "a390ad1f9f75ef9274ab315f47db0bfe8464607ef5a06952253df7801ea0d826",
+              "source_event_ids": [
+                "integrated-engineering-organism:event:2"
+              ]
+            },
+            {
+              "episode_id": "prior-estimate-b",
+              "kind": "successful-sum",
+              "occurred_at": "2026-09-28T07:52:41.481566Z",
+              "content_digest": "a390ad1f9f75ef9274ab315f47db0bfe8464607ef5a06952253df7801ea0d826",
+              "source_event_ids": [
+                "integrated-engineering-organism:event:4"
+              ]
+            }
+          ],
+          "input_episode_ids": [
+            "prior-estimate-a",
+            "prior-estimate-b"
+          ],
+          "operation": "replay_completed",
+          "plan_digest": "1603c7395f089b6b891e2a4dc4b5f46253de3d346b62292cdfcb59eeab2ca05d",
+          "plan_id": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+          "run_id": "5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+          "schedule_event_id": "integrated-engineering-organism:event:7"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:14",
+        "sequence": 14,
+        "occurred_at": "2026-09-28T07:52:41.481954Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "specialist",
+        "operation": "specialist_proposal",
+        "subject": "critic",
+        "summary": "specialist: specialist proposal — critic",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:11"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:10",
+          "integrated-engineering-organism:event:11"
+        ],
+        "payload": {
+          "id": "ca2505616f62005d4beb502a64a28198",
+          "interaction_id": "estimate-current",
+          "specialist_id": "critic",
+          "correlation_id": "message-2",
+          "status": "candidate",
+          "summary": "verify both measurements use credits",
+          "confidence": 0.65,
+          "evidence_event_ids": [
+            "integrated-engineering-organism:event:1"
+          ],
+          "requested_actions": [
+            {
+              "kind": "estimate_review",
+              "payload": {
+                "executable": false
+              }
+            }
+          ],
+          "created_at": "2026-09-28T07:52:41.48191Z"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:15",
+        "sequence": 15,
+        "occurred_at": "2026-09-28T07:52:41.481956Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "specialist",
+        "operation": "specialist_proposal",
+        "subject": "planner",
+        "summary": "specialist: specialist proposal — planner",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:13"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13"
+        ],
+        "payload": {
+          "id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+          "interaction_id": "estimate-current",
+          "specialist_id": "planner",
+          "correlation_id": "message-1",
+          "status": "candidate",
+          "summary": "sum the measured costs after checking units",
+          "confidence": 0.85,
+          "evidence_event_ids": [
+            "integrated-engineering-organism:event:1"
+          ],
+          "requested_actions": [
+            {
+              "kind": "estimate_review",
+              "payload": {
+                "executable": false
+              }
+            }
+          ],
+          "created_at": "2026-09-28T07:52:41.481944Z"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:16",
+        "sequence": 16,
+        "occurred_at": "2026-09-28T07:52:41.48197Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "specialist",
+        "operation": "proposal_received",
+        "subject": "critic",
+        "summary": "specialist: proposal received — critic",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:14"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:10",
+          "integrated-engineering-organism:event:11",
+          "integrated-engineering-organism:event:14"
+        ],
+        "payload": {
+          "operation": "proposal_received",
+          "proposal_event_id": "integrated-engineering-organism:event:14",
+          "proposal_id": "ca2505616f62005d4beb502a64a28198",
+          "run_id": "estimate-workspace",
+          "specialist_id": "critic",
+          "status": "candidate"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:17",
+        "sequence": 17,
+        "occurred_at": "2026-09-28T07:52:41.481977Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "specialist",
+        "operation": "proposal_received",
+        "subject": "planner",
+        "summary": "specialist: proposal received — planner",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:15"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15"
+        ],
+        "payload": {
+          "operation": "proposal_received",
+          "proposal_event_id": "integrated-engineering-organism:event:15",
+          "proposal_id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+          "run_id": "estimate-workspace",
+          "specialist_id": "planner",
+          "status": "candidate"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:19",
+        "sequence": 19,
+        "occurred_at": "2026-09-28T07:52:41.482024Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "regulation",
+        "operation": "regulation_evaluated",
+        "subject": "strained",
+        "summary": "regulation: regulation evaluated — strained",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:18"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:18"
+        ],
+        "payload": {
+          "action_pressure": 1,
+          "cognitive_state": "strained",
+          "interaction_id": "estimate-current",
+          "load": 1,
+          "prediction_error": 1,
+          "salience": 0.9,
+          "surprise": 1,
+          "workspace_policy": {
+            "capacity": 1,
+            "require_evidence": true,
+            "reasons": [
+              "load 1.000 met threshold 0.750; reduced workspace capacity",
+              "action pressure 1.000 met threshold 0.750; reduced workspace capacity",
+              "prediction error 1.000 met threshold 0.500; required proposal evidence",
+              "declared salience 0.900 met threshold 0.750; required proposal evidence"
+            ],
+            "signal_event_ids": [
+              "integrated-engineering-organism:event:18"
+            ]
+          }
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:21",
+        "sequence": 21,
+        "occurred_at": "2026-09-28T07:52:41.482247Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "silk_candidate_rejected",
+        "summary": "procedure: silk candidate rejected",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:4"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:6"
+        ],
+        "payload": {
+          "operation": "silk_candidate_rejected",
+          "pattern_id": "35761a758fa2ec5a0349c66b0b866c506a829c3b2376467934af3d8f24a70b76",
+          "reason": "Silk protocol error -32030: candidate preparation failed"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:23",
+        "sequence": 23,
+        "occurred_at": "2026-09-28T07:52:41.48297Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "governance",
+        "operation": "governance_decision",
+        "subject": "silk:procedure:estimate.sum@sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+        "summary": "governance: governance decision — silk:procedure:estimate.sum@sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50 [approved]",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:8"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "id": "01240049460856c591729e858c79acc2eb46b1ad52f4e4e50ed6ef61ba60e59a",
+          "proposal_id": "retain-estimate-sum",
+          "proposal_digest": "1ba111c5d2947e7d4b024ee60126fdbbb27805cc4f931f2bfd4f4c927e1f8996",
+          "policy_id": "integrated-engineering-policy",
+          "policy_version": "1",
+          "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+          "action_class": "procedure_retention",
+          "target": "silk:procedure:estimate.sum@sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+          "action": "retain validated estimate summation procedure",
+          "payload_digest": "5e8fa9fb68aa4b6fb5e52a1f450e574da28f92ff1b11d53ab9a84f1f792e5022",
+          "minimum_approvals": 1,
+          "require_evidence": true,
+          "allowed_targets": [
+            "*"
+          ],
+          "outcome": "approved",
+          "reasons": [
+            "target, evidence, and approval requirements satisfied"
+          ],
+          "approvals": [
+            {
+              "id": "operator-retain-estimate-sum",
+              "approver_id": "operator",
+              "decision": "approve",
+              "reason": "approve retained sum procedure",
+              "proposal_digest": "1ba111c5d2947e7d4b024ee60126fdbbb27805cc4f931f2bfd4f4c927e1f8996",
+              "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+              "decided_at": "2026-09-28T07:52:41.482913Z",
+              "source_event_id": "integrated-engineering-organism:event:22"
+            }
+          ],
+          "approval_ids": [
+            "operator-retain-estimate-sum"
+          ],
+          "approver_ids": [
+            "operator"
+          ],
+          "source_event_ids": [
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:2",
+            "integrated-engineering-organism:event:22",
+            "integrated-engineering-organism:event:4",
+            "integrated-engineering-organism:event:8"
+          ],
+          "created_at": "2026-09-28T07:52:41.482927Z",
+          "event_id": ""
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:24",
+        "sequence": 24,
+        "occurred_at": "2026-09-28T07:52:41.483344Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "silk_registry_admitted",
+        "subject": "estimate.sum",
+        "summary": "procedure: silk registry admitted — estimate.sum",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "operation": "silk_registry_admitted",
+          "result": {
+            "admission": "inserted",
+            "procedure_id": "estimate.sum",
+            "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+            "entry_procedure": "proc:main",
+            "retention_state": "candidate"
+          }
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:25",
+        "sequence": 25,
+        "occurred_at": "2026-09-28T07:52:41.483417Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "silk_registry_retained",
+        "subject": "estimate.sum",
+        "summary": "procedure: silk registry retained — estimate.sum",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:24"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "operation": "silk_registry_retained",
+          "result": {
+            "governance_decision_id": "01240049460856c591729e858c79acc2eb46b1ad52f4e4e50ed6ef61ba60e59a",
+            "procedure_id": "estimate.sum",
+            "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50"
+          }
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:26",
+        "sequence": 26,
+        "occurred_at": "2026-09-28T07:52:41.483713Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "procedure_trace",
+        "subject": "main",
+        "summary": "procedure: procedure trace — main",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:25"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "block": null,
+          "correlation_id": "call-0",
+          "data": {
+            "arguments": [
+              12.5,
+              4.5
+            ]
+          },
+          "event": "procedure_enter",
+          "instruction": null,
+          "parent_correlation_id": null,
+          "procedure": "main",
+          "sequence": 0,
+          "trace_id": "run-1"
+        },
+        "silk": {
+          "trace_id": "run-1",
+          "sequence": 0,
+          "correlation_id": "call-0",
+          "procedure": "main"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:27",
+        "sequence": 27,
+        "occurred_at": "2026-09-28T07:52:41.483717Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "procedure_trace",
+        "subject": "main",
+        "summary": "procedure: procedure trace — main",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "block": "b0",
+          "correlation_id": "call-0",
+          "data": {
+            "status": "returned",
+            "value": 17.0
+          },
+          "event": "procedure_exit",
+          "instruction": null,
+          "parent_correlation_id": null,
+          "procedure": "main",
+          "sequence": 1,
+          "trace_id": "run-1"
+        },
+        "silk": {
+          "trace_id": "run-1",
+          "sequence": 1,
+          "correlation_id": "call-0",
+          "procedure": "main"
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:28",
+        "sequence": 28,
+        "occurred_at": "2026-09-28T07:52:41.483723Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "procedure",
+        "operation": "procedure_reused",
+        "subject": "estimate.sum",
+        "summary": "procedure: procedure reused — estimate.sum",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26",
+          "integrated-engineering-organism:event:27"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26",
+          "integrated-engineering-organism:event:27",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23"
+        ],
+        "payload": {
+          "procedure_id": "estimate.sum",
+          "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+          "output": 17.0
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:30",
+        "sequence": 30,
+        "occurred_at": "2026-09-28T07:52:41.483777Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "governance",
+        "operation": "governance_decision",
+        "subject": "organism:integrated-engineering-organism:routing:engineering:estimate",
+        "summary": "governance: governance decision — organism:integrated-engineering-organism:routing:engineering:estimate [approved]",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:28",
+          "integrated-engineering-organism:event:29",
+          "integrated-engineering-organism:event:8"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26",
+          "integrated-engineering-organism:event:27",
+          "integrated-engineering-organism:event:28",
+          "integrated-engineering-organism:event:29",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:30"
+        ],
+        "payload": {
+          "id": "8a096fd96abce3bbeffc0bf0cbac111ead331c429e288277cc02602a20beb012",
+          "proposal_id": "learn-estimate-route",
+          "proposal_digest": "8dccbc74eb49d0938a54a561bc4edb24c20238338e343f13b47f3ef27dc9f280",
+          "policy_id": "integrated-engineering-policy",
+          "policy_version": "1",
+          "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+          "action_class": "high_impact",
+          "target": "organism:integrated-engineering-organism:routing:engineering:estimate",
+          "action": "change routing weight",
+          "payload_digest": "f856f401637ae2b5ae85c64d19b3e7136f8d3a083fb04ea26b45d4fbfbb8ea38",
+          "minimum_approvals": 1,
+          "require_evidence": true,
+          "allowed_targets": [
+            "*"
+          ],
+          "outcome": "approved",
+          "reasons": [
+            "target, evidence, and approval requirements satisfied"
+          ],
+          "approvals": [
+            {
+              "id": "operator-learn-estimate-route",
+              "approver_id": "operator",
+              "decision": "approve",
+              "reason": "approve experience-backed route update",
+              "proposal_digest": "8dccbc74eb49d0938a54a561bc4edb24c20238338e343f13b47f3ef27dc9f280",
+              "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+              "decided_at": "2026-09-28T07:52:41.48375Z",
+              "source_event_id": "integrated-engineering-organism:event:29"
+            }
+          ],
+          "approval_ids": [
+            "operator-learn-estimate-route"
+          ],
+          "approver_ids": [
+            "operator"
+          ],
+          "source_event_ids": [
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:28",
+            "integrated-engineering-organism:event:29",
+            "integrated-engineering-organism:event:8"
+          ],
+          "created_at": "2026-09-28T07:52:41.483767Z",
+          "event_id": ""
+        }
+      },
+      {
+        "event_id": "integrated-engineering-organism:event:31",
+        "sequence": 31,
+        "occurred_at": "2026-09-28T07:52:41.4838Z",
+        "organism_id": "integrated-engineering-organism",
+        "category": "development",
+        "operation": "routing_change_applied",
+        "subject": "engineering:estimate",
+        "summary": "development: routing change applied — engineering:estimate (0.5 → 0.9)",
+        "parent_event_ids": [
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:28",
+          "integrated-engineering-organism:event:30",
+          "integrated-engineering-organism:event:8"
+        ],
+        "provenance_event_ids": [
+          "integrated-engineering-organism:event:1",
+          "integrated-engineering-organism:event:12",
+          "integrated-engineering-organism:event:13",
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:24",
+          "integrated-engineering-organism:event:25",
+          "integrated-engineering-organism:event:26",
+          "integrated-engineering-organism:event:27",
+          "integrated-engineering-organism:event:28",
+          "integrated-engineering-organism:event:29",
+          "integrated-engineering-organism:event:3",
+          "integrated-engineering-organism:event:30",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:5",
+          "integrated-engineering-organism:event:7",
+          "integrated-engineering-organism:event:8"
+        ],
+        "governance_event_ids": [
+          "integrated-engineering-organism:event:23",
+          "integrated-engineering-organism:event:30"
+        ],
+        "payload": {
+          "change": {
+            "id": "integrated-engineering-organism:learn-estimate-route:1",
+            "organism_id": "integrated-engineering-organism",
+            "proposal_id": "learn-estimate-route",
+            "revision": 1,
+            "key": "engineering:estimate",
+            "previous": 0.5,
+            "value": 0.9,
+            "governance_decision_id": "8a096fd96abce3bbeffc0bf0cbac111ead331c429e288277cc02602a20beb012",
+            "governance_event_id": "integrated-engineering-organism:event:30",
+            "source_event_ids": [
+              "integrated-engineering-organism:event:15",
+              "integrated-engineering-organism:event:8"
+            ],
+            "evidence_event_ids": [
+              "integrated-engineering-organism:event:28"
+            ],
+            "applied_at": "2026-09-28T07:52:41.48378Z"
+          },
+          "operation": "routing_change_applied",
+          "schema_version": "arachne.development.v1"
+        }
+      }
+    ]
+  },
+  "events": [
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:1",
+      "sequence": 1,
+      "occurred_at": "2026-09-28T07:52:41.481465Z",
+      "organism_id": "integrated-engineering-organism",
+      "correlation_id": "estimate-current",
+      "kind": "perception",
+      "payload": {
+        "task": "estimate total replacement cost",
+        "parts": [
+          12.5,
+          4.5
+        ],
+        "unit": "credits"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:2",
+      "sequence": 2,
+      "occurred_at": "2026-09-28T07:52:41.481544Z",
+      "organism_id": "integrated-engineering-organism",
+      "correlation_id": "prior-estimate-a",
+      "kind": "perception",
+      "payload": {
+        "task": "estimate replacement cost",
+        "unit": "credits"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:3",
+      "sequence": 3,
+      "occurred_at": "2026-09-28T07:52:41.481565Z",
+      "organism_id": "integrated-engineering-organism",
+      "kind": "memory",
+      "payload": {
+        "episode_id": "prior-estimate-a",
+        "kind": "successful-sum",
+        "operation": "episode_recorded",
+        "source": {
+          "kind": "completed-estimate",
+          "id": "prior-estimate-a"
+        },
+        "source_event_ids": [
+          "integrated-engineering-organism:event:2"
+        ]
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:4",
+      "sequence": 4,
+      "occurred_at": "2026-09-28T07:52:41.481566Z",
+      "organism_id": "integrated-engineering-organism",
+      "correlation_id": "prior-estimate-b",
+      "kind": "perception",
+      "payload": {
+        "task": "estimate replacement cost",
+        "unit": "credits"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:5",
+      "sequence": 5,
+      "occurred_at": "2026-09-28T07:52:41.481569Z",
+      "organism_id": "integrated-engineering-organism",
+      "kind": "memory",
+      "payload": {
+        "episode_id": "prior-estimate-b",
+        "kind": "successful-sum",
+        "operation": "episode_recorded",
+        "source": {
+          "kind": "completed-estimate",
+          "id": "prior-estimate-b"
+        },
+        "source_event_ids": [
+          "integrated-engineering-organism:event:4"
+        ]
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:6",
+      "sequence": 6,
+      "occurred_at": "2026-09-28T07:52:41.481609Z",
+      "organism_id": "integrated-engineering-organism",
+      "kind": "replay",
+      "payload": {
+        "minimum_support": 2,
+        "operation": "consolidation_applied",
+        "pattern_ids": [
+          "35761a758fa2ec5a0349c66b0b866c506a829c3b2376467934af3d8f24a70b76"
+        ],
+        "rule_id": "episode.exact_repeat.v1",
+        "run_id": "5b583e1867db6d7070df1f302dc0b4a3d674010ef672d433b66c52d170234bc5",
+        "source_episode_ids": [
+          "prior-estimate-a",
+          "prior-estimate-b"
+        ]
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:7",
+      "sequence": 7,
+      "occurred_at": "2026-09-28T07:52:41.481754Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "coordinator",
+      "correlation_id": "estimate-current",
+      "kind": "replay",
+      "payload": {
+        "episode_ids": [
+          "prior-estimate-a",
+          "prior-estimate-b"
+        ],
+        "interaction_id": "estimate-current",
+        "operation": "replay_scheduled",
+        "plan_digest": "1603c7395f089b6b891e2a4dc4b5f46253de3d346b62292cdfcb59eeab2ca05d",
+        "plan_id": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+        "requested_by": "coordinator",
+        "scheduled_at": "2026-09-28T07:52:41.481713Z",
+        "source_event_ids": null
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:8",
+      "sequence": 8,
+      "occurred_at": "2026-09-28T07:52:41.481779Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "coordinator",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:2",
+        "integrated-engineering-organism:event:4",
+        "integrated-engineering-organism:event:7"
+      ],
+      "kind": "replay",
+      "payload": {
+        "completed_at": "2026-09-28T07:52:41.481762Z",
+        "cues": [
+          {
+            "episode_id": "prior-estimate-a",
+            "kind": "successful-sum",
+            "occurred_at": "2026-09-28T07:52:41.481545Z",
+            "content_digest": "a390ad1f9f75ef9274ab315f47db0bfe8464607ef5a06952253df7801ea0d826",
+            "source_event_ids": [
+              "integrated-engineering-organism:event:2"
+            ]
+          },
+          {
+            "episode_id": "prior-estimate-b",
+            "kind": "successful-sum",
+            "occurred_at": "2026-09-28T07:52:41.481566Z",
+            "content_digest": "a390ad1f9f75ef9274ab315f47db0bfe8464607ef5a06952253df7801ea0d826",
+            "source_event_ids": [
+              "integrated-engineering-organism:event:4"
+            ]
+          }
+        ],
+        "input_episode_ids": [
+          "prior-estimate-a",
+          "prior-estimate-b"
+        ],
+        "operation": "replay_completed",
+        "plan_digest": "1603c7395f089b6b891e2a4dc4b5f46253de3d346b62292cdfcb59eeab2ca05d",
+        "plan_id": "83a1588b36680a333cc36d98f290d3f0a7e36cfe08539c124c4a74d6f4332ee9",
+        "run_id": "5a4ea37d0ed3467d2588bd2b91170324e668b11b59c21f736b73e59197b02ba3",
+        "schedule_event_id": "integrated-engineering-organism:event:7"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:9",
+      "sequence": 9,
+      "occurred_at": "2026-09-28T07:52:41.481881Z",
+      "organism_id": "integrated-engineering-organism",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:1"
+      ],
+      "kind": "activation",
+      "payload": {
+        "interaction_id": "estimate-current",
+        "operation": "workspace_opened",
+        "run_id": "estimate-workspace",
+        "source_event_ids": [
+          "integrated-engineering-organism:event:1"
+        ]
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:10",
+      "sequence": 10,
+      "occurred_at": "2026-09-28T07:52:41.481901Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "critic",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "message-2",
+      "kind": "perception",
+      "payload": {
+        "interaction_id": "estimate-current",
+        "input": {
+          "parts": [
+            12.5,
+            4.5
+          ],
+          "unit": "credits"
+        },
+        "source_event_ids": [
+          "integrated-engineering-organism:event:1"
+        ],
+        "session_id": "integrated-engineering-session"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:11",
+      "sequence": 11,
+      "occurred_at": "2026-09-28T07:52:41.481904Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "critic",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "message-2",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:10"
+      ],
+      "kind": "activation",
+      "payload": {
+        "interaction_id": "estimate-current",
+        "input": {
+          "parts": [
+            12.5,
+            4.5
+          ],
+          "unit": "credits"
+        },
+        "source_event_ids": [
+          "integrated-engineering-organism:event:1"
+        ],
+        "session_id": "integrated-engineering-session"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:12",
+      "sequence": 12,
+      "occurred_at": "2026-09-28T07:52:41.481933Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "planner",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "message-1",
+      "kind": "perception",
+      "payload": {
+        "interaction_id": "estimate-current",
+        "input": {
+          "parts": [
+            12.5,
+            4.5
+          ],
+          "unit": "credits"
+        },
+        "source_event_ids": [
+          "integrated-engineering-organism:event:1"
+        ],
+        "session_id": "integrated-engineering-session"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:13",
+      "sequence": 13,
+      "occurred_at": "2026-09-28T07:52:41.481939Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "planner",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "message-1",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:12"
+      ],
+      "kind": "activation",
+      "payload": {
+        "interaction_id": "estimate-current",
+        "input": {
+          "parts": [
+            12.5,
+            4.5
+          ],
+          "unit": "credits"
+        },
+        "source_event_ids": [
+          "integrated-engineering-organism:event:1"
+        ],
+        "session_id": "integrated-engineering-session"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:14",
+      "sequence": 14,
+      "occurred_at": "2026-09-28T07:52:41.481954Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "critic",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "message-2",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:11"
+      ],
+      "kind": "proposal",
+      "payload": {
+        "id": "ca2505616f62005d4beb502a64a28198",
+        "interaction_id": "estimate-current",
+        "specialist_id": "critic",
+        "correlation_id": "message-2",
+        "status": "candidate",
+        "summary": "verify both measurements use credits",
+        "confidence": 0.65,
+        "evidence_event_ids": [
+          "integrated-engineering-organism:event:1"
+        ],
+        "requested_actions": [
+          {
+            "kind": "estimate_review",
+            "payload": {
+              "executable": false
+            }
+          }
+        ],
+        "created_at": "2026-09-28T07:52:41.48191Z"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:15",
+      "sequence": 15,
+      "occurred_at": "2026-09-28T07:52:41.481956Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "planner",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "message-1",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:13"
+      ],
+      "kind": "proposal",
+      "payload": {
+        "id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+        "interaction_id": "estimate-current",
+        "specialist_id": "planner",
+        "correlation_id": "message-1",
+        "status": "candidate",
+        "summary": "sum the measured costs after checking units",
+        "confidence": 0.85,
+        "evidence_event_ids": [
+          "integrated-engineering-organism:event:1"
+        ],
+        "requested_actions": [
+          {
+            "kind": "estimate_review",
+            "payload": {
+              "executable": false
+            }
+          }
+        ],
+        "created_at": "2026-09-28T07:52:41.481944Z"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:16",
+      "sequence": 16,
+      "occurred_at": "2026-09-28T07:52:41.48197Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "critic",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "message-2",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:14"
+      ],
+      "kind": "proposal",
+      "payload": {
+        "operation": "proposal_received",
+        "proposal_event_id": "integrated-engineering-organism:event:14",
+        "proposal_id": "ca2505616f62005d4beb502a64a28198",
+        "run_id": "estimate-workspace",
+        "specialist_id": "critic",
+        "status": "candidate"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:17",
+      "sequence": 17,
+      "occurred_at": "2026-09-28T07:52:41.481977Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "planner",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "message-1",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:15"
+      ],
+      "kind": "proposal",
+      "payload": {
+        "operation": "proposal_received",
+        "proposal_event_id": "integrated-engineering-organism:event:15",
+        "proposal_id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+        "run_id": "estimate-workspace",
+        "specialist_id": "planner",
+        "status": "candidate"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:18",
+      "sequence": 18,
+      "occurred_at": "2026-09-28T07:52:41.481991Z",
+      "organism_id": "integrated-engineering-organism",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:1"
+      ],
+      "kind": "prediction_error",
+      "payload": {
+        "expected_digest": "a945db272d19c2b4ad7c6947be8189800ac4fa34c1a663bb2ee423a98894f68e",
+        "interaction_id": "estimate-current",
+        "magnitude": 1,
+        "metric": "canonical_json_mismatch",
+        "observed_digest": "9d1aabfed7965b5cc94dfaf948b77796fe163da9ba92ce4e3d5574c8427aeeb0",
+        "source_event_ids": [
+          "integrated-engineering-organism:event:1"
+        ]
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:19",
+      "sequence": 19,
+      "occurred_at": "2026-09-28T07:52:41.482024Z",
+      "organism_id": "integrated-engineering-organism",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:1",
+        "integrated-engineering-organism:event:18"
+      ],
+      "kind": "regulation",
+      "payload": {
+        "action_pressure": 1,
+        "cognitive_state": "strained",
+        "interaction_id": "estimate-current",
+        "load": 1,
+        "prediction_error": 1,
+        "salience": 0.9,
+        "surprise": 1,
+        "workspace_policy": {
+          "capacity": 1,
+          "require_evidence": true,
+          "reasons": [
+            "load 1.000 met threshold 0.750; reduced workspace capacity",
+            "action pressure 1.000 met threshold 0.750; reduced workspace capacity",
+            "prediction error 1.000 met threshold 0.500; required proposal evidence",
+            "declared salience 0.900 met threshold 0.750; required proposal evidence"
+          ],
+          "signal_event_ids": [
+            "integrated-engineering-organism:event:18"
+          ]
+        }
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:20",
+      "sequence": 20,
+      "occurred_at": "2026-09-28T07:52:41.482042Z",
+      "organism_id": "integrated-engineering-organism",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:1",
+        "integrated-engineering-organism:event:18",
+        "integrated-engineering-organism:event:19",
+        "integrated-engineering-organism:event:14",
+        "integrated-engineering-organism:event:15"
+      ],
+      "kind": "selection",
+      "payload": {
+        "capacity": 1,
+        "entries": [
+          {
+            "proposal_id": "b4a44304ca4ab0505d4db8abaed8a7c1",
+            "specialist_id": "planner",
+            "confidence": 0.85,
+            "selected": true,
+            "reason": "ranked within workspace capacity"
+          },
+          {
+            "proposal_id": "ca2505616f62005d4beb502a64a28198",
+            "specialist_id": "critic",
+            "confidence": 0.65,
+            "selected": false,
+            "reason": "ranked below regulated admission capacity"
+          }
+        ],
+        "evidence_required": true,
+        "interaction_id": "estimate-current",
+        "operation": "proposals_selected",
+        "policy": "highest declared confidence; ties by specialist ID then proposal ID",
+        "policy_reasons": [
+          "load 1.000 met threshold 0.750; reduced workspace capacity",
+          "action pressure 1.000 met threshold 0.750; reduced workspace capacity",
+          "prediction error 1.000 met threshold 0.500; required proposal evidence",
+          "declared salience 0.900 met threshold 0.750; required proposal evidence"
+        ],
+        "run_id": "estimate-workspace",
+        "selected_ids": [
+          "b4a44304ca4ab0505d4db8abaed8a7c1"
+        ],
+        "signal_event_ids": [
+          "integrated-engineering-organism:event:18",
+          "integrated-engineering-organism:event:19"
+        ]
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:21",
+      "sequence": 21,
+      "occurred_at": "2026-09-28T07:52:41.482247Z",
+      "organism_id": "integrated-engineering-organism",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:2",
+        "integrated-engineering-organism:event:4"
+      ],
+      "kind": "development",
+      "payload": {
+        "operation": "silk_candidate_rejected",
+        "pattern_id": "35761a758fa2ec5a0349c66b0b866c506a829c3b2376467934af3d8f24a70b76",
+        "reason": "Silk protocol error -32030: candidate preparation failed"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:22",
+      "sequence": 22,
+      "occurred_at": "2026-09-28T07:52:41.482912Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "operator",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:2",
+        "integrated-engineering-organism:event:4",
+        "integrated-engineering-organism:event:2",
+        "integrated-engineering-organism:event:4",
+        "integrated-engineering-organism:event:8",
+        "integrated-engineering-organism:event:15"
+      ],
+      "kind": "decision",
+      "payload": {
+        "decision": "approve retained sum procedure"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:23",
+      "sequence": 23,
+      "occurred_at": "2026-09-28T07:52:41.48297Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "planner",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:15",
+        "integrated-engineering-organism:event:2",
+        "integrated-engineering-organism:event:22",
+        "integrated-engineering-organism:event:4",
+        "integrated-engineering-organism:event:8"
+      ],
+      "kind": "governance",
+      "payload": {
+        "id": "01240049460856c591729e858c79acc2eb46b1ad52f4e4e50ed6ef61ba60e59a",
+        "proposal_id": "retain-estimate-sum",
+        "proposal_digest": "1ba111c5d2947e7d4b024ee60126fdbbb27805cc4f931f2bfd4f4c927e1f8996",
+        "policy_id": "integrated-engineering-policy",
+        "policy_version": "1",
+        "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+        "action_class": "procedure_retention",
+        "target": "silk:procedure:estimate.sum@sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+        "action": "retain validated estimate summation procedure",
+        "payload_digest": "5e8fa9fb68aa4b6fb5e52a1f450e574da28f92ff1b11d53ab9a84f1f792e5022",
+        "minimum_approvals": 1,
+        "require_evidence": true,
+        "allowed_targets": [
+          "*"
+        ],
+        "outcome": "approved",
+        "reasons": [
+          "target, evidence, and approval requirements satisfied"
+        ],
+        "approvals": [
+          {
+            "id": "operator-retain-estimate-sum",
+            "approver_id": "operator",
+            "decision": "approve",
+            "reason": "approve retained sum procedure",
+            "proposal_digest": "1ba111c5d2947e7d4b024ee60126fdbbb27805cc4f931f2bfd4f4c927e1f8996",
+            "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+            "decided_at": "2026-09-28T07:52:41.482913Z",
+            "source_event_id": "integrated-engineering-organism:event:22"
+          }
+        ],
+        "approval_ids": [
+          "operator-retain-estimate-sum"
+        ],
+        "approver_ids": [
+          "operator"
+        ],
+        "source_event_ids": [
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:2",
+          "integrated-engineering-organism:event:22",
+          "integrated-engineering-organism:event:4",
+          "integrated-engineering-organism:event:8"
+        ],
+        "created_at": "2026-09-28T07:52:41.482927Z",
+        "event_id": ""
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:24",
+      "sequence": 24,
+      "occurred_at": "2026-09-28T07:52:41.483344Z",
+      "organism_id": "integrated-engineering-organism",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:23"
+      ],
+      "kind": "development",
+      "payload": {
+        "operation": "silk_registry_admitted",
+        "result": {
+          "admission": "inserted",
+          "procedure_id": "estimate.sum",
+          "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+          "entry_procedure": "proc:main",
+          "retention_state": "candidate"
+        }
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:25",
+      "sequence": 25,
+      "occurred_at": "2026-09-28T07:52:41.483417Z",
+      "organism_id": "integrated-engineering-organism",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:24"
+      ],
+      "kind": "development",
+      "payload": {
+        "operation": "silk_registry_retained",
+        "result": {
+          "governance_decision_id": "01240049460856c591729e858c79acc2eb46b1ad52f4e4e50ed6ef61ba60e59a",
+          "procedure_id": "estimate.sum",
+          "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50"
+        }
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:26",
+      "sequence": 26,
+      "occurred_at": "2026-09-28T07:52:41.483713Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "planner",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:25"
+      ],
+      "kind": "silk_trace",
+      "payload": {
+        "block": null,
+        "correlation_id": "call-0",
+        "data": {
+          "arguments": [
+            12.5,
+            4.5
+          ]
+        },
+        "event": "procedure_enter",
+        "instruction": null,
+        "parent_correlation_id": null,
+        "procedure": "main",
+        "sequence": 0,
+        "trace_id": "run-1"
+      },
+      "silk": {
+        "trace_id": "run-1",
+        "sequence": 0,
+        "correlation_id": "call-0",
+        "procedure": "main"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:27",
+      "sequence": 27,
+      "occurred_at": "2026-09-28T07:52:41.483717Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "planner",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:25",
+        "integrated-engineering-organism:event:26"
+      ],
+      "kind": "silk_trace",
+      "payload": {
+        "block": "b0",
+        "correlation_id": "call-0",
+        "data": {
+          "status": "returned",
+          "value": 17.0
+        },
+        "event": "procedure_exit",
+        "instruction": null,
+        "parent_correlation_id": null,
+        "procedure": "main",
+        "sequence": 1,
+        "trace_id": "run-1"
+      },
+      "silk": {
+        "trace_id": "run-1",
+        "sequence": 1,
+        "correlation_id": "call-0",
+        "procedure": "main"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:28",
+      "sequence": 28,
+      "occurred_at": "2026-09-28T07:52:41.483723Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "planner",
+      "session_id": "integrated-engineering-session",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:25",
+        "integrated-engineering-organism:event:26",
+        "integrated-engineering-organism:event:27"
+      ],
+      "kind": "action",
+      "payload": {
+        "procedure_id": "estimate.sum",
+        "revision_digest": "sha256:92399155290778f04287d0a194b021fc9ed1632d3ffb12e152275015e0906c50",
+        "output": 17.0
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:29",
+      "sequence": 29,
+      "occurred_at": "2026-09-28T07:52:41.483749Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "operator",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:15",
+        "integrated-engineering-organism:event:8",
+        "integrated-engineering-organism:event:28"
+      ],
+      "kind": "decision",
+      "payload": {
+        "decision": "approve experience-backed route update"
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:30",
+      "sequence": 30,
+      "occurred_at": "2026-09-28T07:52:41.483777Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "planner",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:15",
+        "integrated-engineering-organism:event:28",
+        "integrated-engineering-organism:event:29",
+        "integrated-engineering-organism:event:8"
+      ],
+      "kind": "governance",
+      "payload": {
+        "id": "8a096fd96abce3bbeffc0bf0cbac111ead331c429e288277cc02602a20beb012",
+        "proposal_id": "learn-estimate-route",
+        "proposal_digest": "8dccbc74eb49d0938a54a561bc4edb24c20238338e343f13b47f3ef27dc9f280",
+        "policy_id": "integrated-engineering-policy",
+        "policy_version": "1",
+        "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+        "action_class": "high_impact",
+        "target": "organism:integrated-engineering-organism:routing:engineering:estimate",
+        "action": "change routing weight",
+        "payload_digest": "f856f401637ae2b5ae85c64d19b3e7136f8d3a083fb04ea26b45d4fbfbb8ea38",
+        "minimum_approvals": 1,
+        "require_evidence": true,
+        "allowed_targets": [
+          "*"
+        ],
+        "outcome": "approved",
+        "reasons": [
+          "target, evidence, and approval requirements satisfied"
+        ],
+        "approvals": [
+          {
+            "id": "operator-learn-estimate-route",
+            "approver_id": "operator",
+            "decision": "approve",
+            "reason": "approve experience-backed route update",
+            "proposal_digest": "8dccbc74eb49d0938a54a561bc4edb24c20238338e343f13b47f3ef27dc9f280",
+            "policy_digest": "48ca23700bd4590b42101a8f37110ce5161e79e6afa6bbd8dae5db0b2e0fec89",
+            "decided_at": "2026-09-28T07:52:41.48375Z",
+            "source_event_id": "integrated-engineering-organism:event:29"
+          }
+        ],
+        "approval_ids": [
+          "operator-learn-estimate-route"
+        ],
+        "approver_ids": [
+          "operator"
+        ],
+        "source_event_ids": [
+          "integrated-engineering-organism:event:15",
+          "integrated-engineering-organism:event:28",
+          "integrated-engineering-organism:event:29",
+          "integrated-engineering-organism:event:8"
+        ],
+        "created_at": "2026-09-28T07:52:41.483767Z",
+        "event_id": ""
+      }
+    },
+    {
+      "schema_version": "arachne.cognitive_event.v1",
+      "event_id": "integrated-engineering-organism:event:31",
+      "sequence": 31,
+      "occurred_at": "2026-09-28T07:52:41.4838Z",
+      "organism_id": "integrated-engineering-organism",
+      "agent_id": "planner",
+      "correlation_id": "estimate-current",
+      "parent_event_ids": [
+        "integrated-engineering-organism:event:15",
+        "integrated-engineering-organism:event:28",
+        "integrated-engineering-organism:event:30",
+        "integrated-engineering-organism:event:8"
+      ],
+      "kind": "development",
+      "payload": {
+        "change": {
+          "id": "integrated-engineering-organism:learn-estimate-route:1",
+          "organism_id": "integrated-engineering-organism",
+          "proposal_id": "learn-estimate-route",
+          "revision": 1,
+          "key": "engineering:estimate",
+          "previous": 0.5,
+          "value": 0.9,
+          "governance_decision_id": "8a096fd96abce3bbeffc0bf0cbac111ead331c429e288277cc02602a20beb012",
+          "governance_event_id": "integrated-engineering-organism:event:30",
+          "source_event_ids": [
+            "integrated-engineering-organism:event:15",
+            "integrated-engineering-organism:event:8"
+          ],
+          "evidence_event_ids": [
+            "integrated-engineering-organism:event:28"
+          ],
+          "applied_at": "2026-09-28T07:52:41.48378Z"
+        },
+        "operation": "routing_change_applied",
+        "schema_version": "arachne.development.v1"
+      }
+    }
+  ]
+}

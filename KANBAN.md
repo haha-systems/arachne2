@@ -8,19 +8,11 @@ Move a task by changing its **Status** here and in its task file. Use `Ready` on
 
 ### Backlog
 
-| ID                                                               | Task                                                    | Depends on                                                    |
-| ---------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
-| [AR-15](tasks/AR-15-connect-arachne-to-silk-acquisition.md)      | Connect Arachne development to Silk acquisition         | AR-14, AR-13, SILK-14, SILK-17, SILK-18                       |
-| [AR-16](tasks/AR-16-build-developmental-visualization.md)        | Build developmental visualization and inspection        | AR-14, AR-15                                                  |
-| [AR-17](tasks/AR-17-run-integrated-engineering-experiment.md)    | Run an integrated engineering experiment                | AR-04, AR-05, AR-07, AR-09, AR-11, AR-12, AR-13, AR-14, AR-15 |
-| [INT-01](tasks/INT-01-define-silk-arachne-boundary.md)           | Define the Silk and Arachne boundary                    | SILK-01, AR-01                                                |
-| [INT-03](tasks/INT-03-establish-independent-release-strategy.md) | Establish independent repository and release identities | SILK-01, AR-01                                                |
+No tasks are marked Backlog.
 
 ### Ready
 
-| ID                                                          | Task                                            | Depends on                              |
-| ----------------------------------------------------------- | ----------------------------------------------- | --------------------------------------- |
-| [AR-15](tasks/AR-15-connect-arachne-to-silk-acquisition.md) | Connect Arachne development to Silk acquisition | AR-14, AR-13, SILK-14, SILK-17, SILK-18 |
+No tasks are marked Ready.
 
 ### In Progress
 
@@ -73,6 +65,9 @@ No tasks are marked Review.
 | [AR-13](tasks/AR-13-implement-governance.md)                      | Implement governance for consequential changes          | [Governance contract](docs/ARACHNE_GOVERNANCE.md)              |
 | [AR-12](tasks/AR-12-implement-governed-replay.md)                 | Implement governed replay and consolidation             | [Governed replay contract](docs/ARACHNE_GOVERNED_REPLAY.md)    |
 | [AR-14](tasks/AR-14-implement-developmental-changes.md)           | Implement provenance-bearing development                | [Development contract](docs/ARACHNE_DEVELOPMENT.md)            |
+| [AR-15](tasks/AR-15-connect-arachne-to-silk-acquisition.md)       | Connect Arachne development to Silk acquisition         | [Acquisition contract](docs/ARACHNE_SILK_ACQUISITION.md)       |
+| [AR-16](tasks/AR-16-build-developmental-visualization.md)         | Build developmental visualization and inspection        | [Inspection contract](docs/ARACHNE_INSPECTION.md)              |
+| [AR-17](tasks/AR-17-run-integrated-engineering-experiment.md)     | Run an integrated engineering experiment                | [Experiment report](docs/ARACHNE_INTEGRATED_EXPERIMENT.md)     |
 | [INT-02](tasks/INT-02-test-legacy-arachne-with-new-silk.md)       | Run the legacy Arachne compatibility experiment         | [Experiment report](docs/LEGACY_ARACHNE_SILK_EXPERIMENT.md)    |
 
 ### Blocked
@@ -98,7 +93,7 @@ The sequence follows the PRD’s dependency gates. Detailed implementation is st
 | 4. Establish the runtime boundary     | Use a versioned public contract for Arachne’s Silk host and traces.                      | INT-01; AR-04 → AR-05                                       |
 | 5. Make Silk inspectable and reusable | Trace and inspect programs; admit, retrieve, compose, synthesize, and retain procedures. | SILK-11 → SILK-18; standalone demonstration in SILK-19      |
 | 6. Build cognitive foundations        | Implement attributable memory, specialists, workspace, regulation, and governed replay.  | AR-06 → AR-07; AR-08 → AR-09 → AR-10 → AR-11; AR-13 → AR-12 |
-| 7. Enable development                 | Apply governed changes and connect procedural acquisition to Silk.                       | AR-14 → AR-16                                               |
+| 7. Enable development                 | Apply governed changes and connect procedural acquisition to Silk.                       | AR-14 → AR-15 → AR-16                                       |
 | 8. Exercise the integrated organism   | Run an experiment that reconstructs perception through developmental change.             | AR-17                                                       |
 | Diagnostic, when ready                | Test whether legacy Arachne can use the public Silk boundary.                            | INT-02 after Silk execution and the contract are usable     |
 | Deferred, evidence-led                | Revisit a bytecode or VM only when a concrete requirement exists.                        | SILK-20                                                     |
