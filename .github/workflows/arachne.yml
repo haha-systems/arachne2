@@ -1,0 +1,40 @@
+name: Arachne Go
+
+on:
+  push:
+    paths:
+      - "arachne/**"
+      - ".github/workflows/arachne.yml"
+  pull_request:
+    paths:
+      - "arachne/**"
+      - ".github/workflows/arachne.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: arachne/go.mod
+          cache-dependency-path: arachne/go.mod
+      - name: Check Go formatting
+        working-directory: arachne
+        run: |
+          files="$(find . -type f -name '*.go' -print0 | xargs -0 gofmt -l)"
+          if [ -n "$files" ]; then
+            printf '%s\n' "$files"
+            exit 1
+          fi
+      - name: Test
+        working-directory: arachne
+        run: go test ./...
+      - name: Vet
+        working-directory: arachne
+        run: go vet ./...
+      - name: Lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.14.0
+          working-directory: arachne

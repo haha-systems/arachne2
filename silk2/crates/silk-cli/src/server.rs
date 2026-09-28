@@ -78,9 +78,11 @@ fn serve_io(mut input: impl Read, mut output: impl Write) -> io::Result<()> {
             "registry.run" if initialized => run_retained_procedure(
                 &params,
                 &mut sessions,
-                &registry,
-                &registered_programs,
-                &registered_entries,
+                RetainedProcedureRegistry {
+                    registry: &registry,
+                    programs: &registered_programs,
+                    entries: &registered_entries,
+                },
                 &mut input,
                 &mut output,
                 &mut next_host_id,
@@ -429,12 +431,16 @@ fn retain_candidate(
     }))
 }
 
+struct RetainedProcedureRegistry<'a> {
+    registry: &'a ProcedureRegistry<RegistryMemoryStore>,
+    programs: &'a HashMap<(String, String), ProgramIR>,
+    entries: &'a HashMap<(String, String), String>,
+}
+
 fn run_retained_procedure<R: Read, W: Write>(
     params: &Value,
     sessions: &mut HashMap<String, WireSession>,
-    registry: &ProcedureRegistry<RegistryMemoryStore>,
-    registered_programs: &HashMap<(String, String), ProgramIR>,
-    registered_entries: &HashMap<(String, String), String>,
+    retained: RetainedProcedureRegistry<'_>,
     input: &mut R,
     output: &mut W,
     next_host_id: &mut u64,
@@ -444,7 +450,9 @@ fn run_retained_procedure<R: Read, W: Write>(
         let procedure_id = required_string(params, "procedure_id")?;
         let revision_digest = required_string(params, "revision_digest")?;
         let procedure = required_string(params, "procedure")?;
-        if registry.retention_state(&procedure_id, &revision_digest)
+        if retained
+            .registry
+            .retention_state(&procedure_id, &revision_digest)
             != Some(RetentionState::Retained)
         {
             return Err(failure(
@@ -454,14 +462,14 @@ fn run_retained_procedure<R: Read, W: Write>(
             ));
         }
         let key = (procedure_id, revision_digest);
-        if registered_entries.get(&key) != Some(&procedure) {
+        if retained.entries.get(&key) != Some(&procedure) {
             return Err(failure(
                 -32032,
                 "procedure does not match the retained entry",
                 json!({"procedure":procedure}),
             ));
         }
-        let Some(program) = registered_programs.get(&key).cloned() else {
+        let Some(program) = retained.programs.get(&key).cloned() else {
             return Err(failure(
                 -32032,
                 "retained executable is unavailable",

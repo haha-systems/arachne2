@@ -50,7 +50,7 @@ fn run(mut arguments: impl Iterator<Item = String>) -> Result<(String, u8), CliE
         Some("run") => run_source(arguments),
         Some("serve") => Err(CliError {
             exit_code: 2,
-            message: "usage: silk serve (length-prefixed SRP 1.0 over stdio)".to_owned(),
+            message: "usage: silk serve (length-prefixed SRP 1.1 over stdio)".to_owned(),
         }),
         Some("inspect") => run_inspect(arguments),
         Some("compare") => run_compare(arguments),

@@ -1,12 +1,12 @@
 # Silk and Arachne integration boundary
 
 **Task:** INT-01  
-**Protocol:** Silk Runtime Protocol 1.0  
+**Protocol:** Silk Runtime Protocol 1.1  
 **Related contracts:** [Silk host protocol](SILK_HOST_PROTOCOL.md), [effects and authority](SILK_EFFECTS_AUTHORITY.md), [Arachne architecture](ARACHNE2_ARCHITECTURE.md).
 
 ## First transport
 
-Arachne launches Silk as a subprocess and exchanges length-prefixed JSON-RPC 2.0 messages over bidirectional stdio. Each message uses the four-byte unsigned big-endian frame from SRP 1.0. Stdout is protocol-only; Silk diagnostics and application logs use stderr or structured protocol trace notifications. This boundary is black-box testable and does not require Go/Rust FFI, shared memory, or shared database tables.
+Arachne launches Silk as a subprocess and exchanges length-prefixed JSON-RPC 2.0 messages over bidirectional stdio. Each message uses the four-byte unsigned big-endian frame defined by SRP 1.1. Stdout is protocol-only; Silk diagnostics and application logs use stderr or structured protocol trace notifications. This boundary is black-box testable and does not require Go/Rust FFI, shared memory, or shared database tables.
 
 The framing and method semantics are defined by SILK-05. Unix sockets may carry the same messages later. Transport changes do not change who owns state or the meaning of protocol methods.
 
@@ -23,7 +23,7 @@ The framing and method semantics are defined by SILK-05. Unix sockets may carry 
 
 ## Session and call flow
 
-1. Arachne starts the Silk process and sends `initialize` with SRP version `1.0` and supported optional features.
+1. Arachne starts the Silk process and sends `initialize` with SRP version `1.1` and supported optional features.
 2. The Arachne controller creates a session with a unique ID, explicit input, host-function descriptors, effect ceilings/grants, limits, and trace preferences.
 3. Arachne sends `program.load`, then invokes a procedure with `procedure.run` or the lifecycle method `agent.step`.
 4. Silk evaluates in the session. For each external operation, it resolves the exact descriptor, validates arguments, enforces the active effect ceiling and matching session grant, checks session state, and only then sends nested `host.call` to Arachne.
@@ -56,7 +56,7 @@ A descriptor contains an exact function name, schema, nonempty authority identif
 }
 ```
 
-This example aligns SILK-05 session creation with the SILK-06 grant model and the Rust protocol types. JSON-RPC method fields and errors follow the SRP 1.0 specification. Trace event schema remains independently versioned from the JSON-RPC method envelope.
+This example aligns SILK-05 session creation with the SILK-06 grant model and the Rust protocol types. JSON-RPC method fields and errors follow the SRP 1.1 specification. Trace event schema remains independently versioned from the JSON-RPC method envelope.
 
 ## Failure, cancellation, and replay rules
 

@@ -29,11 +29,18 @@ organism-scoped JSON snapshot. Without it, memory is process-local. See the
 
 ## Checks
 
+Run these checks from this directory:
+
 ```sh
-gofmt -w ./cmd ./internal
+files="$(find . -type f -name '*.go' -print0 | xargs -0 gofmt -l)"
+if [ -n "$files" ]; then printf '%s\n' "$files"; exit 1; fi
 go test ./...
+go vet ./...
 golangci-lint run
 ```
+
+To format Go files locally, run `gofmt -w` on the changed files before
+committing.
 
 Lifecycle records are structured logs and entries in the shared event spine.
 Embedding applications can use the versioned Silk
