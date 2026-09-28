@@ -1,6 +1,6 @@
 # AR-15 — Connect Arachne development to Silk acquisition
 
-**Status:** Backlog  
+**Status:** Ready
 **Track:** Arachne  
 **Depends on:** AR-14, AR-13, SILK-14, SILK-17, SILK-18  
 **Source:** PRD §8, Arachne Phase 11
@@ -17,4 +17,3 @@ Implement the experience → recurring structure → candidate → Silk validati
 
 - An acquired procedure was absent from the initial repertoire and can later be reused.
 - The full acquisition, validation, governance, and admission path is traceable.
-

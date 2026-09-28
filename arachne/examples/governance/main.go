@@ -40,28 +40,25 @@ func main() {
 
 	pending, err := service.Evaluate(ctx, proposal, nil)
 	fatalIf(err)
-	printDecision(pending)
+	fmt.Printf("%s: outcome=%s policy=%s/%s decision_event=%s reasons=%v\n",
+		pending.ProposalID, pending.Outcome, pending.PolicyID, pending.PolicyVersion, pending.EventID, pending.Reasons)
 	approved, err := service.Evaluate(ctx, proposal, []governance.Approval{{
 		ID: "approval-1", ApproverID: "operator", ProposalDigest: proposalDigest,
 		PolicyDigest: policyDigest, Decision: governance.ApprovalApprove,
 		Reason: "reviewed evidence", DecidedAt: time.Now().UTC(), SourceEventID: "review-1",
 	}})
 	fatalIf(err)
-	printDecision(approved)
+	fmt.Printf("%s: outcome=%s policy=%s/%s decision_event=%s reasons=%v\n",
+		approved.ProposalID, approved.Outcome, approved.PolicyID, approved.PolicyVersion, approved.EventID, approved.Reasons)
 	rejected, err := service.Evaluate(ctx, proposal, []governance.Approval{{
 		ID: "approval-2", ApproverID: "operator", ProposalDigest: proposalDigest,
 		PolicyDigest: policyDigest, Decision: governance.ApprovalReject,
 		Reason: "target requires more context", DecidedAt: time.Now().UTC(), SourceEventID: "review-2",
 	}})
 	fatalIf(err)
-	printDecision(rejected)
-	fmt.Println("No proposal was executed; approval only marks it eligible for a separate authorized executor.")
-}
-
-func printDecision(decision governance.Decision) {
 	fmt.Printf("%s: outcome=%s policy=%s/%s decision_event=%s reasons=%v\n",
-		decision.ProposalID, decision.Outcome, decision.PolicyID, decision.PolicyVersion,
-		decision.EventID, decision.Reasons)
+		rejected.ProposalID, rejected.Outcome, rejected.PolicyID, rejected.PolicyVersion, rejected.EventID, rejected.Reasons)
+	fmt.Println("No proposal was executed; approval only marks it eligible for a separate authorized executor.")
 }
 
 func fatalIf(err error) {

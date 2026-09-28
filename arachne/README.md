@@ -56,3 +56,6 @@ The [governed replay contract](../docs/ARACHNE_GOVERNED_REPLAY.md) describes
 repeatable attention cues over immutable episodes; run
 `go run ./examples/governed-replay` to see replay provenance and a separate
 governance decision.
+The [development contract](../docs/ARACHNE_DEVELOPMENT.md) describes
+governed routing-profile updates with event-backed recovery; run
+`go run ./examples/development` to observe two instances diverge and recover.
