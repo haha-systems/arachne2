@@ -143,6 +143,10 @@ func analyze(arguments []string) error {
 
 type validationOrganism struct{ ticks uint64 }
 
+func (*validationOrganism) RestorationReport() nursery.RestorationReport {
+	return nursery.RestorationReport{Exact: true, Components: []nursery.RestorationComponent{{ID: "validation-counter", Kind: "organism", Restorability: "exact"}}}
+}
+
 func (o *validationOrganism) Decide(context.Context, nursery.Perception) (nursery.Action, nursery.CognitiveTrace, error) {
 	o.ticks++
 	return nursery.Action{Kind: "wait"}, nursery.CognitiveTrace{}, nil

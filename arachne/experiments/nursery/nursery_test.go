@@ -3,6 +3,7 @@ package nursery
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"reflect"
 	"slices"
 	"strings"
@@ -273,6 +274,14 @@ type statefulTestOrganism struct{ decisions int }
 
 type lineageTestOrganism struct{}
 
+func (*lineageTestOrganism) RestorationReport() RestorationReport {
+	return RestorationReport{Exact: true, Components: []RestorationComponent{{ID: "fixture", Kind: "specialist", Restorability: "stateless"}}}
+}
+
+func (*statefulTestOrganism) RestorationReport() RestorationReport {
+	return RestorationReport{Exact: true, Components: []RestorationComponent{{ID: "decisions", Kind: "organism", Restorability: "exact"}}}
+}
+
 func (*lineageTestOrganism) Decide(context.Context, Perception) (Action, CognitiveTrace, error) {
 	return Action{Kind: "wait"}, CognitiveTrace{ActionSourceEventIDs: []string{"arachne:event:action-1"}}, nil
 }
@@ -282,6 +291,53 @@ func (*lineageTestOrganism) SnapshotState(context.Context) (json.RawMessage, err
 }
 
 func (*lineageTestOrganism) RestoreState(context.Context, json.RawMessage) error { return nil }
+
+type opaqueBestEffortOrganism struct{}
+
+func (*opaqueBestEffortOrganism) Decide(context.Context, Perception) (Action, CognitiveTrace, error) {
+	return Action{Kind: "wait"}, CognitiveTrace{}, nil
+}
+
+func (*opaqueBestEffortOrganism) SnapshotState(context.Context) (json.RawMessage, error) {
+	return nil, fmt.Errorf("opaque state")
+}
+
+func (*opaqueBestEffortOrganism) SnapshotBestEffortState(context.Context) (json.RawMessage, error) {
+	return json.RawMessage(`{"available":true}`), nil
+}
+
+func (*opaqueBestEffortOrganism) RestoreState(context.Context, json.RawMessage) error { return nil }
+
+func (*opaqueBestEffortOrganism) RestorationReport() RestorationReport {
+	return RestorationReport{Exact: false, Components: []RestorationComponent{{ID: "silk-session", Kind: "specialist", Restorability: "opaque", Reason: "session state is not exported by the public protocol"}}}
+}
+
+func TestNurseryExactModePreflightAndBestEffortCheckpointMetadata(t *testing.T) {
+	ctx := context.Background()
+	organism := &opaqueBestEffortOrganism{}
+	_, err := NewSession(ctx, ExperimentConfig{Name: "exact-refusal", World: Config{Seed: 17}, RequireExactRestoration: true}, organism)
+	if err == nil || !strings.Contains(err.Error(), "silk-session") {
+		t.Fatalf("exact-mode preflight did not identify opaque state: %v", err)
+	}
+	session, err := NewSession(ctx, ExperimentConfig{Name: "best-effort", World: Config{Seed: 17}}, organism)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := session.CreateCheckpoint(ctx); err == nil {
+		t.Fatal("exact checkpoint accepted an opaque organism")
+	}
+	checkpoint, err := session.CreateBestEffortCheckpoint(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if checkpoint.Mode != "best-effort" || checkpoint.ExactRestoration || checkpoint.Restorability.Exact ||
+		len(checkpoint.Nondeterminism) == 0 || checkpoint.Restorability.Components[0].ID != "silk-session" {
+		t.Fatalf("best-effort metadata omitted opaque state: %+v", checkpoint)
+	}
+	if _, err := Fork(ctx, checkpoint, organism, "accidental-exact-branch"); err == nil {
+		t.Fatal("exact fork API accepted a best-effort checkpoint")
+	}
+}
 
 func findEffect(world *World, effect entityEffect) *entity {
 	for index := range world.Entities {

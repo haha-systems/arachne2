@@ -136,41 +136,51 @@ type EligibilityGate interface {
 
 // Config supplies the persistent organism identity and its fixed runtime dependencies.
 type Config struct {
-	OrganismID     string
-	Events         *cognition.Spine
-	Specialists    []RegisteredSpecialist
-	Workspace      workspace.Config
-	Gate           EligibilityGate
-	Actuator       Actuator
-	Memory         *memory.Service
-	Regulator      *regulation.Regulator
-	Scorer         OutcomeScorer
-	Learners       map[string]OutcomeLearner
-	ReplaySelector ReplaySelector
+	OrganismID             string
+	Events                 *cognition.Spine
+	Specialists            []RegisteredSpecialist
+	Workspace              workspace.Config
+	Gate                   EligibilityGate
+	Actuator               Actuator
+	Memory                 *memory.Service
+	Regulator              *regulation.Regulator
+	Scorer                 OutcomeScorer
+	Learners               map[string]OutcomeLearner
+	ReplaySelector         ReplaySelector
+	DeferredExecution      bool
+	Deterministic          bool
+	NondeterminismReasons  []string
+	ComponentRestorability map[string]Restorability
 }
 
 // Runtime serializes steps to preserve deterministic interaction IDs and event ordering.
 type Runtime struct {
-	mu             sync.Mutex
-	organismID     string
-	events         *cognition.Spine
-	specialists    []*agent.SpecialistAgent
-	workspace      workspace.Config
-	gate           EligibilityGate
-	actuator       Actuator
-	memory         *memory.Service
-	regulator      *regulation.Regulator
-	scorer         OutcomeScorer
-	learners       map[string]OutcomeLearner
-	replaySelector ReplaySelector
-	conditions     map[string]float64
-	step           uint64
+	mu                     sync.Mutex
+	organismID             string
+	events                 *cognition.Spine
+	specialists            []*agent.SpecialistAgent
+	workspace              workspace.Config
+	gate                   EligibilityGate
+	actuator               Actuator
+	memory                 *memory.Service
+	regulator              *regulation.Regulator
+	scorer                 OutcomeScorer
+	learners               map[string]OutcomeLearner
+	replaySelector         ReplaySelector
+	conditions             map[string]float64
+	step                   uint64
+	deferredExecution      bool
+	deterministic          bool
+	nondeterminismReasons  []string
+	componentRestorability map[string]Restorability
+	pending                map[string]pendingStep
 }
 
 // New creates a persistent runtime with an immutable bounded specialist set.
 func New(config Config) (*Runtime, error) {
-	if strings.TrimSpace(config.OrganismID) == "" || config.Events == nil || config.Gate == nil || config.Actuator == nil {
-		return nil, errors.New("organism ID, event spine, eligibility gate, and actuator are required")
+	if strings.TrimSpace(config.OrganismID) == "" || config.Events == nil || config.Gate == nil ||
+		(!config.DeferredExecution && config.Actuator == nil) {
+		return nil, errors.New("organism ID, event spine, eligibility gate, and required actuator are required")
 	}
 	if config.ReplaySelector != nil && config.Memory == nil {
 		return nil, errors.New("memory service is required when replay selection is configured")
@@ -198,18 +208,23 @@ func New(config Config) (*Runtime, error) {
 		specialists = append(specialists, specialist)
 	}
 	return &Runtime{
-		organismID:     config.OrganismID,
-		events:         config.Events,
-		specialists:    specialists,
-		workspace:      config.Workspace,
-		gate:           config.Gate,
-		actuator:       config.Actuator,
-		memory:         config.Memory,
-		regulator:      config.Regulator,
-		scorer:         config.Scorer,
-		learners:       maps.Clone(config.Learners),
-		replaySelector: config.ReplaySelector,
-		conditions:     make(map[string]float64),
+		organismID:             config.OrganismID,
+		events:                 config.Events,
+		specialists:            specialists,
+		workspace:              config.Workspace,
+		gate:                   config.Gate,
+		actuator:               config.Actuator,
+		memory:                 config.Memory,
+		regulator:              config.Regulator,
+		scorer:                 config.Scorer,
+		learners:               maps.Clone(config.Learners),
+		replaySelector:         config.ReplaySelector,
+		conditions:             make(map[string]float64),
+		deferredExecution:      config.DeferredExecution,
+		deterministic:          config.Deterministic,
+		nondeterminismReasons:  append([]string(nil), config.NondeterminismReasons...),
+		componentRestorability: maps.Clone(config.ComponentRestorability),
+		pending:                make(map[string]pendingStep),
 	}, nil
 }
 
@@ -296,7 +311,8 @@ func (r *Runtime) collectProposals(ctx context.Context, perception Perception, i
 			Features: append([]float64(nil), perception.Features...), SourceEventIDs: sourceIDs,
 			RecentEpisodes: cloneEpisodes(recent), InternalConditions: maps.Clone(r.conditions),
 		}
-		proposal, activationEvent, err := specialist.Activate(ctx, activation, []string{perceptionEventID})
+		proposalID := stableProposalID(interactionID, specialist.ID())
+		proposal, activationEvent, err := specialist.ActivateWithProposalID(ctx, activation, []string{perceptionEventID}, proposalID)
 		if err != nil {
 			return workspace.Report{}, proposals, activations, proposalIDs, err
 		}
@@ -323,6 +339,19 @@ func (r *Runtime) commitAndExecute(ctx context.Context, perception Perception, r
 		}
 		if err := r.recordCommitment(ctx, &result, &commitment, nil); err != nil {
 			return result, err
+		}
+		result.Commitment = commitment
+		if r.deferredExecution {
+			actionEvent, err := r.events.EmitJSON(ctx, cognition.Draft{
+				SessionID: perception.SessionID, CorrelationID: result.InteractionID,
+				ParentEventIDs: []string{commitment.EventID}, Kind: cognition.KindAction,
+			}, map[string]any{"operation": "deferred_no_op"})
+			if err != nil {
+				return result, fmt.Errorf("record deferred no-op: %w", err)
+			}
+			result.Events.Action = actionEvent.EventID
+			r.pending[result.InteractionID] = pendingStep{perception: clonePerception(perception), result: cloneStepResult(result)}
+			return result, nil
 		}
 		outcome := Outcome{Status: "no_op"}
 		if err := r.recordOutcome(ctx, &result, &outcome, commitment.EventID); err != nil {
@@ -356,6 +385,15 @@ func (r *Runtime) commitAndExecute(ctx context.Context, perception Perception, r
 		return result, nil
 	}
 	return r.executeCommitted(ctx, perception, result, commitment, gateEvent)
+}
+
+// Conditions returns an isolated snapshot of accumulated numeric internal conditions.
+func (r *Runtime) deferPending(perception Perception, result StepResult) bool {
+	if !r.deferredExecution {
+		return false
+	}
+	r.pending[result.InteractionID] = pendingStep{perception: clonePerception(perception), result: cloneStepResult(result)}
+	return true
 }
 
 // Conditions returns an isolated snapshot of accumulated numeric internal conditions.
@@ -409,6 +447,7 @@ func (r *Runtime) recordOutcomeEpisode(ctx context.Context, perception Perceptio
 		return memory.Episode{}, fmt.Errorf("encode attributed outcome episode: %w", err)
 	}
 	episode, err := r.memory.RecordEpisode(ctx, memory.Episode{
+		ID:         deterministicStateID("episode", r.organismID, result.InteractionID),
 		OrganismID: r.organismID, Source: memory.SourceRef{Kind: "organism_interaction", ID: result.InteractionID},
 		SourceEventIDs: sourceIDs, OccurredAt: time.Now().UTC(), AgentID: result.Commitment.SpecialistID,
 		SessionID: perception.SessionID, CorrelationID: result.InteractionID,
@@ -425,11 +464,16 @@ func (r *Runtime) applyRegulationFeedback(ctx context.Context, perception Percep
 		return nil
 	}
 	outcome := result.Outcome
+	expected := append(json.RawMessage(nil), outcome.ExpectedEvidence...)
+	observed := append(json.RawMessage(nil), outcome.ObservedEvidence...)
+	if len(expected) == 0 || len(observed) == 0 {
+		expected, observed = nil, nil
+	}
 	input := regulation.Input{
 		InteractionID: result.InteractionID, SessionID: perception.SessionID,
 		SourceEventIDs:     unique(append(sourceIDs, result.Events.Memory)),
-		Expected:           append(json.RawMessage(nil), outcome.ExpectedEvidence...),
-		Observed:           append(json.RawMessage(nil), outcome.ObservedEvidence...),
+		Expected:           expected,
+		Observed:           observed,
 		ConditionDeltas:    maps.Clone(outcome.ConditionDeltas),
 		SpecialistCapacity: max(1, len(r.specialists)), ActionCapacity: 1, WorkspaceCapacity: r.workspace.Capacity,
 	}
@@ -572,6 +616,13 @@ func (r *Runtime) executeCommitted(ctx context.Context, perception Perception, r
 		return result, fmt.Errorf("record action dispatch: %w", err)
 	}
 	result.Events.Action = actionEvent.EventID
+	if r.deferPending(perception, result) {
+		return result, nil
+	}
+	return r.executeAction(ctx, result, commitment, actionEvent)
+}
+
+func (r *Runtime) executeAction(ctx context.Context, result StepResult, commitment Commitment, actionEvent cognition.Event) (StepResult, error) {
 	var detailed ActuatorResult
 	var executeErr error
 	if actuator, ok := r.actuator.(DetailedActuator); ok {

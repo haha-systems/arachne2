@@ -3,6 +3,7 @@ package agent
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/haha-systems/arachne2/internal/cognition"
@@ -11,6 +12,18 @@ import (
 // Activate runs one specialist synchronously and records its attributed activation
 // and proposal. The parent events preserve the perception lineage.
 func (a *SpecialistAgent) Activate(ctx context.Context, activation Activation, parentEventIDs []string) (Proposal, cognition.Event, error) {
+	return a.activate(ctx, activation, parentEventIDs, "")
+}
+
+// ActivateWithProposalID uses a caller-supplied stable proposal ID for reproducible runtimes.
+func (a *SpecialistAgent) ActivateWithProposalID(ctx context.Context, activation Activation, parentEventIDs []string, id string) (Proposal, cognition.Event, error) {
+	if id == "" {
+		return Proposal{}, cognition.Event{}, errors.New("stable proposal ID is required")
+	}
+	return a.activate(ctx, activation, parentEventIDs, id)
+}
+
+func (a *SpecialistAgent) activate(ctx context.Context, activation Activation, parentEventIDs []string, stableID string) (Proposal, cognition.Event, error) {
 	if err := validateActivation(activation); err != nil {
 		return Proposal{}, cognition.Event{}, fmt.Errorf("validate specialist activation: %w", err)
 	}
@@ -35,9 +48,13 @@ func (a *SpecialistAgent) Activate(ctx context.Context, activation Activation, p
 	} else {
 		proposal.Status = "candidate"
 	}
-	proposal.ID, err = proposalID()
-	if err != nil {
-		return Proposal{}, activationEvent, err
+	if stableID == "" {
+		proposal.ID, err = proposalID()
+		if err != nil {
+			return Proposal{}, activationEvent, err
+		}
+	} else {
+		proposal.ID = stableID
 	}
 	proposal.InteractionID = activation.InteractionID
 	proposal.SpecialistID = a.id

@@ -1,7 +1,6 @@
 package nursery
 
 import (
-	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -10,25 +9,30 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 )
 
-const checkpointSchema = "arachne.nursery.checkpoint.v1"
+const checkpointSchema = "arachne.nursery.checkpoint.v2"
 
 // Checkpoint is a complete branch point for the world and one organism history.
 type Checkpoint struct {
-	Schema          string           `json:"schema"`
-	ID              string           `json:"id"`
-	BranchID        string           `json:"branch_id"`
-	ParentID        string           `json:"parent_id,omitempty"`
-	Tick            uint64           `json:"tick"`
-	World           World            `json:"world"`
-	OrganismState   json.RawMessage  `json:"organism_state"`
-	Provider        ProviderRecord   `json:"provider"`
-	Experiment      ExperimentConfig `json:"experiment"`
-	History         []TickRecord     `json:"history"`
-	EventHistoryRef string           `json:"event_history_ref"`
-	Nondeterminism  []string         `json:"nondeterminism,omitempty"`
-	Interventions   []Intervention   `json:"interventions,omitempty"`
+	Schema           string            `json:"schema"`
+	ID               string            `json:"id"`
+	BranchID         string            `json:"branch_id"`
+	ParentID         string            `json:"parent_id,omitempty"`
+	Tick             uint64            `json:"tick"`
+	World            World             `json:"world"`
+	OrganismState    json.RawMessage   `json:"organism_state"`
+	Provider         ProviderRecord    `json:"provider"`
+	Deterministic    *bool             `json:"deterministic,omitempty"`
+	Experiment       ExperimentConfig  `json:"experiment"`
+	History          []TickRecord      `json:"history"`
+	EventHistoryRef  string            `json:"event_history_ref"`
+	Nondeterminism   []string          `json:"nondeterminism,omitempty"`
+	Mode             string            `json:"mode"`
+	ExactRestoration bool              `json:"exact_restoration"`
+	Restorability    RestorationReport `json:"restorability"`
+	Interventions    []Intervention    `json:"interventions,omitempty"`
 }
 
 // Intervention records one explicit fork edit for later causal review.
@@ -42,12 +46,38 @@ type Intervention struct {
 // CheckpointEditor makes a controlled edit to a fork before its organism state is restored.
 type CheckpointEditor func(context.Context, *Checkpoint) error
 
-// CreateCheckpoint captures the exact current environment, organism state, and event history.
+// CreateCheckpoint captures an exact branch point or fails when any component is opaque.
 func (s *Session) CreateCheckpoint(ctx context.Context) (Checkpoint, error) {
+	return s.createCheckpoint(ctx, "exact")
+}
+
+// CreateBestEffortCheckpoint records available state without promising exact continuation.
+func (s *Session) CreateBestEffortCheckpoint(ctx context.Context) (Checkpoint, error) {
+	return s.createCheckpoint(ctx, "best-effort")
+}
+
+func (s *Session) createCheckpoint(ctx context.Context, mode string) (Checkpoint, error) {
 	if s == nil || s.World == nil || s.Organism == nil {
 		return Checkpoint{}, errors.New("nursery session is incomplete")
 	}
-	organismState, err := s.Organism.SnapshotState(ctx)
+	restorability := RestorationReport{Exact: false, Components: []RestorationComponent{{ID: "organism", Kind: "runtime", Restorability: "opaque", Reason: "organism does not report its component inventory"}}}
+	if reporter, ok := s.Organism.(RestorationReporter); ok {
+		restorability = reporter.RestorationReport()
+	}
+	if mode == "exact" && !restorability.Exact {
+		return Checkpoint{}, errors.New("exact checkpoint refused: organism reports opaque or unknown component state")
+	}
+	var organismState json.RawMessage
+	var err error
+	if mode == "best-effort" {
+		if snapshotter, ok := s.Organism.(BestEffortSnapshotter); ok {
+			organismState, err = snapshotter.SnapshotBestEffortState(ctx)
+		} else {
+			return Checkpoint{}, errors.New("best-effort checkpoint requires an explicit best-effort snapshot API")
+		}
+	} else {
+		organismState, err = s.Organism.SnapshotState(ctx)
+	}
 	if err != nil {
 		return Checkpoint{}, fmt.Errorf("snapshot organism state: %w", err)
 	}
@@ -63,17 +93,42 @@ func (s *Session) CreateCheckpoint(ctx context.Context) (Checkpoint, error) {
 		return Checkpoint{}, fmt.Errorf("encode event history reference: %w", err)
 	}
 	historyDigest := sha256.Sum256(historyBytes)
+	provider := checkpointProvider(s.Config.Provider)
+	experiment := cloneExperiment(s.Config)
+	experiment.Provider = provider
 	checkpoint := Checkpoint{
 		Schema: checkpointSchema, Tick: s.World.Tick, World: *cloneWorld(s.World),
 		OrganismState: append(json.RawMessage(nil), organismState...),
-		Provider:      cloneProvider(s.Config.Provider), Experiment: cloneExperiment(s.Config),
+		Provider:      provider, Experiment: experiment,
 		History: history, EventHistoryRef: hex.EncodeToString(historyDigest[:]),
 		BranchID: s.BranchID, ParentID: s.ParentCheckpointID,
+		Mode: mode, ExactRestoration: mode == "exact" && restorability.Exact, Restorability: restorability,
 		Interventions: append([]Intervention(nil), s.Interventions...),
 	}
-	if !s.Config.Provider.Deterministic && s.Config.Provider.NondeterminismReason != "" {
-		checkpoint.Nondeterminism = []string{s.Config.Provider.NondeterminismReason}
+	reproducibility := Reproducibility{Deterministic: false, Reasons: []string{"organism does not declare deterministic continuation"}}
+	if reporter, ok := s.Organism.(ReproducibilityReporter); ok {
+		reproducibility = reporter.Reproducibility()
 	}
+	if !s.Config.Provider.Deterministic {
+		reason := s.Config.Provider.NondeterminismReason
+		if reason == "" {
+			reason = "provider inference is not declared deterministic"
+		}
+		reproducibility.Deterministic = false
+		reproducibility.Reasons = append(reproducibility.Reasons, reason)
+	}
+	if len(s.Config.Provider.Configuration) > 0 || len(s.Config.Provider.State) > 0 {
+		reproducibility.Deterministic = false
+		reproducibility.Reasons = append(reproducibility.Reasons, "opaque provider configuration/state was omitted from checkpoint")
+	}
+	deterministic := reproducibility.Deterministic && len(reproducibility.Reasons) == 0
+	checkpoint.Deterministic = &deterministic
+	for _, component := range restorability.Components {
+		if component.Restorability == "opaque" {
+			reproducibility.Reasons = append(reproducibility.Reasons, component.ID+": "+component.Reason)
+		}
+	}
+	checkpoint.Nondeterminism = sortedUnique(reproducibility.Reasons)
 	checkpoint.ID = checkpointID(checkpoint)
 	if err := ValidateCheckpoint(checkpoint); err != nil {
 		return Checkpoint{}, fmt.Errorf("validate captured checkpoint: %w", err)
@@ -85,6 +140,9 @@ func (s *Session) CreateCheckpoint(ctx context.Context) (Checkpoint, error) {
 func Fork(ctx context.Context, checkpoint Checkpoint, organism Organism, branchID string) (*Session, error) {
 	if err := ValidateCheckpoint(checkpoint); err != nil {
 		return nil, err
+	}
+	if checkpoint.Mode != "exact" || !checkpoint.ExactRestoration {
+		return nil, errors.New("exact fork refused: checkpoint is best-effort or lacks exact-restoration proof")
 	}
 	if organism == nil || branchID == "" {
 		return nil, errors.New("organism adapter and branch ID are required")
@@ -149,8 +207,41 @@ func ForkWithIntervention(ctx context.Context, checkpoint Checkpoint, organism O
 	return branch, nil
 }
 
+func sortedUnique(values []string) []string {
+	seen := make(map[string]struct{}, len(values))
+	result := make([]string, 0, len(values))
+	for _, value := range values {
+		if value == "" {
+			continue
+		}
+		if _, exists := seen[value]; exists {
+			continue
+		}
+		seen[value] = struct{}{}
+		result = append(result, value)
+	}
+	sort.Strings(result)
+	return result
+}
+
+func validateCheckpointMode(checkpoint Checkpoint) error {
+	if checkpoint.Mode != "exact" && checkpoint.Mode != "best-effort" {
+		return errors.New("checkpoint mode must be exact or best-effort")
+	}
+	if checkpoint.ExactRestoration && (checkpoint.Mode != "exact" || !checkpoint.Restorability.Exact) {
+		return errors.New("checkpoint exact-restoration metadata is inconsistent")
+	}
+	if checkpoint.Mode == "exact" && !checkpoint.ExactRestoration {
+		return errors.New("exact checkpoint does not establish exact restoration")
+	}
+	return nil
+}
+
 // ValidateCheckpoint verifies schema, world state, and its event-history reference.
 func ValidateCheckpoint(checkpoint Checkpoint) error {
+	if err := validateCheckpointMode(checkpoint); err != nil {
+		return err
+	}
 	if checkpoint.Schema != checkpointSchema || checkpoint.ID == "" || checkpoint.BranchID == "" {
 		return errors.New("checkpoint schema, ID, and branch ID are required")
 	}
@@ -161,43 +252,17 @@ func ValidateCheckpoint(checkpoint Checkpoint) error {
 	if len(checkpoint.OrganismState) == 0 || !json.Valid(checkpoint.OrganismState) {
 		return errors.New("checkpoint organism state is invalid")
 	}
+	if len(checkpoint.Provider.Configuration) > 0 || len(checkpoint.Provider.State) > 0 ||
+		len(checkpoint.Experiment.Provider.Configuration) > 0 || len(checkpoint.Experiment.Provider.State) > 0 {
+		return errors.New("checkpoint cannot contain opaque provider configuration or state")
+	}
 	if checkpoint.World.Config.Width < 6 || checkpoint.World.Config.Height < 6 ||
 		len(checkpoint.World.Cells) != checkpoint.World.Config.Width*checkpoint.World.Config.Height ||
 		!inside(checkpoint.World.Config, checkpoint.World.Position) {
 		return errors.New("checkpoint world state is inconsistent")
 	}
-	historyBytes, err := json.Marshal(checkpoint.History)
-	if err != nil {
-		return fmt.Errorf("encode checkpoint history: %w", err)
-	}
-	historyHash := sha256.Sum256(historyBytes)
-	if checkpoint.EventHistoryRef != hex.EncodeToString(historyHash[:]) {
-		return errors.New("checkpoint event history reference does not match its history")
-	}
-	previousDigest := ""
-	for index, record := range checkpoint.History {
-		if record.Tick != uint64(index+1) {
-			return errors.New("checkpoint history has a missing or out-of-order tick")
-		}
-		wantDigest, err := historyDigest(previousDigest, record)
-		if err != nil {
-			return fmt.Errorf("validate checkpoint tick %d digest: %w", record.Tick, err)
-		}
-		if record.HistoryDigest != wantDigest {
-			return fmt.Errorf("checkpoint tick %d history digest is inconsistent", record.Tick)
-		}
-		previousDigest = record.HistoryDigest
-	}
-	if len(checkpoint.History) > 0 && len(checkpoint.Interventions) == 0 {
-		var lastWorld World
-		if err := json.Unmarshal(checkpoint.History[len(checkpoint.History)-1].WorldAfter, &lastWorld); err != nil {
-			return fmt.Errorf("decode checkpoint final world: %w", err)
-		}
-		lastWorldJSON, _ := json.Marshal(&lastWorld)
-		checkpointWorldJSON, _ := json.Marshal(&checkpoint.World)
-		if !bytes.Equal(lastWorldJSON, checkpointWorldJSON) {
-			return errors.New("checkpoint world does not match the final event-history state")
-		}
+	if err := validateCheckpointHistory(checkpoint); err != nil {
+		return err
 	}
 	if checkpoint.ID != checkpointID(checkpoint) {
 		return errors.New("checkpoint content digest does not match its ID")
@@ -266,6 +331,12 @@ func checkpointID(checkpoint Checkpoint) string {
 	}
 	digest := sha256.Sum256(data)
 	return hex.EncodeToString(digest[:])
+}
+
+func checkpointProvider(provider ProviderRecord) ProviderRecord {
+	provider.Configuration = nil
+	provider.State = nil
+	return provider
 }
 
 func cloneProvider(provider ProviderRecord) ProviderRecord {

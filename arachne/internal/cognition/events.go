@@ -3,6 +3,8 @@ package cognition
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -39,18 +41,41 @@ var ErrEventStoreFull = errors.New("cognitive event store is full")
 
 // Event is one attributed, ordered record in an organism's cognitive history.
 type Event struct {
-	SchemaVersion  string          `json:"schema_version"`
-	EventID        string          `json:"event_id"`
-	Sequence       uint64          `json:"sequence"`
-	OccurredAt     time.Time       `json:"occurred_at"`
-	OrganismID     string          `json:"organism_id"`
-	AgentID        string          `json:"agent_id,omitempty"`
-	SessionID      string          `json:"session_id,omitempty"`
-	CorrelationID  string          `json:"correlation_id,omitempty"`
-	ParentEventIDs []string        `json:"parent_event_ids,omitempty"`
-	Kind           string          `json:"kind"`
-	Payload        json.RawMessage `json:"payload"`
-	Silk           *SilkTraceRef   `json:"silk,omitempty"`
+	SchemaVersion    string          `json:"schema_version"`
+	EventID          string          `json:"event_id"`
+	Sequence         uint64          `json:"sequence"`
+	OccurredAt       time.Time       `json:"occurred_at"`
+	OrganismID       string          `json:"organism_id"`
+	BranchID         string          `json:"branch_id,omitempty"`
+	BranchInstanceID string          `json:"branch_instance_id,omitempty"`
+	AgentID          string          `json:"agent_id,omitempty"`
+	SessionID        string          `json:"session_id,omitempty"`
+	CorrelationID    string          `json:"correlation_id,omitempty"`
+	ParentEventIDs   []string        `json:"parent_event_ids,omitempty"`
+	Kind             string          `json:"kind"`
+	Payload          json.RawMessage `json:"payload"`
+	Silk             *SilkTraceRef   `json:"silk,omitempty"`
+}
+
+// BranchOrigin records a fork edge without adding branch labels to cognitive input.
+type BranchOrigin struct {
+	BranchID         string `json:"branch_id"`
+	InstanceID       string `json:"instance_id"`
+	ParentBranchID   string `json:"parent_branch_id,omitempty"`
+	ParentInstanceID string `json:"parent_instance_id,omitempty"`
+	ForkEventID      string `json:"fork_event_id"`
+}
+
+// EventSnapshot is a stable history envelope for one continuation point.
+type EventSnapshot struct {
+	SchemaVersion    string         `json:"schema_version"`
+	OrganismID       string         `json:"organism_id"`
+	Sequence         uint64         `json:"sequence"`
+	Capacity         int            `json:"capacity,omitempty"`
+	BranchID         string         `json:"branch_id,omitempty"`
+	BranchInstanceID string         `json:"branch_instance_id,omitempty"`
+	Lineage          []BranchOrigin `json:"lineage,omitempty"`
+	Events           []Event        `json:"events"`
 }
 
 // SilkTraceRef links a cognitive event to one exact event from the Silk trace stream.
@@ -94,6 +119,9 @@ func NewMemoryStore(capacity int) (*MemoryStore, error) {
 	}
 	return &MemoryStore{capacity: capacity, events: make([]Event, 0, capacity)}, nil
 }
+
+// Capacity returns the fixed event capacity used by this store.
+func (s *MemoryStore) Capacity() int { return s.capacity }
 
 // Append stores the next event unless the bounded history is full.
 func (s *MemoryStore) Append(ctx context.Context, event Event) error {
@@ -157,6 +185,9 @@ type Spine struct {
 	mu         sync.Mutex
 	organismID string
 	sequence   uint64
+	branchID   string
+	instanceID string
+	lineage    []BranchOrigin
 	store      EventStore
 	now        func() time.Time
 }
@@ -187,19 +218,25 @@ func (s *Spine) Emit(ctx context.Context, draft Draft) (Event, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	next := s.sequence + 1
+	eventID := fmt.Sprintf("%s:event:%d", s.organismID, next)
+	if s.branchID != "" {
+		eventID = fmt.Sprintf("%s:branch:%s:event:%d", s.organismID, s.instanceID, next)
+	}
 	event := Event{
-		SchemaVersion:  SchemaVersion,
-		EventID:        fmt.Sprintf("%s:event:%d", s.organismID, next),
-		Sequence:       next,
-		OccurredAt:     s.now().UTC(),
-		OrganismID:     s.organismID,
-		AgentID:        draft.AgentID,
-		SessionID:      draft.SessionID,
-		CorrelationID:  draft.CorrelationID,
-		ParentEventIDs: append([]string(nil), draft.ParentEventIDs...),
-		Kind:           draft.Kind,
-		Payload:        append(json.RawMessage(nil), payload...),
-		Silk:           draft.Silk,
+		SchemaVersion:    SchemaVersion,
+		EventID:          eventID,
+		Sequence:         next,
+		OccurredAt:       s.now().UTC(),
+		OrganismID:       s.organismID,
+		BranchID:         s.branchID,
+		BranchInstanceID: s.instanceID,
+		AgentID:          draft.AgentID,
+		SessionID:        draft.SessionID,
+		CorrelationID:    draft.CorrelationID,
+		ParentEventIDs:   append([]string(nil), draft.ParentEventIDs...),
+		Kind:             draft.Kind,
+		Payload:          append(json.RawMessage(nil), payload...),
+		Silk:             draft.Silk,
 	}
 	if err := s.store.Append(ctx, event); err != nil {
 		return Event{}, err
@@ -221,6 +258,136 @@ func (s *Spine) EmitJSON(ctx context.Context, draft Draft, value any) (Event, er
 // Read returns events after a global sequence using the configured store.
 func (s *Spine) Read(ctx context.Context, after uint64, limit int) ([]Event, error) {
 	return s.store.Read(ctx, after, limit)
+}
+
+// Snapshot exports complete event history and branch ancestry as plain data.
+func (s *Spine) Snapshot(ctx context.Context) (EventSnapshot, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	events := make([]Event, 0, s.sequence)
+	var after uint64
+	for {
+		batch, err := s.store.Read(ctx, after, 256)
+		if err != nil {
+			return EventSnapshot{}, fmt.Errorf("read event history: %w", err)
+		}
+		for _, event := range batch {
+			events = append(events, cloneEvent(event))
+			after = event.Sequence
+		}
+		if len(batch) < 256 {
+			break
+		}
+	}
+	if uint64(len(events)) != s.sequence {
+		return EventSnapshot{}, errors.New("event history sequence is incomplete")
+	}
+	capacity := 0
+	if bounded, ok := s.store.(interface{ Capacity() int }); ok {
+		capacity = bounded.Capacity()
+	}
+	return EventSnapshot{
+		SchemaVersion: "arachne.event_snapshot.v1", OrganismID: s.organismID,
+		Sequence: s.sequence, Capacity: capacity, BranchID: s.branchID,
+		BranchInstanceID: s.instanceID, Lineage: append([]BranchOrigin(nil), s.lineage...), Events: events,
+	}, nil
+}
+
+// Restore imports a complete history into an empty store and creates an independent branch.
+func (s *Spine) Restore(ctx context.Context, snapshot EventSnapshot, branchID string) error {
+	if snapshot.SchemaVersion != "arachne.event_snapshot.v1" || snapshot.OrganismID != s.organismID {
+		return errors.New("event snapshot schema or organism identity is incompatible")
+	}
+	if strings.TrimSpace(branchID) == "" {
+		return errors.New("branch ID is required")
+	}
+	if uint64(len(snapshot.Events)) != snapshot.Sequence {
+		return errors.New("event snapshot is missing required history")
+	}
+	for i, event := range snapshot.Events {
+		if event.SchemaVersion != SchemaVersion || event.OrganismID != snapshot.OrganismID ||
+			event.Sequence != uint64(i+1) || event.EventID == "" || event.Kind == "" ||
+			len(event.Payload) == 0 || !json.Valid(event.Payload) {
+			return fmt.Errorf("event snapshot contains malformed event at index %d", i)
+		}
+	}
+	existing, err := s.store.Read(ctx, 0, 1)
+	if err != nil {
+		return fmt.Errorf("check event store before restore: %w", err)
+	}
+	if len(existing) != 0 {
+		return errors.New("event store must be empty before restore")
+	}
+	lineage := append([]BranchOrigin(nil), snapshot.Lineage...)
+	for _, origin := range lineage {
+		if origin.BranchID == branchID {
+			return errors.New("branch ID already appears in event ancestry")
+		}
+	}
+	parentBranch := snapshot.BranchID
+	forkEvent := ""
+	if snapshot.Sequence > 0 {
+		forkEvent = snapshot.Events[len(snapshot.Events)-1].EventID
+	}
+	var branchToken [16]byte
+	if _, err := rand.Read(branchToken[:]); err != nil {
+		return fmt.Errorf("generate branch event namespace: %w", err)
+	}
+	instanceID := hex.EncodeToString(branchToken[:])
+	lineage = append(lineage, BranchOrigin{
+		BranchID: branchID, InstanceID: instanceID,
+		ParentBranchID: parentBranch, ParentInstanceID: snapshot.BranchInstanceID, ForkEventID: forkEvent,
+	})
+	importer, ok := s.store.(EventStateStore)
+	if !ok {
+		return errors.New("event store does not support isolated snapshot restore")
+	}
+	if snapshot.Capacity > 0 {
+		bounded, ok := s.store.(interface{ Capacity() int })
+		if !ok || bounded.Capacity() != snapshot.Capacity {
+			return errors.New("event store capacity does not match snapshot")
+		}
+	}
+	if err := importer.ReplaceEvents(ctx, snapshot.Events); err != nil {
+		return fmt.Errorf("restore event history: %w", err)
+	}
+	s.mu.Lock()
+	s.sequence, s.branchID, s.instanceID, s.lineage = snapshot.Sequence, branchID, instanceID, lineage
+	s.mu.Unlock()
+	return nil
+}
+
+// EventStateStore atomically imports history into a fresh event store.
+type EventStateStore interface {
+	ReplaceEvents(context.Context, []Event) error
+}
+
+// ReplaceEvents imports a complete history only into an empty bounded store.
+func (s *MemoryStore) ReplaceEvents(ctx context.Context, events []Event) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if len(s.events) != 0 {
+		return errors.New("event store must be empty before restore")
+	}
+	if len(events) > s.capacity {
+		return ErrEventStoreFull
+	}
+	cloned := make([]Event, len(events))
+	for i := range events {
+		cloned[i] = cloneEvent(events[i])
+	}
+	s.events = cloned
+	return nil
+}
+
+func cloneEvent(event Event) Event {
+	event.Payload = append(json.RawMessage(nil), event.Payload...)
+	event.ParentEventIDs = append([]string(nil), event.ParentEventIDs...)
+	event.Silk = CloneSilkTraceRef(event.Silk)
+	return event
 }
 
 // RecordSilkTrace wraps one structured Silk event with Arachne attribution and parent links.

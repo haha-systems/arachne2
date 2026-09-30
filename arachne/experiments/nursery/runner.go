@@ -22,6 +22,52 @@ type CognitiveTrace struct {
 	ModelInput           json.RawMessage   `json:"model_input,omitempty"`
 	ModelOutput          json.RawMessage   `json:"model_output,omitempty"`
 	ProviderStateRef     string            `json:"provider_state_ref,omitempty"`
+	Deterministic        bool              `json:"deterministic"`
+	Nondeterminism       []string          `json:"nondeterminism,omitempty"`
+}
+
+// Reproducibility reports exact-continuation limits without serializing provider credentials.
+type Reproducibility struct {
+	Deterministic bool     `json:"deterministic"`
+	Reasons       []string `json:"reasons,omitempty"`
+}
+
+// ReproducibilityReporter is optional for organism adapters with explicit source metadata.
+type ReproducibilityReporter interface {
+	Reproducibility() Reproducibility
+}
+
+// RestorationComponent reports one active component's checkpoint contract.
+type RestorationComponent struct {
+	ID            string `json:"id"`
+	Kind          string `json:"kind"`
+	Restorability string `json:"restorability"`
+	Reason        string `json:"reason,omitempty"`
+}
+
+// RestorationReport distinguishes exact branching capability from inference determinism.
+type RestorationReport struct {
+	Exact      bool                   `json:"exact"`
+	Components []RestorationComponent `json:"components"`
+}
+
+// RestorationReporter exposes the organism's generic component inventory.
+type RestorationReporter interface {
+	RestorationReport() RestorationReport
+}
+
+// Consequence is the generic result returned by an embedding environment after applying an action.
+type Consequence struct {
+	Status           string             `json:"status"`
+	Result           json.RawMessage    `json:"result,omitempty"`
+	ObservedEvidence json.RawMessage    `json:"observed_evidence,omitempty"`
+	ConditionDeltas  map[string]float64 `json:"condition_deltas,omitempty"`
+	Error            string             `json:"error,omitempty"`
+}
+
+// ConsequenceReporter closes a deferred runtime action with the measured environment result.
+type ConsequenceReporter interface {
+	ReportConsequence(context.Context, Consequence) (CognitiveTrace, error)
 }
 
 // Organism is an experiment boundary for one continuous Arachne organism.
@@ -30,6 +76,11 @@ type Organism interface {
 	Decide(context.Context, Perception) (Action, CognitiveTrace, error)
 	SnapshotState(context.Context) (json.RawMessage, error)
 	RestoreState(context.Context, json.RawMessage) error
+}
+
+// BestEffortSnapshotter exports available state with explicit incompleteness metadata.
+type BestEffortSnapshotter interface {
+	SnapshotBestEffortState(context.Context) (json.RawMessage, error)
 }
 
 // Teacher is an inactive-by-default interface for later curriculum experiments.
@@ -56,10 +107,11 @@ type ProviderRecord struct {
 
 // ExperimentConfig contains declarative world and run settings only.
 type ExperimentConfig struct {
-	Name          string         `json:"name"`
-	World         Config         `json:"world"`
-	Provider      ProviderRecord `json:"provider"`
-	TeacherActive bool           `json:"teacher_active"`
+	Name                    string         `json:"name"`
+	World                   Config         `json:"world"`
+	Provider                ProviderRecord `json:"provider"`
+	TeacherActive           bool           `json:"teacher_active"`
+	RequireExactRestoration bool           `json:"require_exact_restoration"`
 }
 
 // TickRecord contains reconstructable evidence for one full environment cycle.
@@ -93,6 +145,11 @@ func NewSession(_ context.Context, config ExperimentConfig, organism Organism) (
 	if organism == nil {
 		return nil, errors.New("one organism adapter is required")
 	}
+	if config.RequireExactRestoration {
+		if err := requireExactRestoration(organism); err != nil {
+			return nil, err
+		}
+	}
 	if config.Name == "" {
 		config.Name = "experiment-002-nursery"
 	}
@@ -106,6 +163,23 @@ func NewSession(_ context.Context, config ExperimentConfig, organism Organism) (
 	}
 	config.World = world.Config
 	return &Session{Config: config, World: world, Organism: organism, BranchID: "original"}, nil
+}
+
+func requireExactRestoration(organism Organism) error {
+	reporter, ok := organism.(RestorationReporter)
+	if !ok {
+		return errors.New("exact-restoration mode requires an organism restorability report")
+	}
+	report := reporter.RestorationReport()
+	if report.Exact {
+		return nil
+	}
+	for _, component := range report.Components {
+		if component.Restorability == "opaque" {
+			return fmt.Errorf("exact-restoration mode refused: component %q (%s): %s", component.ID, component.Kind, component.Reason)
+		}
+	}
+	return errors.New("exact-restoration mode refused: organism is not exactly restorable")
 }
 
 // Step advances one tick, preserving the world and the same organism instance.
@@ -142,18 +216,9 @@ func (s *Session) Step(ctx context.Context) (TickRecord, error) {
 	if err := ctx.Err(); err != nil {
 		return TickRecord{}, err
 	}
-	changes, err := s.World.Apply(action)
+	changes, cognition, err := s.applyAndReport(ctx, action, cognition, viabilityBefore)
 	if err != nil {
-		return TickRecord{}, fmt.Errorf("apply environment action at tick %d: %w", s.World.Tick, err)
-	}
-	if len(changes) > 0 {
-		for _, parent := range cognition.ActionSourceEventIDs {
-			if parent == "" {
-				continue
-			}
-			changes[0].ParentEventIDs = appendUnique(changes[0].ParentEventIDs, parent)
-		}
-		s.World.Recent = cloneChanges(changes)
+		return TickRecord{}, err
 	}
 	after, err := json.Marshal(s.World)
 	if err != nil {
@@ -174,6 +239,51 @@ func (s *Session) Step(ctx context.Context) (TickRecord, error) {
 	}
 	s.History = append(s.History, cloneTick(record))
 	return cloneTick(record), nil
+}
+
+func (s *Session) applyAndReport(ctx context.Context, action Action, cognition CognitiveTrace, before Viability) ([]Change, CognitiveTrace, error) {
+	changes, err := s.World.Apply(action)
+	if err != nil {
+		if reporter, ok := s.Organism.(ConsequenceReporter); ok {
+			_, reportErr := reporter.ReportConsequence(ctx, Consequence{Status: "failed", Error: err.Error()})
+			if reportErr != nil {
+				return nil, cognition, fmt.Errorf("apply environment action at tick %d: %w (record consequence: %w)", s.World.Tick, err, reportErr)
+			}
+		}
+		return nil, cognition, fmt.Errorf("apply environment action at tick %d: %w", s.World.Tick, err)
+	}
+	if len(changes) > 0 {
+		for _, parent := range cognition.ActionSourceEventIDs {
+			if parent != "" {
+				changes[0].ParentEventIDs = appendUnique(changes[0].ParentEventIDs, parent)
+			}
+		}
+		s.World.Recent = cloneChanges(changes)
+	}
+	reporter, ok := s.Organism.(ConsequenceReporter)
+	if !ok {
+		return changes, cognition, nil
+	}
+	result, err := json.Marshal(map[string]any{"action": action, "changes": changes, "viability": s.World.Viability})
+	if err != nil {
+		return nil, cognition, fmt.Errorf("encode environment consequence: %w", err)
+	}
+	observed, err := json.Marshal(map[string]any{"changes": changes, "viability": s.World.Viability})
+	if err != nil {
+		return nil, cognition, fmt.Errorf("encode observed environment evidence: %w", err)
+	}
+	trace, err := reporter.ReportConsequence(ctx, Consequence{
+		Status: "executed", Result: result, ObservedEvidence: observed,
+		ConditionDeltas: map[string]float64{
+			"viability.energy":    s.World.Viability.Energy - before.Energy,
+			"viability.integrity": s.World.Viability.Integrity - before.Integrity,
+			"viability.stability": s.World.Viability.Stability - before.Stability,
+		},
+	})
+	if err != nil {
+		return nil, cognition, fmt.Errorf("record environment consequence: %w", err)
+	}
+	return changes, trace, nil
 }
 
 // Run advances up to count ticks, stopping on cancellation or an organism error.
@@ -202,6 +312,7 @@ func cloneCognition(trace CognitiveTrace) CognitiveTrace {
 	clone.MemoryWrites = append([]string(nil), trace.MemoryWrites...)
 	clone.ReplayEventIDs = append([]string(nil), trace.ReplayEventIDs...)
 	clone.ActionSourceEventIDs = append([]string(nil), trace.ActionSourceEventIDs...)
+	clone.Nondeterminism = append([]string(nil), trace.Nondeterminism...)
 	return clone
 }
 
