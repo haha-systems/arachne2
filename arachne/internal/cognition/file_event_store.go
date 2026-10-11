@@ -109,6 +109,7 @@ func OpenFileEventStore(path, organismID string, capacity int) (*FileEventStore,
 		return nil, errors.New("event store capacity must be positive")
 	}
 
+	// #nosec G304 -- the caller selects the durable event log path.
 	file, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0o600)
 	if err != nil {
 		return nil, fmt.Errorf("open event log: %w", err)
@@ -295,7 +296,7 @@ func (s *FileEventStore) rollbackAppend(offset int64, cause error) error {
 	truncateErr := s.file.Truncate(offset)
 	syncErr := s.syncFile()
 	if truncateErr != nil || syncErr != nil {
-		rollbackCause := fmt.Errorf("append cause: %v; truncate cause: %v; sync cause: %v", cause, truncateErr, syncErr)
+		rollbackCause := errors.Join(cause, truncateErr, syncErr)
 		s.poisoned = rollbackCause
 		return &EventStoreError{Kind: ErrEventLogRollback, Cause: rollbackCause}
 	}
