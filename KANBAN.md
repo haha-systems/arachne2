@@ -20,7 +20,9 @@ No tasks are marked In Progress.
 
 ### Review
 
-No tasks are marked Review.
+| ID                                                      | Task                              | Evidence                                           |
+| ------------------------------------------------------- | --------------------------------- | -------------------------------------------------- |
+| [AR-18](tasks/AR-18-durable-event-store.md)              | Add a durable cognitive event store | [Cognitive events](docs/ARACHNE_COGNITIVE_EVENTS.md) |
 
 ### Done
 
