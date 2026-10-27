@@ -26,13 +26,29 @@ Daemon startup and shutdown are currently represented as development events.
 
 ## Storage and limits
 
-`EventStore` defines append and sequence-based reads. The daemon currently
-provides a bounded in-memory implementation with a default capacity of 10,000
-events. A full store returns `ErrEventStoreFull`; the spine never evicts or
-drops records silently. Applications can read through `Spine.Read` and can
-provide a durable store when constructing a spine directly. Durable recovery
-of sequence state and atomic persistence are responsibilities for a future
-store implementation.
+`EventStore` defines append and sequence-based reads. The daemon continues to
+use a bounded in-memory implementation with a default capacity of 10,000
+events. Embedders can instead construct a bounded `FileEventStore` with
+`OpenFileEventStore(path, organismID, capacity)`. It stores a versioned
+`arachne.event_log.v1` header followed by append-only JSON Lines records. The
+header binds the log to one organism; each record wraps the unchanged
+`arachne.cognitive_event.v1` event and a CRC32 checksum of its JSON encoding.
+
+Each successful append is synced before it is published to readers. Reopening
+validates the header, organism, event schema, checksums, and strict sequence
+order, then rebuilds the in-memory read index. An incomplete final line is
+truncated and reported by `RepairInfo`; malformed complete lines and earlier
+corruption return typed errors without repairing the file. Files are secured
+with 0600 permissions. The file store is bounded, never evicts, and returns
+`ErrEventStoreFull` at capacity. It assumes a single writer process.
+
+CRC32 detects accidental record corruption; it is not authentication or
+tamper resistance. The store validates sequence numbers supplied by the
+unchanged `Spine` and does not assign them. A newly constructed `Spine` starts
+its local sequence at zero, so this store does not provide fresh-spine N+1
+append continuation. Restart recovery currently means replaying stored events
+through `Spine.Read` into the development routing profile; other runtime state
+is not rebuilt. See [development restart recovery](ARACHNE_DEVELOPMENT.md#restart-recovery).
 
 Payloads preserve supplied JSON, and Silk trace payloads can include host-call
 arguments and results. Embedders should avoid secrets in traced values or add

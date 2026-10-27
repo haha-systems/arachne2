@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/haha-systems/arachne2/internal/cognition"
+	"github.com/haha-systems/arachne2/internal/memory"
 )
 
 const (
@@ -24,10 +25,13 @@ const (
 
 // Activation is the explicit input and evidence context supplied to one specialist.
 type Activation struct {
-	InteractionID  string          `json:"interaction_id"`
-	Input          json.RawMessage `json:"input"`
-	SourceEventIDs []string        `json:"source_event_ids,omitempty"`
-	SessionID      string          `json:"session_id,omitempty"`
+	InteractionID      string             `json:"interaction_id"`
+	Input              json.RawMessage    `json:"input"`
+	Features           []float64          `json:"features,omitempty"`
+	SourceEventIDs     []string           `json:"source_event_ids,omitempty"`
+	SessionID          string             `json:"session_id,omitempty"`
+	RecentEpisodes     []memory.Episode   `json:"recent_episodes,omitempty"`
+	InternalConditions map[string]float64 `json:"internal_conditions,omitempty"`
 }
 
 // RequestedAction is a proposed intent. It has no execution capability.

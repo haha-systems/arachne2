@@ -1,0 +1,15 @@
+{
+  "name": "experiment-002-nursery",
+  "world": {
+    "seed": 2026002,
+    "width": 12,
+    "height": 12
+  },
+  "pilot_ticks": 256,
+  "teacher_active": false,
+  "provider": {
+    "name": "unconfigured",
+    "deterministic": false,
+    "nondeterminism_reason": "no inference provider or Arachne organism adapter is configured in this repository"
+  }
+}

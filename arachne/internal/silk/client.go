@@ -12,7 +12,6 @@ import (
 	"os/exec"
 	"sort"
 	"sync"
-	"sync/atomic"
 	"time"
 )
 
@@ -28,7 +27,7 @@ var ErrReentrantCall error = ReentrantCallError{}
 type ReentrantCallError struct{}
 
 func (ReentrantCallError) Error() string {
-	return "silk client calls from a host callback are unsupported"
+	return "silk client cannot wait for its serialized stream while a host callback is active; callback re-entry is unsupported"
 }
 
 // HostFunctionDescriptor declares the schema, effects, and authority for a host callback.
@@ -137,7 +136,9 @@ type Client struct {
 	traceSession    string
 	closed          bool
 	failed          error
-	callbacksActive atomic.Int32
+	callbackMu      sync.Mutex
+	callbacksActive int
+	callbackChanged chan struct{}
 	terminateOnce   sync.Once
 }
 
@@ -177,12 +178,13 @@ func Start(ctx context.Context, command Command) (*Client, error) {
 		return nil, fmt.Errorf("start Silk: %w", err)
 	}
 	client := &Client{
-		gate:     make(chan struct{}, 1),
-		command:  process,
-		stdin:    stdin,
-		stdout:   bufio.NewReader(stdout),
-		sessions: make(map[string]map[string]HostCapability),
-		traces:   make(map[string][]json.RawMessage),
+		gate:            make(chan struct{}, 1),
+		command:         process,
+		stdin:           stdin,
+		stdout:          bufio.NewReader(stdout),
+		sessions:        make(map[string]map[string]HostCapability),
+		traces:          make(map[string][]json.RawMessage),
+		callbackChanged: make(chan struct{}),
 	}
 	var result struct {
 		ProtocolVersion string `json:"protocol_version"`
@@ -337,7 +339,7 @@ func (c *Client) CloseSession(ctx context.Context, sessionID string) error {
 
 // Close shuts down the subprocess after closing every remaining session.
 func (c *Client) Close() error {
-	if c.callbacksActive.Load() > 0 {
+	if c.hostCallbackActive() {
 		return ErrReentrantCall
 	}
 	if err := c.lock(context.Background()); err != nil {
@@ -518,14 +520,14 @@ func (c *Client) handleHostCall(ctx context.Context, id json.RawMessage, params 
 		err   error
 	}
 	callbackResults := make(chan callbackResult, 1)
-	c.callbacksActive.Add(1)
+	c.beginHostCallback()
 	go func() {
 		callback := callbackResult{}
 		defer func() {
 			if panicValue := recover(); panicValue != nil {
 				callback.err = fmt.Errorf("host callback panicked: %v", panicValue)
 			}
-			c.callbacksActive.Add(-1)
+			c.endHostCallback()
 			callbackResults <- callback
 		}()
 		callback.value, callback.err = capability.Call(callContext, call.Arguments)
@@ -561,16 +563,67 @@ func (c *Client) rejectReentrant(ctx context.Context) error {
 }
 
 func (c *Client) lock(ctx context.Context) error {
-	select {
-	case c.gate <- struct{}{}:
-		if err := ctx.Err(); err != nil {
-			c.unlock()
-			return err
+	for {
+		select {
+		case c.gate <- struct{}{}:
+			if err := ctx.Err(); err != nil {
+				c.unlock()
+				return err
+			}
+			return nil
+		default:
 		}
-		return nil
-	case <-ctx.Done():
-		return ctx.Err()
+
+		c.callbackMu.Lock()
+		if c.callbacksActive > 0 {
+			c.callbackMu.Unlock()
+			if err := ctx.Err(); err != nil {
+				return err
+			}
+			return ErrReentrantCall
+		}
+		changed := c.callbackChanged
+		c.callbackMu.Unlock()
+
+		select {
+		case c.gate <- struct{}{}:
+			if err := ctx.Err(); err != nil {
+				c.unlock()
+				return err
+			}
+			return nil
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-changed:
+			// A host callback may have started while this call was queued. Recheck
+			// callback state before waiting on the stream again.
+		}
 	}
+}
+
+func (c *Client) beginHostCallback() {
+	c.callbackMu.Lock()
+	defer c.callbackMu.Unlock()
+	c.callbacksActive++
+	c.signalCallbackStateChange()
+}
+
+func (c *Client) endHostCallback() {
+	c.callbackMu.Lock()
+	defer c.callbackMu.Unlock()
+	c.callbacksActive--
+	c.signalCallbackStateChange()
+}
+
+func (c *Client) hostCallbackActive() bool {
+	c.callbackMu.Lock()
+	defer c.callbackMu.Unlock()
+	return c.callbacksActive > 0
+}
+
+func (c *Client) signalCallbackStateChange() {
+	close(c.callbackChanged)
+	c.callbackChanged = make(chan struct{})
 }
 
 func (c *Client) unlock() { <-c.gate }

@@ -20,6 +20,7 @@ type Episode struct {
 	SourceEventIDs []string        `json:"source_event_ids,omitempty"`
 	OccurredAt     time.Time       `json:"occurred_at"`
 	RecordedAt     time.Time       `json:"recorded_at"`
+	EventID        string          `json:"event_id,omitempty"`
 	AgentID        string          `json:"agent_id,omitempty"`
 	SessionID      string          `json:"session_id,omitempty"`
 	CorrelationID  string          `json:"correlation_id,omitempty"`

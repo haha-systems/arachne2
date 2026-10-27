@@ -25,6 +25,17 @@ event store is in memory, so that configuration does not survive process
 failure. Initial profiles are also host-supplied; they are not emitted as
 development changes.
 
+## Restart recovery
+
+An embedding host can open a `FileEventStore` for the same organism after a
+restart, construct a fresh `Spine` over it, and pass that spine and the same
+host-supplied initial routing profile to `NewEngine`. The engine replays the
+persisted events through `Spine.Read` and rebuilds the routing projection. This
+recovery claim is limited to that profile: the event store does not restore
+other runtime state, and it does not restore the fresh spine's local sequence
+counter for new emissions. Continued sequence assignment from a new spine is
+deferred; the daemon also remains in-memory by default.
+
 The [`development` example](../arachne/examples/development/main.go) creates
 two instances with equivalent initial routing weights. Different evidenced
 experiences lead to separately approved changes, so their snapshots diverge;
